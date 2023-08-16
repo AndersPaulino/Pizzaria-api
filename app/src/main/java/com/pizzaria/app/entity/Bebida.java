@@ -19,4 +19,5 @@ public class Bebida extends AbstractEntity{
     @Column(name = "cl_valor_bebida")
     private BigDecimal valorBebida;
 
+
 }
