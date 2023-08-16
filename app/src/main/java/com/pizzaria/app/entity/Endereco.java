@@ -20,11 +20,8 @@ public class Endereco extends AbstractEntity {
     @Column(name = "cl_numero")
     private int numero;
 
-    @Getter @Setter
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
-
-    public Endereco(String bairro, String rua, int numero) {}
 }
 

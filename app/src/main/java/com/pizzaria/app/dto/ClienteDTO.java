@@ -1,5 +1,6 @@
 package com.pizzaria.app.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pizzaria.app.entity.Cliente;
 import com.pizzaria.app.entity.Endereco;
 import lombok.Getter;
@@ -15,10 +16,9 @@ public class ClienteDTO {
     private String nome;
     private String telefone;
     private String cpf;
-    private EnderecoDTO endereco;
 
-    public ClienteDTO() {
-    }
+    @JsonProperty("endereco")
+    private EnderecoDTO endereco;
 
     public ClienteDTO(Long id, String nome, String telefone, String cpf, EnderecoDTO endereco) {
         this.id = id;

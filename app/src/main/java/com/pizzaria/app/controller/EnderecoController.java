@@ -58,26 +58,4 @@ public class EnderecoController {
             return ResponseEntity.noContent().build();
         }
     }
-
-    @PostMapping
-    public ResponseEntity<Endereco> createEndereco(@RequestBody Endereco endereco) {
-        Endereco novoEndereco = enderecoService.cadastrarEndereco(endereco);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoEndereco);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Endereco> updateEndereco(@PathVariable Long id, @RequestBody Endereco endereco) {
-        Endereco enderecoAtualizado = enderecoService.atualizarEndereco(id, endereco);
-        if (enderecoAtualizado != null) {
-            return ResponseEntity.ok(enderecoAtualizado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEndereco(@PathVariable Long id) {
-        enderecoService.deletarEndereco(id);
-        return ResponseEntity.noContent().build();
-    }
 }

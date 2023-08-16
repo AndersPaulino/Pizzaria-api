@@ -75,52 +75,41 @@ public class ClienteService {
 
 
 
-    public ClienteDTO cadastrarCliente(ClienteDTO clienteDTO) {
-        // Converte ClienteDTO em um objeto Cliente
-        Cliente cliente = new Cliente();
-        cliente.setNome(clienteDTO.getNome());
-        cliente.setTelefone(clienteDTO.getTelefone());
-        cliente.setCpf(clienteDTO.getCpf());
 
-        EnderecoDTO enderecoDTO = clienteDTO.getEndereco();
-        Endereco endereco = new Endereco(enderecoDTO.getBairro(), enderecoDTO.getRua(), enderecoDTO.getNumero());
-        cliente.setEnderecos(Collections.singletonList(endereco));
+    public Cliente cadastrarCliente(ClienteDTO clienteDTO) {
+        // Cadastrar o endereço primeiro e obter a instância do endereço salvo
+        Endereco enderecoSalvo = enderecoService.cadastrarEndereco(clienteDTO.getEndereco());
 
-        // Salva o cliente no banco de dados
-        Cliente clienteCadastrado = clienteRepository.save(cliente);
+        // Mapear ClienteDTO para Cliente
+        Cliente novoCliente = new Cliente();
+        novoCliente.setNome(clienteDTO.getNome());
+        novoCliente.setTelefone(clienteDTO.getTelefone());
+        novoCliente.setCpf(clienteDTO.getCpf());
 
-        // Cria um novo ClienteDTO a partir do cliente cadastrado
-        ClienteDTO clienteCadastradoDTO = new ClienteDTO(clienteCadastrado);
+        // Associar o endereço salvo ao cliente
+        novoCliente.getEnderecos().add(enderecoSalvo);
 
-        return clienteCadastradoDTO;
+        return clienteRepository.save(novoCliente);
     }
 
-    public ClienteDTO atualizarCliente(Long clienteId, ClienteDTO clienteDTO) {
+    public Cliente atualizarCliente(Long clienteId, ClienteDTO clienteDTO) {
         Cliente clienteExistente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        // Atualiza as informações do cliente existente com base no DTO
+        // Atualizar os campos do cliente existente com base nos dados do DTO
         clienteExistente.setNome(clienteDTO.getNome());
         clienteExistente.setTelefone(clienteDTO.getTelefone());
         clienteExistente.setCpf(clienteDTO.getCpf());
 
-        EnderecoDTO enderecoDTO = clienteDTO.getEndereco();
-        Endereco enderecoAtualizado = new Endereco(enderecoDTO.getBairro(), enderecoDTO.getRua(), enderecoDTO.getNumero());
+        // Se o clienteDTO tiver um endereço, atualize os campos do endereço associado
+        if (clienteDTO.getEndereco() != null) {
+            Endereco enderecoExistente = clienteExistente.getEnderecos().get(0); // Supondo um único endereço
+            enderecoExistente.setBairro(clienteDTO.getEndereco().getBairro());
+            enderecoExistente.setRua(clienteDTO.getEndereco().getRua());
+            enderecoExistente.setNumero(clienteDTO.getEndereco().getNumero());
+        }
 
-        // Como você tem uma lista de endereços no DTO, você precisará atualizar a lista de endereços do cliente
-        List<Endereco> enderecosAtualizados = clienteExistente.getEnderecos().stream()
-                .map(endereco -> endereco.getId().equals(enderecoDTO.getId()) ? enderecoAtualizado : endereco)
-                .collect(Collectors.toList());
-
-        clienteExistente.setEnderecos(enderecosAtualizados);
-
-        // Salva as alterações no cliente no banco de dados
-        Cliente clienteAtualizado = clienteRepository.save(clienteExistente);
-
-        // Cria um novo ClienteDTO a partir do cliente atualizado
-        ClienteDTO clienteAtualizadoDTO = new ClienteDTO(clienteAtualizado);
-
-        return clienteAtualizadoDTO;
+        return clienteRepository.save(clienteExistente);
     }
 
 

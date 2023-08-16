@@ -24,7 +24,6 @@ public class Cliente extends AbstractEntity {
     private String cpf;
 
     @Getter @Setter
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Endereco> enderecos = new ArrayList<>();
-
 }

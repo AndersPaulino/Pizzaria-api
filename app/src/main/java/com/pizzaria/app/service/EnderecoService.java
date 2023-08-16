@@ -43,19 +43,28 @@ public class EnderecoService {
         return enderecoRepository.save(endereco);
     }
 
+    public Endereco cadastrarEndereco(EnderecoDTO enderecoDTO) {
+        // Mapear EnderecoDTO para Endereco
+        Endereco novoEndereco = new Endereco();
+        novoEndereco.setBairro(enderecoDTO.getBairro());
+        novoEndereco.setRua(enderecoDTO.getRua());
+        novoEndereco.setNumero(enderecoDTO.getNumero());
 
-    public Endereco atualizarEndereco(Long id, Endereco enderecoAtualizado) {
-        Optional<Endereco> enderecoExistente = enderecoRepository.findById(id);
-        if (enderecoExistente.isPresent()) {
-            Endereco endereco = enderecoExistente.get();
-            endereco.setBairro(enderecoAtualizado.getBairro());
-            endereco.setRua(enderecoAtualizado.getRua());
-            endereco.setNumero(enderecoAtualizado.getNumero());
-            return enderecoRepository.save(endereco);
-        } else {
-            return null;
-        }
+        return enderecoRepository.save(novoEndereco);
     }
+
+    public Endereco atualizarEndereco(Long id, EnderecoDTO enderecoDTO) {
+        Endereco enderecoExistente = enderecoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+
+        // Atualizar os campos do endereço existente com base nos dados do DTO
+        enderecoExistente.setBairro(enderecoDTO.getBairro());
+        enderecoExistente.setRua(enderecoDTO.getRua());
+        enderecoExistente.setNumero(enderecoDTO.getNumero());
+
+        return enderecoRepository.save(enderecoExistente);
+    }
+
 
     public void deletarEndereco(Long id) {
         enderecoRepository.deleteById(id);

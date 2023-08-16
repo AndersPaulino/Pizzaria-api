@@ -9,7 +9,6 @@ public class EnderecoDTO {
     private String bairro;
     private String rua;
     private int numero;
-    public EnderecoDTO(EnderecoDTO endereco) {}
 
     public EnderecoDTO(Long id, String bairro, String rua, int numero) {
         this.id = id;
