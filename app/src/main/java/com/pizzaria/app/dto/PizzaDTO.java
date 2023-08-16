@@ -4,6 +4,7 @@ import com.pizzaria.app.entity.Pizza;
 import com.pizzaria.app.entity.Sabor;
 import com.pizzaria.app.entity.Tamanho;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ public class PizzaDTO {
 
     private Tamanho tamanho;
 
+    private BigDecimal valorPizza;
+
     public PizzaDTO(){
 
     }
@@ -29,6 +32,7 @@ public class PizzaDTO {
         registro = pizza.getRegistro();
         sabor = pizza.getSabor();
         tamanho = pizza.getTamanho();
+        valorPizza = pizza.getValorPizza();
     }
 
     public Long getId() {
@@ -69,5 +73,13 @@ public class PizzaDTO {
 
     public void setTamanho(Tamanho tamanho) {
         this.tamanho = tamanho;
+    }
+
+    public BigDecimal getValorPizza() {
+        return valorPizza;
+    }
+
+    public void setValorPizza(BigDecimal valorPizza) {
+        this.valorPizza = valorPizza;
     }
 }
