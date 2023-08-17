@@ -18,7 +18,11 @@ public class Cliente extends AbstractEntity {
     private String cpf;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    @JoinTable(name = "cliente_endereco",
+            joinColumns = @JoinColumn(name = "cliente_id"),
+            inverseJoinColumns = @JoinColumn(name = "endereco_id"))
     @Getter @Setter
     private Endereco endereco;
 }
+
+
