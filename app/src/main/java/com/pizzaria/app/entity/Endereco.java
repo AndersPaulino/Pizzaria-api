@@ -9,19 +9,15 @@ import lombok.Setter;
 public class Endereco extends AbstractEntity {
 
     @Getter @Setter
-    @Column(name = "cl_bairro")
+    @Column(name = "bairro", nullable = false, length = 255)
     private String bairro;
 
     @Getter @Setter
-    @Column(name = "cl_rua")
+    @Column(name = "rua", nullable = false, length = 255)
     private String rua;
 
     @Getter @Setter
-    @Column(name = "cl_numero")
+    @Column(name = "numero", nullable = false)
     private int numero;
-
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
 }
 

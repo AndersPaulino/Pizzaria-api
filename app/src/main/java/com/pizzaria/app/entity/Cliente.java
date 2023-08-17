@@ -4,26 +4,21 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "tb_cliente", schema = "public")
 public class Cliente extends AbstractEntity {
 
     @Getter @Setter
-    @Column(name = "cl_nome")
+    @Column(name = "nome", nullable = false, length = 255)
     private String nome;
 
     @Getter @Setter
-    @Column(name = "cl_telefone")
-    private String telefone;
-
-    @Getter @Setter
-    @Column(name = "cl_cpf")
+    @Column(name = "cpf", nullable = false, length = 18)
     private String cpf;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
     @Getter @Setter
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Endereco> enderecos = new ArrayList<>();
+    private Endereco endereco;
 }
