@@ -78,7 +78,7 @@ public class ClienteService {
 
     public Cliente cadastrarCliente(ClienteDTO clienteDTO) {
         // Cadastrar o endereço primeiro e obter a instância do endereço salvo
-        Endereco enderecoSalvo = enderecoService.cadastrarEndereco(clienteDTO.getEndereco());
+        Endereco enderecoSalvo = enderecoService.cadastrarEndereco((Endereco) clienteDTO.getEndereco());
 
         // Mapear ClienteDTO para Cliente
         Cliente novoCliente = new Cliente();
@@ -104,9 +104,9 @@ public class ClienteService {
         // Se o clienteDTO tiver um endereço, atualize os campos do endereço associado
         if (clienteDTO.getEndereco() != null) {
             Endereco enderecoExistente = clienteExistente.getEnderecos().get(0); // Supondo um único endereço
-            enderecoExistente.setBairro(clienteDTO.getEndereco().getBairro());
-            enderecoExistente.setRua(clienteDTO.getEndereco().getRua());
-            enderecoExistente.setNumero(clienteDTO.getEndereco().getNumero());
+            enderecoExistente.setBairro(clienteDTO.getEndereco().get(0).getBairro());
+            enderecoExistente.setRua(clienteDTO.getEndereco().get(0).getRua());
+            enderecoExistente.setNumero(clienteDTO.getEndereco().get(0).getNumero());
         }
 
         return clienteRepository.save(clienteExistente);
