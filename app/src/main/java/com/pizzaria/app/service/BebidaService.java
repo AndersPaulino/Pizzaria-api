@@ -33,6 +33,7 @@ public class BebidaService {
         return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
     }
 
+    @Transactional
     public Bebida cadastrar(Bebida bebida){
        return bebidaRepository.save(bebida);
     }
@@ -51,6 +52,7 @@ public class BebidaService {
         return bebidaRepository.save(bebidaExistente);
     }
 
+    @Transactional
     private void atualizarCampos(Bebida bebidaExistente, Bebida bebida) {
         if (bebida.getNomeBebida() != null) {
             bebidaExistente.setNomeBebida(bebida.getNomeBebida());
