@@ -17,10 +17,9 @@ public class ClienteDTO {
     private String telefone;
     private String cpf;
 
-    @JsonProperty("endereco")
-    private EnderecoDTO endereco;
+    private List<Endereco> endereco;
 
-    public ClienteDTO(Long id, String nome, String telefone, String cpf, EnderecoDTO endereco) {
+    public ClienteDTO(Long id, String nome, String telefone, String cpf, List<Endereco> endereco) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
