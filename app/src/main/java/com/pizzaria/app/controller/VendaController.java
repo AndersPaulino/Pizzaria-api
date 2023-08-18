@@ -1,6 +1,7 @@
 package com.pizzaria.app.controller;
 
 import com.pizzaria.app.dto.VendaDTO;
+import com.pizzaria.app.entity.Venda;
 import com.pizzaria.app.service.VendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,12 +38,16 @@ public class VendaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<VendaDTO> buscarVendaPorId(@PathVariable Long id) {
-        Optional<VendaDTO> vendaDTO = vendaService.buscarVendaPorId(id)
-                .map(VendaDTO::new);
+        Optional<Venda> vendaOptional = vendaService.buscarVendaPorId(id);
 
-        return vendaDTO.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        if (vendaOptional.isPresent()) {
+            VendaDTO vendaDTO = new VendaDTO(vendaOptional.get());
+            return ResponseEntity.ok(vendaDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<VendaDTO> atualizarVenda(@PathVariable Long id, @RequestBody VendaDTO vendaDTO) {

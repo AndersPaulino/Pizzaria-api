@@ -26,10 +26,10 @@ public class Venda extends AbstractEntity {
 
     @Getter @Setter
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "venda_pedido",
+    @JoinTable(name = "venda_produto",
             joinColumns = @JoinColumn(name = "venda_id"),
-            inverseJoinColumns = @JoinColumn(name = "pedido_id"))
-    private Pedido pedido;
+            inverseJoinColumns = @JoinColumn(name = "produto_id"))
+    private Produto produto;
 
     @Getter @Setter
     @Column(name = "emitir_nota")

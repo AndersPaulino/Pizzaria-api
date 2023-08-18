@@ -1,14 +1,15 @@
 package com.pizzaria.app.service;
 
+
+import com.pizzaria.app.dto.ClienteDTO;
+import com.pizzaria.app.dto.FuncionarioDTO;
+import com.pizzaria.app.dto.ProdutoDTO;
 import com.pizzaria.app.dto.VendaDTO;
-import com.pizzaria.app.entity.Cliente;
-import com.pizzaria.app.entity.Funcionario;
 import com.pizzaria.app.entity.Venda;
 import com.pizzaria.app.repository.VendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,26 +21,31 @@ public class VendaService {
     private VendaRepository vendaRepository;
 
     @Autowired
-    private PedidoService pedidoService;
+    private ClienteService clienteService;
+
+    @Autowired
+    private FuncionarioService funcionarioService;
+
+    @Autowired
+    private ProdutoService produtoService;
 
     public VendaDTO cadastrarVenda(VendaDTO vendaDTO) {
         Venda venda = new Venda();
 
-        Cliente cliente = vendaDTO.getCliente().toEntity();
-        Funcionario funcionario = vendaDTO.getFuncionario().toEntity();
-        Pedido pedido = pedidoService.buscarPedidoPorId(vendaDTO.getPedido().getId());
+        venda.setCliente(clienteService.buscarClientePorId(vendaDTO.getCliente().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado")));
 
-        venda.setCliente(cliente);
-        venda.setFuncionario(funcionario);
-        venda.setPedido(pedido);
+        venda.setFuncionario(funcionarioService.buscarFuncionarioPorId(vendaDTO.getFuncionario().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado")));
+
+        venda.setProduto(produtoService.buscarProdutoPorId(vendaDTO.getProduto().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado")));
+
         venda.setEmitirNota(vendaDTO.isEmitirNota());
         venda.setEntregar(vendaDTO.isEntregar());
 
-        BigDecimal valorVenda = pedido.getValorPedido();
-        if (venda.isEntregar()) {
-            valorVenda = valorVenda.add(pedido.getValorEntrega());
-        }
-        venda.setValorVenda(valorVenda);
+        //Calculo com valor de venda é aqui!!!!!!!!!!!!!!!!!
+        venda.setValorVenda(vendaDTO.getValorVenda());
 
         vendaRepository.save(venda);
 
@@ -47,22 +53,19 @@ public class VendaService {
         return vendaDTO;
     }
 
-    public List<VendaDTO> buscarVendasPorEmitirNota(boolean emitirNota) {
-        List<Venda> vendas = vendaRepository.findByEmitirNota(emitirNota);
-        return vendas.stream()
-                .map(VendaDTO::new)
-                .collect(Collectors.toList());
+
+    public Optional<Venda> buscarVendaPorId(Long id) {
+        return vendaRepository.findById(id);
     }
 
     public List<VendaDTO> buscarVendasPorEntregar(boolean entregar) {
         List<Venda> vendas = vendaRepository.findByEntregar(entregar);
-        return vendas.stream()
-                .map(VendaDTO::new)
-                .collect(Collectors.toList());
+        return vendas.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    public Optional<Venda> buscarVendaPorId(Long id) {
-        return vendaRepository.findById(id);
+    public List<VendaDTO> buscarVendasPorEmitirNota(boolean emitirNota) {
+        List<Venda> vendas = vendaRepository.findByEmitirNota(emitirNota);
+        return vendas.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     public VendaDTO atualizarVenda(Long id, VendaDTO vendaDTO) {
@@ -71,21 +74,20 @@ public class VendaService {
         if (vendaOptional.isPresent()) {
             Venda venda = vendaOptional.get();
 
-            Cliente cliente = vendaDTO.getCliente().toEntity();
-            Funcionario funcionario = vendaDTO.getFuncionario().toEntity();
-            Pedido pedido = pedidoService.buscarPedidoPorId(vendaDTO.getPedido().getId());
+            venda.setCliente(clienteService.buscarClientePorId(vendaDTO.getCliente().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado")));
 
-            venda.setCliente(cliente);
-            venda.setFuncionario(funcionario);
-            venda.setPedido(pedido);
+            venda.setFuncionario(funcionarioService.buscarFuncionarioPorId(vendaDTO.getFuncionario().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado")));
+
+            venda.setProduto(produtoService.buscarProdutoPorId(vendaDTO.getProduto().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado")));
+
             venda.setEmitirNota(vendaDTO.isEmitirNota());
             venda.setEntregar(vendaDTO.isEntregar());
 
-            BigDecimal valorVenda = pedido.getValorPedido();
-            if (venda.isEntregar()) {
-                valorVenda = valorVenda.add(pedido.getValorEntrega());
-            }
-            venda.setValorVenda(valorVenda);
+            // Calculo da venda é aqui!!!!!!!
+            venda.setValorVenda(vendaDTO.getValorVenda());
 
             vendaRepository.save(venda);
 
@@ -100,4 +102,16 @@ public class VendaService {
         vendaRepository.deleteById(id);
     }
 
+    private VendaDTO convertToDTO(Venda venda) {
+        VendaDTO vendaDTO = new VendaDTO(venda);
+        vendaDTO.setId(venda.getId());
+        vendaDTO.setCliente(new ClienteDTO(venda.getCliente()));
+        vendaDTO.setFuncionario(new FuncionarioDTO(venda.getFuncionario()));
+        vendaDTO.setProduto(new ProdutoDTO(venda.getProduto()));
+        vendaDTO.setEmitirNota(venda.isEmitirNota());
+        vendaDTO.setEntregar(venda.isEntregar());
+        vendaDTO.setValorVenda(venda.getValorVenda());
+        return vendaDTO;
+    }
 }
+

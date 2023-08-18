@@ -2,11 +2,14 @@ package com.pizzaria.app.service;
 
 import com.pizzaria.app.dto.PizzaDTO;
 import com.pizzaria.app.dto.ProdutoDTO;
+import com.pizzaria.app.entity.Cliente;
 import com.pizzaria.app.entity.Pizza;
 import com.pizzaria.app.entity.Produto;
 import com.pizzaria.app.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -22,5 +25,9 @@ public class ProdutoService {
         Produto entity = produtoRepository.findById(id).get();
         ProdutoDTO dto = new ProdutoDTO(entity);
         return dto;
+    }
+
+    public Optional<Produto> buscarProdutoPorId(Long id) {
+        return produtoRepository.findById(id);
     }
 }

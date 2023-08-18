@@ -1,5 +1,6 @@
 package com.pizzaria.app.dto;
 
+import com.pizzaria.app.entity.Endereco;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,15 @@ public class EnderecoDTO {
     private String bairro;
     private String rua;
     private int numero;
+
+    public EnderecoDTO() {}
+
+    public EnderecoDTO(Endereco endereco) {
+        this.id = endereco.getId();
+        this.bairro = endereco.getBairro();
+        this.rua = endereco.getRua();
+        this.numero = endereco.getNumero();
+    }
 
     public Long getId() {
         return id;

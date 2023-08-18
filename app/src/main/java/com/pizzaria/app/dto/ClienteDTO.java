@@ -1,5 +1,6 @@
 package com.pizzaria.app.dto;
 
+import com.pizzaria.app.entity.Cliente;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,14 @@ public class ClienteDTO {
     private String nome;
     private String cpf;
     private EnderecoDTO endereco;
+
+    public ClienteDTO() {}
+
+    public ClienteDTO(Cliente cliente) {
+        this.id = cliente.getId();
+        this.nome = cliente.getNome();
+        this.cpf = cliente.getCpf();
+    }
 
     public Long getId() {
         return id;

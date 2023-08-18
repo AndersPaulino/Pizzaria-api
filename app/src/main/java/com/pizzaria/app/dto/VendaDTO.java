@@ -1,5 +1,7 @@
 package com.pizzaria.app.dto;
 
+import com.pizzaria.app.entity.Venda;
+
 import java.math.BigDecimal;
 
 public class VendaDTO {
@@ -7,10 +9,22 @@ public class VendaDTO {
     private Long id;
     private ClienteDTO cliente;
     private FuncionarioDTO funcionario;
-    private PedidoDTO pedido;
+    private ProdutoDTO produto;
     private boolean emitirNota;
     private boolean entregar;
     private BigDecimal valorVenda;
+
+    public VendaDTO() {}
+
+    public VendaDTO(Venda venda) {
+        this.id = venda.getId();
+        this.cliente = new ClienteDTO(venda.getCliente());
+        this.funcionario = new FuncionarioDTO(venda.getFuncionario());
+        this.produto = new ProdutoDTO(venda.getProduto());
+        this.emitirNota = venda.isEmitirNota();
+        this.entregar = venda.isEntregar();
+        this.valorVenda = venda.getValorVenda();
+    }
 
     public Long getId() {
         return id;
@@ -36,12 +50,12 @@ public class VendaDTO {
         this.funcionario = funcionario;
     }
 
-    public PedidoDTO getPedido() {
-        return pedido;
+    public ProdutoDTO getProduto() {
+        return produto;
     }
 
-    public void setPedido(PedidoDTO pedido) {
-        this.pedido = pedido;
+    public void setProduto(ProdutoDTO produto) {
+        this.produto = produto;
     }
 
     public boolean isEmitirNota() {
@@ -68,3 +82,4 @@ public class VendaDTO {
         this.valorVenda = valorVenda;
     }
 }
+

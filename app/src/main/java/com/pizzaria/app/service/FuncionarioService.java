@@ -17,7 +17,7 @@ public class FuncionarioService {
     private FuncionarioRepository funcionarioRepository;
 
     private FuncionarioDTO convertToDTO(Funcionario funcionario) {
-        FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
+        FuncionarioDTO funcionarioDTO = new FuncionarioDTO(funcionario);
         funcionarioDTO.setId(funcionario.getId());
         funcionarioDTO.setNome(funcionario.getNome());
         return funcionarioDTO;
@@ -31,6 +31,10 @@ public class FuncionarioService {
     public Optional<FuncionarioDTO> buscarFuncionarioPorIdDTO(Long id) {
         Optional<Funcionario> funcionario = funcionarioRepository.findById(id);
         return funcionario.map(this::convertToDTO);
+    }
+
+    public Optional<Funcionario> buscarFuncionarioPorId(Long id) {
+        return funcionarioRepository.findById(id);
     }
 
     public List<FuncionarioDTO> buscarFuncionariosPorNomeDTO(String nome) {
@@ -59,12 +63,11 @@ public class FuncionarioService {
             return funcionarioDTO;
         }
 
-        return null; // Ou lançar uma exceção adequada
+        return null;
     }
 
     public void deletarFuncionario(Long id) {
         funcionarioRepository.deleteById(id);
     }
 
-    // Restante do código da service, incluindo o método convertToDTO
 }

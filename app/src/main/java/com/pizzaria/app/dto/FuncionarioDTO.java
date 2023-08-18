@@ -1,9 +1,17 @@
 package com.pizzaria.app.dto;
 
+import com.pizzaria.app.entity.Funcionario;
+
 public class FuncionarioDTO {
 
     private Long id;
     private String nome;
+
+    public FuncionarioDTO() {}
+    public FuncionarioDTO(Funcionario funcionario) {
+        this.id = funcionario.getId();
+        this.nome = funcionario.getNome();
+    }
 
     public Long getId() {
         return id;

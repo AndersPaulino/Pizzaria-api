@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface VendaRepository extends JpaRepository<Venda, Long> {
 
+    List<Venda> findAll();
+
     List<Venda> findByEmitirNota(boolean emitirNota);
 
     List<Venda> findByEntregar(boolean entregar);

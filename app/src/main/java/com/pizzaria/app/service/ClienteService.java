@@ -18,13 +18,13 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     public ClienteDTO convertToDTO(Cliente cliente) {
-        ClienteDTO clienteDTO = new ClienteDTO();
+        ClienteDTO clienteDTO = new ClienteDTO(cliente);
         clienteDTO.setId(cliente.getId());
         clienteDTO.setNome(cliente.getNome());
         clienteDTO.setCpf(cliente.getCpf());
 
         if (cliente.getEndereco() != null) {
-            EnderecoDTO enderecoDTO = new EnderecoDTO();
+            EnderecoDTO enderecoDTO = new EnderecoDTO(cliente.getEndereco());
             enderecoDTO.setId(cliente.getEndereco().getId());
             enderecoDTO.setBairro(cliente.getEndereco().getBairro());
             enderecoDTO.setRua(cliente.getEndereco().getRua());
@@ -35,6 +35,7 @@ public class ClienteService {
 
         return clienteDTO;
     }
+
 
     public ClienteDTO criarCliente(ClienteDTO clienteDTO) {
         Cliente cliente = new Cliente();
@@ -83,7 +84,7 @@ public class ClienteService {
             return clienteRepository.save(cliente);
         }
 
-        return null; // Ou lançar uma exceção adequada
+        return null;
     }
 
     public void deletarCliente(Long id) {
