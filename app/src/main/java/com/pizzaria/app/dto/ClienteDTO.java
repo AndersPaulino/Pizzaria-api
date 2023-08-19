@@ -1,6 +1,7 @@
 package com.pizzaria.app.dto;
 
 import com.pizzaria.app.entity.Cliente;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +9,7 @@ public class ClienteDTO {
     private Long id;
     private String nome;
     private String cpf;
-    private EnderecoDTO endereco;
+    private EnderecoDTO endereco;  // Importe necessário para EnderecoDTO
 
     public ClienteDTO() {}
 

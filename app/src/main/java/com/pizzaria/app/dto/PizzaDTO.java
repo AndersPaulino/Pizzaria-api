@@ -22,6 +22,8 @@ public class PizzaDTO {
 
     private BigDecimal valorPizza;
 
+    private int qtdeSabor;
+
     public PizzaDTO(){
 
     }
@@ -33,6 +35,11 @@ public class PizzaDTO {
         sabor = pizza.getSabor();
         tamanho = pizza.getTamanho();
         valorPizza = pizza.getValorPizza();
+        qtdeSabor = pizza.getQtdeSabor();
+    }
+
+    public static PizzaDTO fromPizza(Pizza pizza) {
+        return new PizzaDTO(pizza);
     }
 
     public Long getId() {
@@ -81,5 +88,13 @@ public class PizzaDTO {
 
     public void setValorPizza(BigDecimal valorPizza) {
         this.valorPizza = valorPizza;
+    }
+
+    public int getQtdeSabor() {
+        return qtdeSabor;
+    }
+
+    public void setQtdeSabor(int qtdeSabor) {
+        this.qtdeSabor = qtdeSabor;
     }
 }

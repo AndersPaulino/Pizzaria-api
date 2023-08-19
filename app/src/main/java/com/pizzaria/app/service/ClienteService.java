@@ -82,6 +82,7 @@ public class ClienteService {
             cliente.setCpf(clienteDTO.getCpf());
 
             return clienteRepository.save(cliente);
+
         }
 
         return null;

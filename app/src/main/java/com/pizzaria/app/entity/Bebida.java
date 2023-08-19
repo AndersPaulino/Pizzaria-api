@@ -1,5 +1,6 @@
 package com.pizzaria.app.entity;
 
+import com.pizzaria.app.dto.BebidaDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -19,5 +20,12 @@ public class Bebida extends AbstractEntity{
     @Column(name = "cl_valor_bebida")
     private BigDecimal valorBebida;
 
+
+    public Bebida() {
+    }
+
+    public Bebida(BebidaDTO bebidaDTO) {
+        super();
+    }
 
 }
