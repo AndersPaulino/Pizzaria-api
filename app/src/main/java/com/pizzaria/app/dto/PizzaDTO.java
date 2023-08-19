@@ -38,6 +38,10 @@ public class PizzaDTO {
         qtdeSabor = pizza.getQtdeSabor();
     }
 
+    public static PizzaDTO fromPizza(Pizza pizza) {
+        return new PizzaDTO(pizza);
+    }
+
     public Long getId() {
         return id;
     }
