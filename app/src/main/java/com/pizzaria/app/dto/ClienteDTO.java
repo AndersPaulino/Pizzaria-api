@@ -9,7 +9,7 @@ public class ClienteDTO {
     private Long id;
     private String nome;
     private String cpf;
-    private EnderecoDTO endereco;  // Importe necessário para EnderecoDTO
+    private EnderecoDTO endereco;
 
     public ClienteDTO() {}
 

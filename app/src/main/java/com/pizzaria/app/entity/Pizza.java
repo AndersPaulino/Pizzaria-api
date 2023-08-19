@@ -1,6 +1,5 @@
 package com.pizzaria.app.entity;
 
-import com.pizzaria.app.dto.SaborDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,13 +41,11 @@ public class Pizza extends AbstractEntity{
     @Column(name = "cl_valor_pizza")
     private BigDecimal valorPizza;
 
-    public void setSabores(List<SaborDTO> saborDTOs) {
-        this.sabor = new ArrayList<>();
-
-        for (SaborDTO saborDTO : saborDTOs) {
-            Sabor sabor = new Sabor();
-            sabor.setId(saborDTO.getId());
-            this.sabor.add(sabor);
-        }
+    public Pizza() {
+        this.sabor = sabor;
+        this.tamanho = tamanho;
+        this.qtdeSabor = qtdeSabor;
+        this.valorPizza = valorPizza;
     }
+
 }

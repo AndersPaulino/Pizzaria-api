@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/pizza")
+@RequestMapping("/pizza")
 public class PizzaController {
 
     private final PizzaService pizzaService;
@@ -47,13 +48,17 @@ public class PizzaController {
 
             List<SaborDTO> saborDTOs = new ArrayList<>();
             for (Sabor saborDTO : pizzaDTO.getSabor()) {
-                SaborDTO sabor = saborService.findById(saborDTO.getId());
-                saborDTOs.add(sabor);
+                Optional<SaborDTO> saborOptional = Optional.ofNullable(saborService.findById(saborDTO.getId()));
+                if (saborOptional.isPresent()) {
+                    saborDTOs.add(saborOptional.get());
+                } else {
+                    return null;
+                }
             }
 
 
             Pizza pizza = new Pizza();
-            pizza.setSabores(saborDTOs);
+            pizza.setSabor(pizzaDTO.getSabor());
             pizza.setTamanho(pizzaDTO.getTamanho());
             pizza.setValorPizza(pizzaDTO.getValorPizza());
 

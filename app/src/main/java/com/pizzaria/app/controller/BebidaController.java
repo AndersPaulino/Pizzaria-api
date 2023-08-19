@@ -45,20 +45,4 @@ public class BebidaController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> atualizar(@PathVariable Long id, @RequestBody Bebida bebida) {
-        try {
-            bebida.setId(id);
-
-            Bebida bebidaAtualizada = bebidaService.atualizar(bebida);
-
-            if (bebidaAtualizada != null) {
-                return ResponseEntity.ok("Registro atualizado com sucesso!");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar bebida.");
-            }
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 }
