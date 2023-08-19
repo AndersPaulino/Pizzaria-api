@@ -10,17 +10,13 @@ public class EnderecoDTO {
     private String rua;
     private int numero;
 
-    public EnderecoDTO(Long id, String bairro, String rua, int numero) {
-        this.id = id;
-        this.bairro = bairro;
-        this.rua = rua;
-        this.numero = numero;
-    }
-    public EnderecoDTO(Endereco endereco){
-        id = endereco.getId();
-        bairro = endereco.getBairro();
-        rua = endereco.getRua();
-        numero = endereco.getNumero();
+    public EnderecoDTO() {}
+
+    public EnderecoDTO(Endereco endereco) {
+        this.id = endereco.getId();
+        this.bairro = endereco.getBairro();
+        this.rua = endereco.getRua();
+        this.numero = endereco.getNumero();
     }
 
     public Long getId() {
@@ -55,3 +51,4 @@ public class EnderecoDTO {
         this.numero = numero;
     }
 }
+

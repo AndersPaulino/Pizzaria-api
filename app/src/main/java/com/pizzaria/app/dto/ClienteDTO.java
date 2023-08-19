@@ -1,36 +1,53 @@
 package com.pizzaria.app.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pizzaria.app.entity.Cliente;
-import com.pizzaria.app.entity.Endereco;
+
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-@Getter
-@Setter
 public class ClienteDTO {
-
     private Long id;
     private String nome;
-    private String telefone;
     private String cpf;
+    private EnderecoDTO endereco;  // Importe necessário para EnderecoDTO
 
-    private List<Endereco> endereco;
-
-    public ClienteDTO(Long id, String nome, String telefone, String cpf, List<Endereco> endereco) {
-        this.id = id;
-        this.nome = nome;
-        this.telefone = telefone;
-        this.cpf = cpf;
-        this.endereco = endereco;
-    }
+    public ClienteDTO() {}
 
     public ClienteDTO(Cliente cliente) {
-        id = cliente.getId();
-        nome = cliente.getNome();
-        telefone = cliente.getTelefone();
-        cpf = cliente.getCpf();
+        this.id = cliente.getId();
+        this.nome = cliente.getNome();
+        this.cpf = cliente.getCpf();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public EnderecoDTO getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(EnderecoDTO endereco) {
+        this.endereco = endereco;
     }
 }

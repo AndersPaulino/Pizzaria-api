@@ -13,87 +13,44 @@ import java.util.List;
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
-
-    private final ClienteService clienteService;
-
     @Autowired
-    public ClienteController(ClienteService clienteService) {
-        this.clienteService = clienteService;
-    }
+    private ClienteService clienteService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> getClienteById(@PathVariable Long id) {
-        ClienteDTO clienteDTO = clienteService.findById(id);
-        if (clienteDTO != null) {
-            return ResponseEntity.ok(clienteDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ClienteDTO>> listarTodosClientes() {
-        List<ClienteDTO> clientesDTO = clienteService.listarTodosClientes();
-        if (!clientesDTO.isEmpty()) {
-            return ResponseEntity.ok(clientesDTO);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+    @PostMapping
+    public ResponseEntity<ClienteDTO> criarCliente(@RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO clienteCriado = clienteService.criarCliente(clienteDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteCriado);
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<ClienteDTO>> getClientesByNome(@PathVariable String nome) {
-        List<ClienteDTO> clientesDTO = clienteService.buscarPorNome(nome);
-        if (!clientesDTO.isEmpty()) {
-            return ResponseEntity.ok(clientesDTO);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+    public List<Cliente> buscarClientesPorNome(@PathVariable String nome) {
+        return clienteService.buscarClientesPorNome(nome);
     }
 
     @GetMapping("/cpf/{cpf}")
-    public ResponseEntity<ClienteDTO> getClienteByCpf(@PathVariable String cpf) {
-        ClienteDTO clienteDTO = clienteService.buscarPorCpf(cpf);
-        if (clienteDTO != null) {
-            return ResponseEntity.ok(clienteDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public List<Cliente> buscarClientesPorCpf(@PathVariable String cpf) {
+        return clienteService.buscarClientesPorCpf(cpf);
     }
 
-    @GetMapping("/telefone/{telefone}")
-    public ResponseEntity<List<ClienteDTO>> getClientesByTelefone(@PathVariable String telefone) {
-        List<ClienteDTO> clientesDTO = clienteService.buscarPorTelefone(telefone);
-        if (!clientesDTO.isEmpty()) {
-            return ResponseEntity.ok(clientesDTO);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+
+    @GetMapping
+    public ResponseEntity<List<ClienteDTO>> listarTodosClientes() {
+        List<ClienteDTO> clientesDTO = clienteService.listarTodosClientesDTO();
+        return ResponseEntity.ok(clientesDTO);
     }
 
-    @PostMapping
-    public ResponseEntity<ClienteDTO> createCliente(@RequestBody ClienteDTO clienteDTO) {
-        Cliente novoCliente = clienteService.cadastrarCliente(clienteDTO);
-        ClienteDTO novoClienteDTO = new ClienteDTO(novoCliente);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoClienteDTO);
+    @GetMapping("/{id}")
+    public Cliente buscarClientePorId(@PathVariable Long id) {
+        return clienteService.buscarClientePorId(id).orElse(null);
     }
-
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteDTO> updateCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
-        Cliente clienteAtualizado = clienteService.atualizarCliente(id, clienteDTO);
-        if (clienteAtualizado != null) {
-            ClienteDTO clienteAtualizadoDTO = new ClienteDTO(clienteAtualizado);
-            return ResponseEntity.ok(clienteAtualizadoDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public Cliente atualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
+        return clienteService.atualizarCliente(id, clienteDTO);
     }
 
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable Long id) {
+    public void deletarCliente(@PathVariable Long id) {
         clienteService.deletarCliente(id);
-        return ResponseEntity.noContent().build();
     }
 }
