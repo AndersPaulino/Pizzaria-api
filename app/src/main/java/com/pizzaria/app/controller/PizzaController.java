@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/pizza")
+@RequestMapping("/pizza")
 public class PizzaController {
 
     private final PizzaService pizzaService;
@@ -53,7 +53,7 @@ public class PizzaController {
 
 
             Pizza pizza = new Pizza();
-            pizza.setSabores(saborDTOs);
+            pizza.setSabor(pizzaDTO.getSabor());
             pizza.setTamanho(pizzaDTO.getTamanho());
             pizza.setValorPizza(pizzaDTO.getValorPizza());
 

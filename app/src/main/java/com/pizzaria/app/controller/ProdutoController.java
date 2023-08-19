@@ -1,34 +1,50 @@
 package com.pizzaria.app.controller;
 
-import com.pizzaria.app.dto.PizzaDTO;
 import com.pizzaria.app.dto.ProdutoDTO;
+import com.pizzaria.app.entity.Produto;
+import com.pizzaria.app.repository.ProdutoRepository;
 import com.pizzaria.app.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/produto")
+@RequestMapping("/produto")
 public class ProdutoController {
 
-    private ProdutoService produtoService;
+    private final ProdutoService produtoService;
+    private final ProdutoRepository produtorepository;
 
     @Autowired
-    public ProdutoController(ProdutoService produtoService){
+    public ProdutoController(ProdutoService produtoService, ProdutoRepository produtorepository){
         this.produtoService = produtoService;
+        this.produtorepository = produtorepository;
     }
 
     @GetMapping("/{id}")
-    public ProdutoDTO findById(@PathVariable Long id){
-        return  produtoService.findById(id);
+    public Optional<Produto> findById(@PathVariable Long id){
+        return  produtorepository.findById(id);
     }
 
     @GetMapping
-    public List<ProdutoDTO> findAll() {
-        return produtoService.findAll();
+    public List<Produto> findAll() {
+        return produtorepository.findAll();
+    }
+
+    @PostMapping
+    public ProdutoDTO cadastrarProduto(@RequestBody ProdutoDTO produtoDTO) {
+        return produtoService.cadastrarProduto(produtoDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ProdutoDTO atualizarProduto(@PathVariable Long id, @RequestBody ProdutoDTO produtoDTO) {
+        return produtoService.atualizarProduto(id, produtoDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletarProduto(@PathVariable Long id) {
+        produtoService.deletarProduto(id);
     }
 }
