@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,8 +48,12 @@ public class PizzaController {
 
             List<SaborDTO> saborDTOs = new ArrayList<>();
             for (Sabor saborDTO : pizzaDTO.getSabor()) {
-                SaborDTO sabor = saborService.findById(saborDTO.getId());
-                saborDTOs.add(sabor);
+                Optional<SaborDTO> saborOptional = Optional.ofNullable(saborService.findById(saborDTO.getId()));
+                if (saborOptional.isPresent()) {
+                    saborDTOs.add(saborOptional.get());
+                } else {
+                    return null;
+                }
             }
 
 
