@@ -35,4 +35,13 @@ public class SaborService {
     public Sabor cadastrar(Sabor sabor){
         return saborRepository.save(sabor);
     }
+
+    public Sabor fromSaborDTO(SaborDTO saborDTO) {
+        Sabor sabor = new Sabor();
+        sabor.setId(saborDTO.getId());
+        sabor.setAtivo(saborDTO.isAtivo());
+        sabor.setRegistro(saborDTO.getRegistro());
+        sabor.setNomeSabor(saborDTO.getNomeSabor());
+        return sabor;
+    }
 }

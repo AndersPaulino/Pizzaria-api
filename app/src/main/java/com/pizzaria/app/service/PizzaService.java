@@ -68,4 +68,5 @@ public class PizzaService {
             throw new IllegalArgumentException(String.join("\n", errors));
         }
     }
+    public void deletarPizza(Long id) {pizzaRepository.deleteById(id);}
 }

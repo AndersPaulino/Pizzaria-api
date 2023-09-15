@@ -28,6 +28,18 @@ public class PizzaDTO {
 
     }
 
+    public Pizza toPizza() {
+        Pizza pizza = new Pizza();
+        pizza.setId(id);
+        pizza.setAtivo(ativo);
+        pizza.setRegistro(registro);
+        pizza.setSabor(sabor);
+        pizza.setTamanho(tamanho);
+        pizza.setValorPizza(valorPizza);
+        pizza.setQtdeSabor(qtdeSabor);
+        return pizza;
+    }
+
     public PizzaDTO(Pizza pizza){
         id = pizza.getId();
         ativo = pizza.isAtivo();
