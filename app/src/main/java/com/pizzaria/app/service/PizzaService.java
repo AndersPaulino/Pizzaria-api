@@ -68,5 +68,12 @@ public class PizzaService {
             throw new IllegalArgumentException(String.join("\n", errors));
         }
     }
-    public void deletarPizza(Long id) {pizzaRepository.deleteById(id);}
+    public void deletarPizza(Long id) {
+        System.out.println("Deletando pizza com ID: " + id); // Adicione esta linha para depuração
+
+        Pizza pizza = pizzaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("A pizza com o ID " + id + " não existe."));
+
+        pizzaRepository.delete(pizza);
+    }
 }

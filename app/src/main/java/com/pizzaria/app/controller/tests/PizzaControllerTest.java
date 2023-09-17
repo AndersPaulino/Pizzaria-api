@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -110,7 +111,8 @@ public class PizzaControllerTest {
 
         // Realize a solicitação DELETE para /pizza/1
         mockMvc.perform(delete("/pizza/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string("")); // Verifica se o retorno é uma string vazia
 
         // Verifique se o método deleteById do repositório foi chamado
         verify(pizzaRepository, times(1)).deleteById(1L);
@@ -123,7 +125,8 @@ public class PizzaControllerTest {
 
         // Realize a solicitação DELETE para /pizza/1 e espere um erro 404
         mockMvc.perform(delete("/pizza/1"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("")); // Verifica se o retorno é uma string vazia
 
         // Verifique se o método deleteById do repositório não foi chamado
         verify(pizzaRepository, never()).deleteById(1L);

@@ -6,9 +6,11 @@ import com.pizzaria.app.repository.PizzaRepository;
 import com.pizzaria.app.service.PizzaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +21,11 @@ import static org.mockito.Mockito.*;
 
 public class PizzaServiceTest {
 
-    @InjectMocks
-    private PizzaService pizzaService;
-
     @Mock
     private PizzaRepository pizzaRepository;
+
+    @InjectMocks
+    private PizzaService pizzaService;
 
     @BeforeEach
     public void setUp() {
@@ -83,29 +85,31 @@ public class PizzaServiceTest {
         assertThrows(IllegalArgumentException.class, () -> pizzaService.cadastrar(pizza));
     }
 
+
     @Test
-    public void testDeletarPizza() {
-        // Crie uma instância de Pizza para simular o retorno do repositório
+    void testDeletarPizza() {
+        // Crie um objeto Pizza fictício para usar no teste
+        Long pizzaId = 1L;
         Pizza pizza = new Pizza();
-        pizza.setId(1L);
+        pizza.setId(pizzaId);
 
-        // Configure o comportamento do mock do repositório para retornar a pizza quando for solicitada por ID
-        when(pizzaRepository.findById(1L)).thenReturn(Optional.of(pizza));
+        // Configure o comportamento simulado do repositório
+        when(pizzaRepository.findById(pizzaId)).thenReturn(Optional.of(pizza));
 
-        // Execute o método deletarPizza
-        pizzaService.deletarPizza(1L);
+        // Chame o método a ser testado
+        pizzaService.deletarPizza(pizzaId);
 
-        // Verifique se o método deleteById do repositório foi chamado com o ID correto
-        verify(pizzaRepository, times(1)).deleteById(1L);
+        // Verifique se o método delete do repositório foi chamado com o objeto Pizza correto
+        verify(pizzaRepository, times(1)).delete(pizza);
     }
-
     @Test
     public void testDeletarPizzaInexistente() {
         // Configure o comportamento do mock do repositório para retornar Optional vazio
         when(pizzaRepository.findById(1L)).thenReturn(Optional.empty());
 
         // Tente deletar uma pizza inexistente
-        assertThrows(IllegalArgumentException.class, () -> pizzaService.deletarPizza(1L));
+        assertThrows(IllegalArgumentException.class, () -> pizzaService.deletarPizza(1L), "Deletar uma pizza inexistente deve lançar IllegalArgumentException");
+
     }
 }
 
