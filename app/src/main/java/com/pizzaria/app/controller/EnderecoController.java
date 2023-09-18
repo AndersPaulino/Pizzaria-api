@@ -4,6 +4,7 @@ import com.pizzaria.app.dto.EnderecoDTO;
 import com.pizzaria.app.entity.Endereco;
 import com.pizzaria.app.service.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,8 +46,17 @@ public class EnderecoController {
     }
 
     @PutMapping("/{id}")
-    public Endereco atualizarEndereco(@PathVariable Long id, @RequestBody EnderecoDTO enderecoDTO) {
-        return enderecoService.atualizarEndereco(id, enderecoDTO);
+    public ResponseEntity<Endereco> atualizarEndereco(@PathVariable Long id, @RequestBody EnderecoDTO enderecoDTO) {
+        try {
+            Endereco enderecoAtualizado = enderecoService.atualizarEndereco(id, enderecoDTO);
+            if (enderecoAtualizado != null) {
+                return ResponseEntity.ok(enderecoAtualizado);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
