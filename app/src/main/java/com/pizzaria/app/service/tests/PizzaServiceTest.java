@@ -7,12 +7,9 @@ import com.pizzaria.app.repository.PizzaRepository;
 import com.pizzaria.app.service.PizzaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.hamcrest.Matcher;
+import org.mockito.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,8 +83,48 @@ public class PizzaServiceTest {
         assertThrows(IllegalArgumentException.class, () -> pizzaService.cadastrar(pizza));
     }
 
-    
+    @Test
+    public void testAtualizarPizza() {
+        // Crie uma instância de Pizza fictícia para usar no teste
+        Long pizzaId = 1L;
+        Pizza pizzaExistente = new Pizza();
+        pizzaExistente.setId(pizzaId);
+        pizzaExistente.setTamanho(Tamanho.GRANDE);
+        pizzaExistente.setValorPizza(BigDecimal.valueOf(20.0));
 
+        // Crie uma instância de PizzaDTO com os dados atualizados
+        PizzaDTO pizzaAtualizada = new PizzaDTO();
+        pizzaAtualizada.setTamanho(Tamanho.MEDIA);
+        pizzaAtualizada.setValorPizza(BigDecimal.valueOf(15.0));
+
+        // Configure o comportamento simulado do repositório
+        when(pizzaRepository.findById(pizzaId)).thenReturn(Optional.of(pizzaExistente));
+        when(pizzaRepository.save(Mockito.any(Pizza.class))).then(AdditionalAnswers.returnsFirstArg());
+
+        // Chame o método a ser testado
+        PizzaDTO pizzaDTOAtualizada = PizzaDTO.fromPizza(pizzaService.atualizarPizza(pizzaId, pizzaAtualizada.toPizza()));
+
+        // Verifique se o método save do repositório foi chamado com a pizza correta
+        verify(pizzaRepository, times(1)).save(Mockito.any(Pizza.class));
+
+        // Verifique se os dados da pizza atualizada correspondem ao esperado
+        assertEquals(Tamanho.MEDIA, pizzaDTOAtualizada.getTamanho());
+        assertEquals(BigDecimal.valueOf(15.0), pizzaDTOAtualizada.getValorPizza());
+    }
+
+    @Test
+    public void testAtualizarPizzaInexistente() {
+        // Crie uma instância de PizzaDTO com os dados atualizados
+        PizzaDTO pizzaAtualizada = new PizzaDTO();
+        pizzaAtualizada.setTamanho(Tamanho.MEDIA);
+        pizzaAtualizada.setValorPizza(BigDecimal.valueOf(15.0));
+
+        // Configure o comportamento simulado do repositório para retornar Optional vazio
+        when(pizzaRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Tente atualizar uma pizza inexistente
+        assertThrows(IllegalArgumentException.class, () -> pizzaService.atualizarPizza(1L, pizzaAtualizada.toPizza()), "Atualizar uma pizza inexistente deve lançar IllegalArgumentException");
+    }
     @Test
     public void testDeletarPizza() {
         // Crie um objeto Pizza fictício para usar no teste

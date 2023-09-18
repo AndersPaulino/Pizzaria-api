@@ -134,6 +134,29 @@ public class PizzaControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string(containsString("Registro cadastrado com sucesso!")));
     }
 
+    @Test
+    public void testAtualizarPizza() throws Exception {
+        // Configurar uma PizzaDTO fictícia para enviar no corpo da requisição
+        PizzaDTO pizzaDTO = new PizzaDTO();
+        pizzaDTO.setId(1L);
+        pizzaDTO.setAtivo(true);
+        pizzaDTO.setRegistro(LocalDateTime.now());
+        pizzaDTO.setSabor(new ArrayList<>());
+        pizzaDTO.setTamanho(null);
+        pizzaDTO.setValorPizza(BigDecimal.valueOf(20.0));
+        pizzaDTO.setQtdeSabor(0);
+
+        // Configurar comportamento do mock para retornar a PizzaDTO atualizada
+        Mockito.when(pizzaService.atualizarPizza(any(Long.class), any(Pizza.class))).thenReturn(pizzaDTO.toPizza());
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/pizza/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(pizzaDTO)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.valorPizza").value(20.0));
+    }
+
 
     @Test
     public void testDeletarPizza() throws Exception {

@@ -70,7 +70,7 @@ public class PizzaService {
         }
     }
 
-    public Pizza atualizar(Long id, Pizza pizzaAtualizada) {
+    public Pizza atualizarPizza(Long id, Pizza pizzaAtualizada) {
         validarPizza(pizzaAtualizada);
 
         Pizza pizzaExistente = pizzaRepository.findById(id)
