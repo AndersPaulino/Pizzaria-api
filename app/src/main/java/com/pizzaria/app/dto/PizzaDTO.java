@@ -25,7 +25,6 @@ public class PizzaDTO {
     private int qtdeSabor;
 
     public PizzaDTO(){
-
     }
 
     public Pizza toPizza() {

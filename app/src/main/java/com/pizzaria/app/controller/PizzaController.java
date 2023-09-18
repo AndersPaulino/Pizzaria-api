@@ -69,4 +69,10 @@ public class PizzaController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarPizza(@PathVariable Long id) {
+        pizzaService.deletarPizza(id);
+        return ResponseEntity.ok("Pizza com ID " + id + " excluída com sucesso.");
+    }
+
 }

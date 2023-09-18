@@ -2,6 +2,7 @@ package com.pizzaria.app.service.tests;
 
 import com.pizzaria.app.dto.PizzaDTO;
 import com.pizzaria.app.entity.Pizza;
+import com.pizzaria.app.entity.Tamanho;
 import com.pizzaria.app.repository.PizzaRepository;
 import com.pizzaria.app.service.PizzaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,9 +86,10 @@ public class PizzaServiceTest {
         assertThrows(IllegalArgumentException.class, () -> pizzaService.cadastrar(pizza));
     }
 
+    
 
     @Test
-    void testDeletarPizza() {
+    public void testDeletarPizza() {
         // Crie um objeto Pizza fictício para usar no teste
         Long pizzaId = 1L;
         Pizza pizza = new Pizza();
