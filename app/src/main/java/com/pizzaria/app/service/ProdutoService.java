@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 public class ProdutoService {
 
-    private ProdutoRepository produtoRepository;
+    private final ProdutoRepository produtoRepository;
 
     @Autowired
     public ProdutoService(ProdutoRepository produtoRepository) {

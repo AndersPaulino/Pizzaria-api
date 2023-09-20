@@ -3,12 +3,15 @@ package com.pizzaria.app.dto;
 import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.entity.Pizza;
 import com.pizzaria.app.entity.Produto;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter @Setter
 public class ProdutoDTO {
 
     private Long id;
@@ -33,53 +36,5 @@ public class ProdutoDTO {
         pizzaList = produto.getPizzaList();
         bebidaList = produto.getBebidaList();
         valorProduto = produto.getValorProduto();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
-
-    public LocalDateTime getRegistro() {
-        return registro;
-    }
-
-    public void setRegistro(LocalDateTime registro) {
-        this.registro = registro;
-    }
-
-    public List<Pizza> getPizzaList() {
-        return pizzaList;
-    }
-
-    public void setPizzaList(List<Pizza> pizzaList) {
-        this.pizzaList = pizzaList;
-    }
-
-    public List<Bebida> getBebidaList() {
-        return bebidaList;
-    }
-
-    public void setBebidaList(List<Bebida> bebidaList) {
-        this.bebidaList = bebidaList;
-    }
-
-    public BigDecimal getValorProduto() {
-        return valorProduto;
-    }
-
-    public void setValorProduto(BigDecimal valorProduto) {
-        this.valorProduto = valorProduto;
     }
 }

@@ -2,8 +2,6 @@ package com.pizzaria.app.controller.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pizzaria.app.controller.BebidaController;
-import com.pizzaria.app.controller.ClienteController;
-import com.pizzaria.app.controller.SaborController;
 import com.pizzaria.app.dto.BebidaDTO;
 import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.service.BebidaService;
@@ -13,8 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -157,10 +153,10 @@ public class BebidaControllerTest {
     @Test
     public void testAtualizarBebida() throws Exception {
         BebidaDTO bebidaDTO = new BebidaDTO();
-        bebidaDTO.setId(1L);
+        bebidaDTO.setId(1L); // Defina o ID da bebida corretamente
         bebidaDTO.setNomeBebida("Nova Cola");
 
-        when(bebidaService.atualizarBebida(any(BebidaDTO.class))).thenReturn(bebidaDTO);
+        when(bebidaService.atualizarBebida(eq(1L), any(BebidaDTO.class))).thenReturn(bebidaDTO); // Passe o ID como primeiro argumento
 
         mockMvc.perform(put("/api/bebida/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -168,7 +164,7 @@ public class BebidaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Registro atualizado com sucesso!"));
     }
-
+    
     @Test
     public void testDeletarBebida() throws Exception {
         mockMvc.perform(delete("/api/bebida/deletar/1")
