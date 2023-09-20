@@ -5,8 +5,11 @@ import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.repository.BebidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,11 +34,49 @@ public class BebidaService {
         List<Bebida> bebidas = bebidaRepository.findAll();
         return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
     }
+    @Transactional(readOnly = true)
+    public List<BebidaDTO> findByAtivo(boolean ativo) {
+        List<Bebida> bebidas = bebidaRepository.findByAtivo(ativo);
+
+        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+
+        for (Bebida bebida : bebidas) {
+            BebidaDTO dto = new BebidaDTO(bebida);
+            bebidaDTOS.add(dto);
+        }
+        return bebidaDTOS;
+    }
 
     @Transactional(readOnly = true)
     public List<BebidaDTO> findByName(String nomeBebida) {
         List<Bebida> bebidas = bebidaRepository.buscarBebidaporNome(nomeBebida);
         return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<BebidaDTO> findByDiaRegistro(LocalDate registro) {
+        List<Bebida> bebidas = bebidaRepository.findByDiaRegistro(registro);
+
+        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+
+        for (Bebida bebida : bebidas) {
+            BebidaDTO dto = new BebidaDTO(bebida);
+            bebidaDTOS.add(dto);
+        }
+        return bebidaDTOS;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BebidaDTO> findByDiaAtualizar(LocalDate atualizar) {
+        List<Bebida> bebidas = bebidaRepository.findByDiaAtualizar(atualizar);
+
+        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+
+        for (Bebida bebida : bebidas) {
+            BebidaDTO dto = new BebidaDTO(bebida);
+            bebidaDTOS.add(dto);
+        }
+        return bebidaDTOS;
     }
 
     @Transactional
@@ -70,5 +111,18 @@ public class BebidaService {
         Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
                 .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
         bebidaRepository.delete(bebidaExistente);
+    }
+anderson-dev
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public void desativar(Long id) {
+        Optional<Bebida> bebidaOptional = bebidaRepository.findById(id);
+
+        if (bebidaOptional.isPresent()) {
+            Bebida bebida = bebidaOptional.get();
+            bebida.setAtivo(false);
+        } else {
+            throw new IllegalArgumentException("ID de estoque inválido!");
+        }
     }
 }
