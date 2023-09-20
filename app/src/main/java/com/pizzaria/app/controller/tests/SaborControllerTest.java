@@ -1,6 +1,7 @@
 package com.pizzaria.app.controller.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pizzaria.app.controller.PizzaController;
 import com.pizzaria.app.controller.SaborController;
 import com.pizzaria.app.dto.SaborDTO;
 import com.pizzaria.app.entity.Sabor;
@@ -9,20 +10,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@WebMvcTest(SaborController.class)
 public class SaborControllerTest {
 
     private MockMvc mockMvc;
@@ -47,7 +48,6 @@ public class SaborControllerTest {
         expectedSaborDTO.setNomeSabor("Calabresa");
         expectedSaborDTO.setAtivo(true);
 
-        // Mock the service to return the expected SaborDTO
         when(saborService.findById(1L)).thenReturn(expectedSaborDTO);
 
         mockMvc.perform(get("/api/sabor/1")

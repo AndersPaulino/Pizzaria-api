@@ -28,6 +28,7 @@ public class Produto extends AbstractEntity{
             inverseJoinColumns = @JoinColumn(name = "bebida_id")
     )
     private List<Bebida> bebidaList = new ArrayList<>();
+
     @Getter @Setter
     @Column(name = "cl_valor_pedido")
     private BigDecimal valorProduto;

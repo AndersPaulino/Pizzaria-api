@@ -6,6 +6,7 @@ import com.pizzaria.app.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +21,11 @@ public class ProdutoService {
     public Optional<Produto> buscarProdutoPorId(Long id){
         return produtoRepository.findById(id);
     }
+
+    public List<Produto> listarTodosProdutos() {
+        return produtoRepository.findAll();
+    }
+
     public ProdutoDTO cadastrarProduto(ProdutoDTO produtoDTO) {
         Produto produto = new Produto();
         produto.setAtivo(produtoDTO.isAtivo());

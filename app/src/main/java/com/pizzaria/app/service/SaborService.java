@@ -37,17 +37,11 @@ public class SaborService {
 
     @Transactional
     public SaborDTO atualizar(SaborDTO saborDTO) {
-        // Retrieve the existing Sabor entity from the database
         Sabor saborExistente = saborRepository.findById(saborDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Sabor not found with ID: " + saborDTO.getId()));
 
-        // Update the nomeSabor field
         saborExistente.setNomeSabor(saborDTO.getNomeSabor());
-
-        // Save the updated Sabor entity
         Sabor saborAtualizado = saborRepository.save(saborExistente);
-
-        // Create and return a new SaborDTO with the updated values
         return new SaborDTO(saborAtualizado);
     }
 
