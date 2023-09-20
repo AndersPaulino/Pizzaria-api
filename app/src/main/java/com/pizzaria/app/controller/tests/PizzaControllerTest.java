@@ -5,7 +5,6 @@ import com.pizzaria.app.controller.PizzaController;
 import com.pizzaria.app.dto.PizzaDTO;
 import com.pizzaria.app.dto.SaborDTO;
 import com.pizzaria.app.entity.Pizza;
-import com.pizzaria.app.entity.Sabor;
 import com.pizzaria.app.service.PizzaService;
 import com.pizzaria.app.service.SaborService;
 import org.junit.jupiter.api.BeforeEach;

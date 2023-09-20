@@ -11,7 +11,7 @@ import lombok.Setter;
 public class Funcionario extends AbstractEntity {
 
     @Getter @Setter
-    @Column(name = "nome", nullable = false, length = 255)
+    @Column(name = "cl_nome", nullable = false, length = 255)
     private String nome;
 }
 

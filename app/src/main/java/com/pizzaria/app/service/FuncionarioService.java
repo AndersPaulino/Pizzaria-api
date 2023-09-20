@@ -13,8 +13,9 @@ import java.util.stream.Collectors;
 @Service
 public class FuncionarioService {
 
+    private final FuncionarioRepository funcionarioRepository;
     @Autowired
-    private FuncionarioRepository funcionarioRepository;
+    public FuncionarioService(FuncionarioRepository funcionarioRepository){this.funcionarioRepository = funcionarioRepository;}
 
     private FuncionarioDTO convertToDTO(Funcionario funcionario) {
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO(funcionario);
