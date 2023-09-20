@@ -3,12 +3,17 @@ package com.pizzaria.app.service;
 import com.pizzaria.app.dto.BebidaDTO;
 import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.repository.BebidaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,44 +25,76 @@ public class BebidaService {
     public BebidaService(BebidaRepository bebidaRepository){
         this.bebidaRepository = bebidaRepository;
     }
-
+    @Transactional(readOnly = true)
     public BebidaDTO findById(Long id) {
        Bebida bebida = bebidaRepository.findById(id).get();
        BebidaDTO bebidaDTO = new BebidaDTO(bebida);
        return bebidaDTO;
     }
-
+    @Transactional(readOnly = true)
     public List<BebidaDTO> findAll() {
         List<Bebida> bebidas = bebidaRepository.findAll();
         return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public BebidaDTO findByName(String nomeBebida){
-        Bebida bebida = new Bebida();
-        BebidaDTO bebidaDTO = new BebidaDTO(bebida);
-        if (bebidaDTO != null){
-            return bebidaDTO;
+    public BebidaDTO findByName(String nomeBebida) {
+        Bebida bebida = bebidaRepository.findByName(nomeBebida);
+        if (bebida != null) {
+            return new BebidaDTO(bebida);
         } else {
-            try {
-                throw new ChangeSetPersister.NotFoundException();
-            } catch (ChangeSetPersister.NotFoundException e){
-                throw  new RuntimeException(e);
-            }
+            throw new EntityNotFoundException("Bebida não encontrada com o nome: " + nomeBebida);
         }
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<BebidaDTO> findByAtivo(boolean ativo) {
+        List<Bebida> bebidas = bebidaRepository.findByAtivo(ativo);
+
+        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+
+        for (Bebida bebida : bebidas) {
+            BebidaDTO dto = new BebidaDTO(bebida);
+            bebidaDTOS.add(dto);
+        }
+        return bebidaDTOS;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BebidaDTO> findByDiaRegistro(LocalDate registro) {
+        List<Bebida> bebidas = bebidaRepository.findByDiaRegistro(registro);
+
+        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+
+        for (Bebida bebida : bebidas) {
+            BebidaDTO dto = new BebidaDTO(bebida);
+            bebidaDTOS.add(dto);
+        }
+        return bebidaDTOS;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BebidaDTO> findByDiaAtualizar(LocalDate atualizar) {
+        List<Bebida> bebidas = bebidaRepository.findByDiaAtualizar(atualizar);
+
+        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+
+        for (Bebida bebida : bebidas) {
+            BebidaDTO dto = new BebidaDTO(bebida);
+            bebidaDTOS.add(dto);
+        }
+        return bebidaDTOS;
     }
 
     @Transactional
     public BebidaDTO cadastrar(BebidaDTO bebidaDTO) {
-        // Aqui você pode converter o BebidaDTO em uma instância de Bebida e fazer o cadastro
         Bebida bebida = new Bebida();
         bebida.setNomeBebida(bebidaDTO.getNomeBebida());
         bebida.setValorBebida(bebidaDTO.getValorBebida());
-        // Configurar outros campos, se houver
 
         Bebida bebidaCadastrada = bebidaRepository.save(bebida);
 
-        // Aqui, você pode criar um novo BebidaDTO a partir do BebidaCadastrada e retorná-lo
         return new BebidaDTO(bebidaCadastrada);
     }
 
@@ -90,14 +127,28 @@ public class BebidaService {
     }
 
     @Transactional
-    public void deleteBebida(Long bebidaId) {
-        if (bebidaId == null) {
-            throw new IllegalArgumentException("ID da bebida não pode ser nulo para exclusão.");
+    public void deleteBebida(Long id) {
+        Optional<Bebida> bebidaOptional = bebidaRepository.findById(id);
+
+        if (!bebidaOptional.isPresent()) {
+            throw new IllegalArgumentException("Bebida com ID " + id + " não encontrada.");
         }
 
-        Bebida bebidaExistente = bebidaRepository.findById(bebidaId).orElseThrow(() -> new IllegalArgumentException("Bebida com ID " + bebidaId + " não encontrada."));
-
+        Bebida bebidaExistente = bebidaOptional.get();
         bebidaRepository.delete(bebidaExistente);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public void desativar(Long id) {
+        Optional<Bebida> bebidaOptional = bebidaRepository.findById(id);
+
+        if (bebidaOptional.isPresent()) {
+            Bebida bebida = bebidaOptional.get();
+            bebida.setAtivo(false);
+        } else {
+            throw new IllegalArgumentException("ID da bebida inválido!");
+        }
     }
 
 }
