@@ -112,13 +112,25 @@ public class BebidaController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<String> deletarBebida(@PathVariable Long id) {
         try {
             bebidaService.deleteBebida(id);
             return ResponseEntity.ok("Registro excluído com sucesso!");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/desativar/{id}")
+    public ResponseEntity<?> deletar(@PathVariable Long id) {
+        try {
+            bebidaService.desativar(id);
+            return ResponseEntity.ok().body("Registro desativado com sucesso!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao desativar o registro.");
         }
     }
 }

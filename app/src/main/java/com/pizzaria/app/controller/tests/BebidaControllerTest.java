@@ -151,11 +151,21 @@ public class BebidaControllerTest {
 
     @Test
     public void testDeletarBebida() throws Exception {
-        mockMvc.perform(delete("/api/bebida/1")
+        mockMvc.perform(delete("/api/bebida/deletar/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Registro excluído com sucesso!"));
 
         verify(bebidaService, times(1)).deleteBebida(1L);
+    }
+
+    @Test
+    public void testDesativarBebida() throws Exception {
+        mockMvc.perform(delete("/api/bebida/desativar/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Registro desativado com sucesso!"));
+
+        verify(bebidaService, times(1)).desativar(1L);
     }
 }

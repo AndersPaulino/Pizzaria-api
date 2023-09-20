@@ -6,11 +6,13 @@ import com.pizzaria.app.repository.BebidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -128,14 +130,28 @@ public class BebidaService {
     }
 
     @Transactional
-    public void deleteBebida(Long bebidaId) {
-        if (bebidaId == null) {
-            throw new IllegalArgumentException("ID da bebida não pode ser nulo para exclusão.");
+    public void deleteBebida(Long id) {
+        Optional<Bebida> bebidaOptional = bebidaRepository.findById(id);
+
+        if (!bebidaOptional.isPresent()) {
+            throw new IllegalArgumentException("Bebida com ID " + id + " não encontrada.");
         }
 
-        Bebida bebidaExistente = bebidaRepository.findById(bebidaId).orElseThrow(() -> new IllegalArgumentException("Bebida com ID " + bebidaId + " não encontrada."));
-
+        Bebida bebidaExistente = bebidaOptional.get();
         bebidaRepository.delete(bebidaExistente);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public void desativar(Long id) {
+        Optional<Bebida> bebidaOptional = bebidaRepository.findById(id);
+
+        if (bebidaOptional.isPresent()) {
+            Bebida bebida = bebidaOptional.get();
+            bebida.setAtivo(false);
+        } else {
+            throw new IllegalArgumentException("ID da bebida inválido!");
+        }
     }
 
 }
