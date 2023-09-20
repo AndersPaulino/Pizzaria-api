@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/pizza")
@@ -67,6 +66,27 @@ public class PizzaController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PizzaDTO> atualizarPizza(@PathVariable Long id, @RequestBody PizzaDTO pizzaDTO) {
+        // Lógica para atualizar a pizza no serviço
+        PizzaDTO pizzaAtualizada = PizzaDTO.fromPizza(pizzaService.atualizarPizza(id, pizzaDTO.toPizza()));
+
+        // Verifique se a pizza foi atualizada com sucesso e retorne-a no formato JSON
+        if (pizzaAtualizada != null) {
+            return ResponseEntity.ok(pizzaAtualizada);
+        } else {
+            // Se a atualização falhou, retorne uma resposta de erro adequada
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarPizza(@PathVariable Long id) {
+        pizzaService.deletarPizza(id);
+        return ResponseEntity.ok("Pizza com ID " + id + " excluída com sucesso.");
     }
 
 }

@@ -19,13 +19,4 @@ public class Bebida extends AbstractEntity{
     @Getter @Setter
     @Column(name = "cl_valor_bebida")
     private BigDecimal valorBebida;
-
-
-    public Bebida() {
-    }
-
-    public Bebida(BebidaDTO bebidaDTO) {
-        super();
-    }
-
 }

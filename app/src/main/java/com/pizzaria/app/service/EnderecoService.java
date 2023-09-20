@@ -20,7 +20,7 @@ public class EnderecoService {
         endereco.setRua(enderecoDTO.getRua());
         endereco.setNumero(enderecoDTO.getNumero());
 
-        enderecoRepository.save(endereco);
+        endereco = enderecoRepository.save(endereco);
 
         enderecoDTO.setId(endereco.getId());
         return enderecoDTO;
@@ -56,9 +56,9 @@ public class EnderecoService {
             endereco.setNumero(enderecoDTO.getNumero());
 
             return enderecoRepository.save(endereco);
+        } else {
+            throw new RuntimeException("Endereço não encontrado para o ID: " + id);
         }
-
-        return null; // Ou lançar uma exceção adequada
     }
 
     public void deletarEndereco(Long id) {

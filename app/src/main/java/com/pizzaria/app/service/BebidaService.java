@@ -4,6 +4,7 @@ import com.pizzaria.app.dto.BebidaDTO;
 import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.repository.BebidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,16 +22,29 @@ public class BebidaService {
     }
 
     public BebidaDTO findById(Long id) {
-        Bebida entity = bebidaRepository.findById(id).orElse(null);
-        if (entity == null) {
-            return null;
-        }
-        return new BebidaDTO(entity);
+       Bebida bebida = bebidaRepository.findById(id).get();
+       BebidaDTO bebidaDTO = new BebidaDTO(bebida);
+       return bebidaDTO;
     }
 
     public List<BebidaDTO> findAll() {
         List<Bebida> bebidas = bebidaRepository.findAll();
         return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public BebidaDTO findByName(String nomeBebida){
+        Bebida bebida = new Bebida();
+        BebidaDTO bebidaDTO = new BebidaDTO(bebida);
+        if (bebidaDTO != null){
+            return bebidaDTO;
+        } else {
+            try {
+                throw new ChangeSetPersister.NotFoundException();
+            } catch (ChangeSetPersister.NotFoundException e){
+                throw  new RuntimeException(e);
+            }
+        }
     }
 
     @Transactional

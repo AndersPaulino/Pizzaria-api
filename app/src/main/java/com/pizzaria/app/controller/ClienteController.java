@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/clientes")
@@ -40,9 +41,17 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public Cliente buscarClientePorId(@PathVariable Long id) {
-        return clienteService.buscarClientePorId(id).orElse(null);
+    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
+        Optional<Cliente> clienteOptional = clienteService.buscarClientePorId(id);
+
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+            return ResponseEntity.ok(cliente);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 
     @PutMapping("/{id}")
     public Cliente atualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
