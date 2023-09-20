@@ -64,13 +64,12 @@ public class ClienteService {
         return clienteRepository.findByCpf(cpf);
     }
 
+    public Optional<Cliente> buscarClientePorId(Long id) {
+        return clienteRepository.findById(id);
+    }
     public List<ClienteDTO> listarTodosClientesDTO() {
         List<Cliente> clientes = clienteRepository.findAll();
         return clientes.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    public Optional<Cliente> buscarClientePorId(Long id) {
-        return clienteRepository.findById(id);
     }
 
     public Cliente atualizarCliente(Long id, ClienteDTO clienteDTO) {

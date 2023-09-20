@@ -1,8 +1,6 @@
 package com.pizzaria.app.dto;
 
 import com.pizzaria.app.entity.Endereco;
-import lombok.Getter;
-import lombok.Setter;
 
 public class EnderecoDTO {
     private Long id;
