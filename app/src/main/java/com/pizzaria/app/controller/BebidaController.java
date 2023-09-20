@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,36 @@ public class BebidaController {
     public ResponseEntity<List<BebidaDTO>> findByAtivo(@PathVariable boolean ativo) {
         try {
             List<BebidaDTO> bebidaDTOS = bebidaService.findByAtivo(ativo);
+
+            if (!bebidaDTOS.isEmpty()) {
+                return ResponseEntity.ok(bebidaDTOS);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("registro/dia/{registro}")
+    public ResponseEntity<List<BebidaDTO>> findByDiaRegistro(@PathVariable("registro") LocalDate registro) {
+        try {
+            List<BebidaDTO> bebidaDTOS = bebidaService.findByDiaRegistro(registro);
+
+            if (!bebidaDTOS.isEmpty()) {
+                return ResponseEntity.ok(bebidaDTOS);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("atualizar/dia/{atualizar}")
+    public ResponseEntity<List<BebidaDTO>> findByDiaAtualizar(@PathVariable("atualizar") LocalDate atualizar) {
+        try {
+            List<BebidaDTO> bebidaDTOS = bebidaService.findByDiaAtualizar(atualizar);
 
             if (!bebidaDTOS.isEmpty()) {
                 return ResponseEntity.ok(bebidaDTOS);

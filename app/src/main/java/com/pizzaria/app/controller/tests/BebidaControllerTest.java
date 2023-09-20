@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -107,6 +108,28 @@ public class BebidaControllerTest {
         Mockito.when(bebidaService.findByAtivo(true)).thenReturn(bebidaDTOList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/ativo/true")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testFindByDiaRegistro() throws Exception {
+        List<BebidaDTO> bebidaDTOList = Collections.singletonList(bebidaDTO);
+        LocalDate currentDate = LocalDate.now();
+        Mockito.when(bebidaService.findByDiaRegistro(currentDate)).thenReturn(bebidaDTOList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/registro/dia/" + currentDate)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testFindByDiaAtualizar() throws Exception {
+        List<BebidaDTO> bebidaDTOList = Collections.singletonList(bebidaDTO);
+        LocalDate currentDate = LocalDate.now();
+        Mockito.when(bebidaService.findByDiaAtualizar(currentDate)).thenReturn(bebidaDTOList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/atualizar/dia/" + currentDate)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

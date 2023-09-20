@@ -8,6 +8,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +52,32 @@ public class BebidaService {
     @Transactional(readOnly = true)
     public List<BebidaDTO> findByAtivo(boolean ativo) {
         List<Bebida> bebidas = bebidaRepository.findByAtivo(ativo);
+
+        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+
+        for (Bebida bebida : bebidas) {
+            BebidaDTO dto = new BebidaDTO(bebida);
+            bebidaDTOS.add(dto);
+        }
+        return bebidaDTOS;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BebidaDTO> findByDiaRegistro(LocalDate registro) {
+        List<Bebida> bebidas = bebidaRepository.findByDiaRegistro(registro);
+
+        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+
+        for (Bebida bebida : bebidas) {
+            BebidaDTO dto = new BebidaDTO(bebida);
+            bebidaDTOS.add(dto);
+        }
+        return bebidaDTOS;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BebidaDTO> findByDiaAtualizar(LocalDate atualizar) {
+        List<Bebida> bebidas = bebidaRepository.findByDiaAtualizar(atualizar);
 
         List<BebidaDTO> bebidaDTOS = new ArrayList<>();
 
