@@ -2,6 +2,8 @@ package com.pizzaria.app.controller.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pizzaria.app.controller.BebidaController;
+import com.pizzaria.app.controller.ClienteController;
+import com.pizzaria.app.controller.SaborController;
 import com.pizzaria.app.dto.BebidaDTO;
 import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.service.BebidaService;
@@ -9,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,11 +28,14 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+//@WebMvcTest(BebidaController.class)
+//@AutoConfigureMockMvc
 public class BebidaControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
+    @Autowired
     private ObjectMapper objectMapper;
-
     @Mock
     private BebidaService bebidaService;
 
