@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -31,8 +30,12 @@ public class BebidaControllerTest {
     @Mock
     private BebidaService bebidaService;
 
+    private BebidaDTO bebidaDTO;
+
     @BeforeEach
     public void setUp() {
+        Bebida bebida = new Bebida();
+        bebidaDTO = new BebidaDTO(bebida);
         MockitoAnnotations.initMocks(this);
         BebidaController bebidaController = new BebidaController(bebidaService);
         mockMvc = MockMvcBuilders.standaloneSetup(bebidaController).build();

@@ -49,15 +49,12 @@ public class BebidaService {
 
     @Transactional
     public BebidaDTO cadastrar(BebidaDTO bebidaDTO) {
-        // Aqui você pode converter o BebidaDTO em uma instância de Bebida e fazer o cadastro
         Bebida bebida = new Bebida();
         bebida.setNomeBebida(bebidaDTO.getNomeBebida());
         bebida.setValorBebida(bebidaDTO.getValorBebida());
-        // Configurar outros campos, se houver
 
         Bebida bebidaCadastrada = bebidaRepository.save(bebida);
 
-        // Aqui, você pode criar um novo BebidaDTO a partir do BebidaCadastrada e retorná-lo
         return new BebidaDTO(bebidaCadastrada);
     }
 
