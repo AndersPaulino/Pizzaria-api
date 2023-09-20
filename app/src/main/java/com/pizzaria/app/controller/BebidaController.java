@@ -30,6 +30,10 @@ public class BebidaController {
     public List<BebidaDTO> findAll() {
         return bebidaService.findAll();
     }
+    @GetMapping("/nome/{nomeBebida}")
+    public BebidaDTO findByName(@PathVariable String nomeBebida){
+        return bebidaService.findByName(nomeBebida);
+    }
 
     @PostMapping
     public ResponseEntity<String> cadastrarBebida(@RequestBody Bebida bebida) {
