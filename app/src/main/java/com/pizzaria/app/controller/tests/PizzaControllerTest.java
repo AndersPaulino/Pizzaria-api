@@ -28,7 +28,6 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @WebMvcTest(PizzaController.class)
-@AutoConfigureMockMvc
 public class PizzaControllerTest {
 
     @Autowired

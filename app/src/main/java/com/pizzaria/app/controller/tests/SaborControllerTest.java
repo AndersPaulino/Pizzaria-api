@@ -1,18 +1,16 @@
 package com.pizzaria.app.controller.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pizzaria.app.controller.PizzaController;
 import com.pizzaria.app.controller.SaborController;
 import com.pizzaria.app.dto.SaborDTO;
 import com.pizzaria.app.entity.Sabor;
 import com.pizzaria.app.service.SaborService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -25,16 +23,14 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//@WebMvcTest(SaborController.class)
-//@AutoConfigureMockMvc
+@WebMvcTest(SaborController.class)
 public class SaborControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Mock
+    @MockBean
     private SaborService saborService;
 
     @BeforeEach
