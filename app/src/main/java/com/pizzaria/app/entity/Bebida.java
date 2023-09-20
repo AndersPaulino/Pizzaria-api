@@ -1,6 +1,5 @@
 package com.pizzaria.app.entity;
 
-import com.pizzaria.app.dto.BebidaDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
