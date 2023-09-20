@@ -12,4 +12,7 @@ import java.util.List;
 public interface BebidaRepository extends JpaRepository<Bebida, Long> {
     @Query("SELECT e FROM Bebida e WHERE e.nomeBebida = :nomeBebida")
     public List<Bebida> findByName(@Param("nomeBebida") String nomeBebida);
+
+    @Query("SELECT e FROM Bebida e WHERE e.ativo = :ativo")
+    public List<Bebida> findByAtivo(@Param("ativo") boolean ativo);
 }

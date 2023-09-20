@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+@Getter @Setter
 public class BebidaDTO {
     private Long id;
     private String nomeBebida;
@@ -31,45 +32,5 @@ public class BebidaDTO {
 
     public BebidaDTO() {
 
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNomeBebida() {
-        return nomeBebida;
-    }
-
-    public void setNomeBebida(String nomeBebida) {
-        this.nomeBebida = nomeBebida;
-    }
-
-    public BigDecimal getValorBebida() {
-        return valorBebida;
-    }
-
-    public void setValorBebida(BigDecimal valorBebida) {
-        this.valorBebida = valorBebida;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
-
-    public LocalDateTime getRegistro() {
-        return registro;
-    }
-
-    public void setRegistro(LocalDateTime registro) {
-        this.registro = registro;
     }
 }

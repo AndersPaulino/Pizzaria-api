@@ -8,14 +8,18 @@ import com.pizzaria.app.service.BebidaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -95,6 +99,16 @@ public class BebidaControllerTest {
                 .andExpect(content().string("Registro cadastrado com sucesso!"));
 
         verify(bebidaService, times(1)).cadastrar(any(BebidaDTO.class));
+    }
+
+    @Test
+    public void testFindByAtivo() throws Exception {
+        List<BebidaDTO> bebidaDTOList = Collections.singletonList(bebidaDTO);
+        Mockito.when(bebidaService.findByAtivo(true)).thenReturn(bebidaDTOList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/ativo/true")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test

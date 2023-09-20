@@ -35,6 +35,21 @@ public class BebidaController {
         return bebidaService.findByName(nomeBebida);
     }
 
+    @GetMapping("ativo/{ativo}")
+    public ResponseEntity<List<BebidaDTO>> findByAtivo(@PathVariable boolean ativo) {
+        try {
+            List<BebidaDTO> bebidaDTOS = bebidaService.findByAtivo(ativo);
+
+            if (!bebidaDTOS.isEmpty()) {
+                return ResponseEntity.ok(bebidaDTOS);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<String> cadastrarBebida(@RequestBody BebidaDTO bebidaDTO) {
         try {

@@ -8,6 +8,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,13 +21,13 @@ public class BebidaService {
     public BebidaService(BebidaRepository bebidaRepository){
         this.bebidaRepository = bebidaRepository;
     }
-
+    @Transactional(readOnly = true)
     public BebidaDTO findById(Long id) {
        Bebida bebida = bebidaRepository.findById(id).get();
        BebidaDTO bebidaDTO = new BebidaDTO(bebida);
        return bebidaDTO;
     }
-
+    @Transactional(readOnly = true)
     public List<BebidaDTO> findAll() {
         List<Bebida> bebidas = bebidaRepository.findAll();
         return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
@@ -45,6 +46,19 @@ public class BebidaService {
                 throw  new RuntimeException(e);
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<BebidaDTO> findByAtivo(boolean ativo) {
+        List<Bebida> bebidas = bebidaRepository.findByAtivo(ativo);
+
+        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+
+        for (Bebida bebida : bebidas) {
+            BebidaDTO dto = new BebidaDTO(bebida);
+            bebidaDTOS.add(dto);
+        }
+        return bebidaDTOS;
     }
 
     @Transactional
