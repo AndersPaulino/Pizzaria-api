@@ -20,10 +20,9 @@ public class SaborDTO {
         nomeSabor = sabor.getNomeSabor();
     }
 
-    public SaborDTO(Long id, boolean ativo, LocalDateTime registro, String nomeSabor) {
+    public SaborDTO(Long id, boolean ativo, String nomeSabor) {
         this.id = id;
         this.ativo = ativo;
-        this.registro = registro;
         this.nomeSabor = nomeSabor;
     }
 
