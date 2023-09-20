@@ -4,11 +4,11 @@ import com.pizzaria.app.dto.BebidaDTO;
 import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.repository.BebidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,14 +17,14 @@ public class BebidaService {
     private final BebidaRepository bebidaRepository;
 
     @Autowired
-    public BebidaService(BebidaRepository bebidaRepository){
+    public BebidaService(BebidaRepository bebidaRepository) {
         this.bebidaRepository = bebidaRepository;
     }
 
     public BebidaDTO findById(Long id) {
-       Bebida bebida = bebidaRepository.findById(id).get();
-       BebidaDTO bebidaDTO = new BebidaDTO(bebida);
-       return bebidaDTO;
+        Bebida bebida = bebidaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + id));
+        return new BebidaDTO(bebida);
     }
 
     public List<BebidaDTO> findAll() {
@@ -33,71 +33,42 @@ public class BebidaService {
     }
 
     @Transactional(readOnly = true)
-    public BebidaDTO findByName(String nomeBebida){
-        Bebida bebida = new Bebida();
-        BebidaDTO bebidaDTO = new BebidaDTO(bebida);
-        if (bebidaDTO != null){
-            return bebidaDTO;
-        } else {
-            try {
-                throw new ChangeSetPersister.NotFoundException();
-            } catch (ChangeSetPersister.NotFoundException e){
-                throw  new RuntimeException(e);
-            }
-        }
+    public List<BebidaDTO> findByName(String nomeBebida) {
+        List<Bebida> bebidas = bebidaRepository.buscarBebidaporNome(nomeBebida);
+        return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
     }
 
     @Transactional
     public BebidaDTO cadastrar(BebidaDTO bebidaDTO) {
-        // Aqui você pode converter o BebidaDTO em uma instância de Bebida e fazer o cadastro
         Bebida bebida = new Bebida();
-        bebida.setNomeBebida(bebidaDTO.getNomeBebida());
-        bebida.setValorBebida(bebidaDTO.getValorBebida());
-        // Configurar outros campos, se houver
-
+        atualizarCampos(bebida, bebidaDTO);
         Bebida bebidaCadastrada = bebidaRepository.save(bebida);
-
-        // Aqui, você pode criar um novo BebidaDTO a partir do BebidaCadastrada e retorná-lo
         return new BebidaDTO(bebidaCadastrada);
     }
 
-
-
     @Transactional
-    public BebidaDTO atualizarBebida(BebidaDTO bebidaDTO) {
-        Long bebidaId = bebidaDTO.getId();
-        if (bebidaId == null) {
-            throw new IllegalArgumentException("ID da bebida não pode ser nulo para atualização.");
-        }
-
-        Bebida bebidaExistente = bebidaRepository.findById(bebidaId).orElseThrow(() -> new IllegalArgumentException("Bebida com ID " + bebidaId + " não encontrada."));
-
+    public BebidaDTO atualizarBebida(Long bebidaId, BebidaDTO bebidaDTO) {
+        Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
+                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
         atualizarCampos(bebidaExistente, bebidaDTO);
-
         Bebida bebidaAtualizada = bebidaRepository.save(bebidaExistente);
-
         return new BebidaDTO(bebidaAtualizada);
     }
 
     @Transactional
-    private void atualizarCampos(Bebida bebidaExistente, BebidaDTO bebidaDTO) {
+    private void atualizarCampos(Bebida bebida, BebidaDTO bebidaDTO) {
         if (bebidaDTO.getNomeBebida() != null) {
-            bebidaExistente.setNomeBebida(bebidaDTO.getNomeBebida());
+            bebida.setNomeBebida(bebidaDTO.getNomeBebida());
         }
         if (bebidaDTO.getValorBebida() != null) {
-            bebidaExistente.setValorBebida(bebidaDTO.getValorBebida());
+            bebida.setValorBebida(bebidaDTO.getValorBebida());
         }
     }
 
     @Transactional
     public void deleteBebida(Long bebidaId) {
-        if (bebidaId == null) {
-            throw new IllegalArgumentException("ID da bebida não pode ser nulo para exclusão.");
-        }
-
-        Bebida bebidaExistente = bebidaRepository.findById(bebidaId).orElseThrow(() -> new IllegalArgumentException("Bebida com ID " + bebidaId + " não encontrada."));
-
+        Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
+                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
         bebidaRepository.delete(bebidaExistente);
     }
-
 }

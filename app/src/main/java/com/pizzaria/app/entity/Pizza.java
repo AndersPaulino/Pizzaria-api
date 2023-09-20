@@ -41,11 +41,4 @@ public class Pizza extends AbstractEntity{
     @Column(name = "cl_valor_pizza")
     private BigDecimal valorPizza;
 
-    public Pizza() {
-        this.sabor = sabor;
-        this.tamanho = tamanho;
-        this.qtdeSabor = qtdeSabor;
-        this.valorPizza = valorPizza;
-    }
-
 }
