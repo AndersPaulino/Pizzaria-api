@@ -31,10 +31,6 @@ public class BebidaController {
     public List<BebidaDTO> findAll() {
         return bebidaService.findAll();
     }
-    @GetMapping("/nome/{nomeBebida}")
-    public BebidaDTO findByName(@PathVariable String nomeBebida){
-        return bebidaService.findByName(nomeBebida);
-    }
 
     @GetMapping("ativo/{ativo}")
     public ResponseEntity<List<BebidaDTO>> findByAtivo(@PathVariable boolean ativo) {
@@ -49,6 +45,10 @@ public class BebidaController {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+    @GetMapping("/nome/{nomeBebida}")
+    public BebidaDTO findByName(@PathVariable String nomeBebida){
+        return bebidaService.findByName(nomeBebida);
     }
 
     @GetMapping("registro/dia/{registro}")
