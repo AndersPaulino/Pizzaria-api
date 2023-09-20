@@ -45,6 +45,7 @@ public class BebidaControllerTest {
         BebidaController bebidaController = new BebidaController(bebidaService);
         mockMvc = MockMvcBuilders.standaloneSetup(bebidaController).build();
         objectMapper = new ObjectMapper(); // Initialize objectMapper here
+        bebidaDTO.setNomeBebida("Coca-Cola");
     }
 
     @Test
@@ -102,6 +103,17 @@ public class BebidaControllerTest {
         verify(bebidaService, times(1)).cadastrar(any(BebidaDTO.class));
     }
 
+
+    @Test
+    public void testFindByName() throws Exception {
+        String currentString = "Coca-Cola";
+
+        Mockito.when(bebidaService.findByName(currentString)).thenReturn(bebidaDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/nome/" + currentString)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
     @Test
     public void testFindByAtivo() throws Exception {
         List<BebidaDTO> bebidaDTOList = Collections.singletonList(bebidaDTO);

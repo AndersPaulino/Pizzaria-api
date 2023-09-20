@@ -3,6 +3,7 @@ package com.pizzaria.app.service;
 import com.pizzaria.app.dto.BebidaDTO;
 import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.repository.BebidaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
@@ -37,19 +38,15 @@ public class BebidaService {
     }
 
     @Transactional(readOnly = true)
-    public BebidaDTO findByName(String nomeBebida){
-        Bebida bebida = new Bebida();
-        BebidaDTO bebidaDTO = new BebidaDTO(bebida);
-        if (bebidaDTO != null){
-            return bebidaDTO;
+    public BebidaDTO findByName(String nomeBebida) {
+        Bebida bebida = bebidaRepository.findByName(nomeBebida);
+        if (bebida != null) {
+            return new BebidaDTO(bebida);
         } else {
-            try {
-                throw new ChangeSetPersister.NotFoundException();
-            } catch (ChangeSetPersister.NotFoundException e){
-                throw  new RuntimeException(e);
-            }
+            throw new EntityNotFoundException("Bebida não encontrada com o nome: " + nomeBebida);
         }
     }
+
 
     @Transactional(readOnly = true)
     public List<BebidaDTO> findByAtivo(boolean ativo) {
