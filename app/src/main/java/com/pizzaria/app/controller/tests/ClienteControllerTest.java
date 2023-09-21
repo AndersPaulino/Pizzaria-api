@@ -1,10 +1,12 @@
 package com.pizzaria.app.controller.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pizzaria.app.controller.BebidaController;
 import com.pizzaria.app.controller.ClienteController;
 import com.pizzaria.app.dto.ClienteDTO;
 import com.pizzaria.app.entity.Cliente;
 import com.pizzaria.app.service.ClienteService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +37,11 @@ public class ClienteControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private ClienteService clienteService;
+
+    @BeforeEach
+    public void setUp() {
+        objectMapper = new ObjectMapper();
+    }
 
     @Test
     public void testCriarCliente() throws Exception {

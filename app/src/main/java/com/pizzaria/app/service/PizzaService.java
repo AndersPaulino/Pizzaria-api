@@ -5,6 +5,8 @@ import com.pizzaria.app.entity.Pizza;
 import com.pizzaria.app.entity.Sabor;
 import com.pizzaria.app.entity.Tamanho;
 import com.pizzaria.app.repository.PizzaRepository;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +37,9 @@ public class PizzaService {
         return pizzass.stream().map(PizzaDTO::new).collect(Collectors.toList());
     }
 
-    public Pizza cadastrarPizza(Pizza pizza) {
+    public void cadastrarPizza(Pizza pizza) {
         validarPizza(pizza);
-        return pizzaRepository.save(pizza);
+        pizzaRepository.save(pizza);
     }
 
     private void validarPizza(Pizza pizza) {
@@ -81,12 +83,9 @@ public class PizzaService {
 
         return pizzaRepository.save(pizzaExistente);
     }
-    public void deletarPizza(Long id) {
-        System.out.println("Deletando pizza com ID: " + id);
-
-        Pizza pizza = pizzaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("A pizza com o ID " + id + " não existe."));
-
-        pizzaRepository.delete(pizza);
+    public void deletarPizza(Long pizzaId) {
+        Pizza pizzaExistente = pizzaRepository.findById(pizzaId)
+                .orElseThrow(() -> new IllegalStateException("Pizza não encontrada com ID: " + pizzaId));
+        pizzaRepository.delete(pizzaExistente);
     }
 }

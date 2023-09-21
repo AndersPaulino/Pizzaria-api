@@ -44,6 +44,12 @@ public class VendaControllerTest {
     @MockBean
     private ProdutoService produtoService;
 
+    private static final String VENDA_API_URL = "/vendas";
+    private static final String VENDA_API_URL_WITH_ID = "/vendas/";
+    private static final String VENDA_BUSCAR_POR_EMITIR_NOTA_URL = "/vendas/por-emitir-nota?emitirNota=";
+    private static final String VENDA_BUSCAR_POR_ENTREGAR_URL = "/vendas/por-entregar?entregar=";
+    private static final String JSON_PATH_VALOR_VENDA = "$.valorVenda";
+    private static final String JSON_PATH_ID = "$.id";
     @BeforeEach
     public void setUp() {
         Cliente cliente = new Cliente();
@@ -88,12 +94,12 @@ public class VendaControllerTest {
 
         when(vendaService.cadastrarVenda(any(VendaDTO.class))).thenReturn(vendaCadastrada);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/vendas")
+        mockMvc.perform(MockMvcRequestBuilders.post(VENDA_API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(vendaDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.valorVenda").value(200.0));
+                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_ID).value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_VALOR_VENDA).value(200.0));
     }
 
 
@@ -115,7 +121,7 @@ public class VendaControllerTest {
 
         when(vendaService.buscarVendasPorEmitirNota(emitirNota)).thenReturn(vendas);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/vendas/por-emitir-nota?emitirNota=true")
+        mockMvc.perform(MockMvcRequestBuilders.get(VENDA_BUSCAR_POR_EMITIR_NOTA_URL + "true")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].emitirNota").value(true))
@@ -143,7 +149,7 @@ public class VendaControllerTest {
 
         when(vendaService.buscarVendasPorEntregar(entregar)).thenReturn(vendas);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/vendas/por-entregar?entregar=true")
+        mockMvc.perform(MockMvcRequestBuilders.get(VENDA_BUSCAR_POR_ENTREGAR_URL + "true")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].entregar").value(true))
@@ -160,11 +166,11 @@ public class VendaControllerTest {
 
         when(vendaService.buscarVendaPorId(vendaId)).thenReturn(optionalVenda);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/vendas/{id}", vendaId)
+        mockMvc.perform(MockMvcRequestBuilders.get(VENDA_API_URL_WITH_ID + vendaId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(vendaId))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.valorVenda").value(200.0))
+                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_ID).value(vendaId))
+                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_VALOR_VENDA).value(200.0))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.funcionario.id").value(2L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.produto.id").value(3L));
     }
@@ -180,17 +186,17 @@ public class VendaControllerTest {
             return ResponseEntity.ok(updatedVendaDTO);
         });
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/vendas/{id}", vendaId)
+        mockMvc.perform(MockMvcRequestBuilders.put(VENDA_API_URL_WITH_ID + vendaId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(vendaDTO)))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.valorVenda").value(125.0));
+                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_VALOR_VENDA).value(125.0));
     }
     @Test
     public void testDeletarVenda() throws Exception {
         Long vendaId = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/vendas/{id}", vendaId)
+        mockMvc.perform(MockMvcRequestBuilders.delete(VENDA_API_URL_WITH_ID + vendaId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }

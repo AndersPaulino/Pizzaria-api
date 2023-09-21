@@ -27,7 +27,7 @@ public class SaborService {
 
     public List<SaborDTO> findAll() {
         List<Sabor> sabores = saborRepository.findAll();
-        return sabores.stream().map(SaborDTO::new).collect(Collectors.toList());
+        return sabores.stream().map(SaborDTO::new).toList();
     }
 
     public Sabor cadastrar(Sabor sabor) {

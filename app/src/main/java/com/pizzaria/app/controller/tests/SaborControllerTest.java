@@ -35,7 +35,6 @@ public class SaborControllerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         SaborController saborController = new SaborController(saborService);
         mockMvc = MockMvcBuilders.standaloneSetup(saborController).build();
         objectMapper = new ObjectMapper();

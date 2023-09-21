@@ -36,8 +36,13 @@ public class FuncionarioControllerTest {
     @MockBean
     private FuncionarioService funcionarioService;
 
+    private static final String FUNCIONARIO_API_URL = "/funcionarios";
+    private static final String FUNCIONARIO_API_URL_WITH_ID = "/funcionarios/";
+    private static final String FUNCIONARIO_BUSCAR_URL = "/funcionarios/buscar?nome=";
+
     @BeforeEach
     public void setUp() {
+        objectMapper = new ObjectMapper();
     }
 
     @Test
@@ -57,7 +62,7 @@ public class FuncionarioControllerTest {
         when(funcionarioService.listarTodosFuncionariosDTO()).thenReturn(funcionariosDTO);
 
         // Realize a solicitação GET para /funcionarios
-        mockMvc.perform(get("/funcionarios")
+        mockMvc.perform(get(FUNCIONARIO_API_URL)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -72,18 +77,17 @@ public class FuncionarioControllerTest {
         // Crie um FuncionarioDTO para simular o retorno do serviço
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
         funcionarioDTO.setId(1L);
-        funcionarioDTO.setNome("João");
+        funcionarioDTO.setNome("Marcio");
 
-        // Configure o comportamento do mock do serviço para retornar o funcionário pelo ID
         when(funcionarioService.buscarFuncionarioPorIdDTO(1L)).thenReturn(Optional.of(funcionarioDTO));
 
         // Realize a solicitação GET para /funcionarios/1
-        mockMvc.perform(get("/funcionarios/1")
+        mockMvc.perform(get(FUNCIONARIO_API_URL_WITH_ID + "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.nome").value("João"));
+                .andExpect(jsonPath("$.nome").value("Marcio"));
     }
 
     @Test
@@ -92,7 +96,7 @@ public class FuncionarioControllerTest {
         when(funcionarioService.buscarFuncionarioPorIdDTO(1L)).thenReturn(Optional.empty());
 
         // Realize a solicitação GET para /funcionarios/1 e espere um erro 404
-        mockMvc.perform(get("/funcionarios/1")
+        mockMvc.perform(get(FUNCIONARIO_API_URL_WITH_ID + "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -102,26 +106,25 @@ public class FuncionarioControllerTest {
         // Crie uma lista de FuncionarioDTOs para simular o retorno do serviço
         FuncionarioDTO funcionarioDTO1 = new FuncionarioDTO();
         funcionarioDTO1.setId(1L);
-        funcionarioDTO1.setNome("João");
+        funcionarioDTO1.setNome("Marcos");
 
         FuncionarioDTO funcionarioDTO2 = new FuncionarioDTO();
         funcionarioDTO2.setId(2L);
-        funcionarioDTO2.setNome("Maria");
+        funcionarioDTO2.setNome("Vitoria");
 
         List<FuncionarioDTO> funcionariosDTO = Arrays.asList(funcionarioDTO1, funcionarioDTO2);
 
-        // Configure o comportamento do mock do serviço para retornar a lista de funcionários por nome
-        when(funcionarioService.buscarFuncionariosPorNomeDTO("João")).thenReturn(funcionariosDTO);
+        when(funcionarioService.buscarFuncionariosPorNomeDTO("Marcos")).thenReturn(funcionariosDTO);
 
         // Realize a solicitação GET para /funcionarios/buscar?nome=João
-        mockMvc.perform(get("/funcionarios/buscar?nome=João")
+        mockMvc.perform(get(FUNCIONARIO_BUSCAR_URL+"Marcos")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].nome").value("João"))
+                .andExpect(jsonPath("$[0].nome").value("Marcos"))
                 .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].nome").value("Maria"));
+                .andExpect(jsonPath("$[1].nome").value("Vitoria"));
     }
 
     @Test
@@ -129,17 +132,17 @@ public class FuncionarioControllerTest {
         // Configurar um FuncionarioDTO fictício para enviar no corpo da requisição
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
         funcionarioDTO.setId(1L);
-        funcionarioDTO.setNome("João");
+        funcionarioDTO.setNome("Eduardo");
 
         // Configurar comportamento do mock para retornar o FuncionarioDTO cadastrado
         Mockito.when(funcionarioService.cadastrarFuncionario(Mockito.any(FuncionarioDTO.class))).thenReturn(funcionarioDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/funcionarios")
+        mockMvc.perform(MockMvcRequestBuilders.post(FUNCIONARIO_API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(funcionarioDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("João"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Eduardo"));
     }
 
     @Test
@@ -159,7 +162,7 @@ public class FuncionarioControllerTest {
 
         // Chamada ao endpoint
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-                        .put("/funcionarios/{id}", funcionarioId)
+                        .put(FUNCIONARIO_API_URL_WITH_ID + funcionarioId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(funcionarioDTO)))
                 .andExpect(status().isOk())
@@ -173,13 +176,10 @@ public class FuncionarioControllerTest {
         assertEquals(funcionarioDTO.getNome(), funcionarioResponse.getNome());
     }
 
-
-
-
     @Test
     public void testDeletarFuncionario() throws Exception {
         // Realize a solicitação DELETE para /funcionarios/1
-        mockMvc.perform(delete("/funcionarios/1"))
+        mockMvc.perform(delete(FUNCIONARIO_API_URL_WITH_ID+"1"))
                 .andExpect(status().isNoContent());
     }
 }

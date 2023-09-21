@@ -41,7 +41,8 @@ public class ProdutoControllerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        objectMapper = new ObjectMapper();
+
     }
 
     @Test

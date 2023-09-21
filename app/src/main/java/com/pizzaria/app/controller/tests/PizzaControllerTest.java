@@ -43,6 +43,8 @@ public class PizzaControllerTest {
 
     @BeforeEach
     public void setUp() {
+        objectMapper = new ObjectMapper();
+
     }
 
     @Test

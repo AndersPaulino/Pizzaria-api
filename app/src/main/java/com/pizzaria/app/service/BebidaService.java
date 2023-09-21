@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BebidaService {
@@ -20,20 +19,25 @@ public class BebidaService {
     }
 
     public BebidaDTO findById(Long id) {
+        final String notFoundMessage = "Bebida não encontrada com ID: ";
+
         Bebida bebida = bebidaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + id));
+                .orElseThrow(() -> new IllegalArgumentException(notFoundMessage + id));
+
         return new BebidaDTO(bebida);
     }
 
+
     public List<BebidaDTO> findAll() {
         List<Bebida> bebidas = bebidaRepository.findAll();
-        return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
+        return bebidas.stream().map(BebidaDTO::new).toList();
     }
 
     public List<BebidaDTO> findByName(String nomeBebida) {
         List<Bebida> bebidas = bebidaRepository.findByNomeBebida(nomeBebida);
-        return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
+        return bebidas.stream().map(BebidaDTO::new).toList();
     }
+
 
     public BebidaDTO cadastrar(BebidaDTO bebidaDTO) {
         Bebida bebida = new Bebida();
