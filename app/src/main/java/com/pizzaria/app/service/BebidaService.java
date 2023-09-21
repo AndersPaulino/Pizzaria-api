@@ -50,10 +50,9 @@ public class BebidaService {
 
     @Transactional(readOnly = true)
     public BebidaDTO findByName(String nomeBebida) {
-        Bebida bebidas = bebidaRepository.findByName(nomeBebida);
-        BebidaDTO dto = new BebidaDTO(bebidas);
-        if (dto !=null) {
-            return dto;
+        Bebida bebida = bebidaRepository.findByName(nomeBebida);
+        if (bebida !=null) {
+            return new BebidaDTO(bebida);
         } else {
             try {
                 throw new ChangeSetPersister.NotFoundException();

@@ -4,6 +4,7 @@ import com.pizzaria.app.dto.EnderecoDTO;
 import com.pizzaria.app.entity.Endereco;
 import com.pizzaria.app.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,16 +16,24 @@ public class EnderecoService {
     private EnderecoRepository enderecoRepository;
 
     public EnderecoDTO criarEndereco(EnderecoDTO enderecoDTO) {
+        if (enderecoDTO == null) {
+            throw new IllegalArgumentException("O objeto enderecoDTO não pode ser nulo.");
+        }
         Endereco endereco = new Endereco();
         endereco.setBairro(enderecoDTO.getBairro());
         endereco.setRua(enderecoDTO.getRua());
         endereco.setNumero(enderecoDTO.getNumero());
 
-        endereco = enderecoRepository.save(endereco);
+        try {
+            endereco = enderecoRepository.save(endereco);
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Erro ao salvar o endereço no repositório.", e);
+        }
 
         enderecoDTO.setId(endereco.getId());
         return enderecoDTO;
     }
+
 
     public List<Endereco> buscarEnderecosPorBairro(String bairro) {
         return enderecoRepository.findByBairro(bairro);

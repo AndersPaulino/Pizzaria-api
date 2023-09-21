@@ -1,4 +1,4 @@
-package com.pizzaria.app.controller.tests;
+package com.pizzaria.app.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pizzaria.app.controller.PizzaController;
@@ -66,7 +66,7 @@ public class SaborControllerTest {
 
     @Test
     public void testFindAll() throws Exception {
-        // Create SaborDTO instances with expected values
+
         SaborDTO saborDTO1 = new SaborDTO();
         saborDTO1.setId(1L);
         saborDTO1.setNomeSabor("Calabresa");
