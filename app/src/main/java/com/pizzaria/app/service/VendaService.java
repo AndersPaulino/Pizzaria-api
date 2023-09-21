@@ -72,7 +72,6 @@ public class VendaService {
 
         if (vendaOptional.isPresent()) {
             Venda venda = vendaOptional.get();
-
             venda.setCliente(clienteService.buscarClientePorId(vendaDTO.getCliente().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado")));
 
@@ -86,16 +85,13 @@ public class VendaService {
             venda.setEntregar(vendaDTO.isEntregar());
 
             venda.setValorVenda(vendaDTO.getValorVenda());
-
             vendaRepository.save(venda);
-
             vendaDTO.setId(venda.getId());
             return vendaDTO;
         }
 
         return null;
     }
-
     public void deletarVenda(Long id) {
         vendaRepository.deleteById(id);
     }

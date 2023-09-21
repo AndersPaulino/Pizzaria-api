@@ -48,7 +48,6 @@ public class FuncionarioControllerTest {
 
     @Test
     public void testListarTodosFuncionarios() throws Exception {
-        // Crie uma lista de FuncionarioDTOs para simular o retorno do serviço
         FuncionarioDTO funcionarioDTO1 = new FuncionarioDTO();
         funcionarioDTO1.setId(1L);
         funcionarioDTO1.setNome("João");
@@ -59,10 +58,8 @@ public class FuncionarioControllerTest {
 
         List<FuncionarioDTO> funcionariosDTO = Arrays.asList(funcionarioDTO1, funcionarioDTO2);
 
-        // Configure o comportamento do mock do serviço para retornar a lista de funcionários
         when(funcionarioService.listarTodosFuncionariosDTO()).thenReturn(funcionariosDTO);
 
-        // Realize a solicitação GET para /funcionarios
         mockMvc.perform(get(FUNCIONARIO_API_URL)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -82,7 +79,6 @@ public class FuncionarioControllerTest {
 
         when(funcionarioService.buscarFuncionarioPorIdDTO(1L)).thenReturn(Optional.of(funcionarioDTO));
 
-        // Realize a solicitação GET para /funcionarios/1
         mockMvc.perform(get(FUNCIONARIO_API_URL_WITH_ID + "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

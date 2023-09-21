@@ -48,7 +48,6 @@ public class VendaController {
         }
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<VendaDTO> atualizarVenda(@PathVariable Long id, @RequestBody VendaDTO vendaDTO) {
         VendaDTO vendaAtualizadaDTO = vendaService.atualizarVenda(id, vendaDTO);
