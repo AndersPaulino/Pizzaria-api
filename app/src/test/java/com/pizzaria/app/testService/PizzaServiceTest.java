@@ -1,4 +1,4 @@
-package com.pizzaria.app.service.tests;
+package com.pizzaria.app.testService;
 
 import com.pizzaria.app.dto.PizzaDTO;
 import com.pizzaria.app.entity.Pizza;

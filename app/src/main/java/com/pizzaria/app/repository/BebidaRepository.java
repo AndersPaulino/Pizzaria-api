@@ -13,7 +13,6 @@ import java.util.List;
 
 @Repository
 public interface BebidaRepository extends JpaRepository<Bebida, Long> {
-
     @Query("SELECT e FROM Bebida e WHERE e.nomeBebida = :nomeBebida")
     public Bebida findByName(@Param("nomeBebida") String nomeBebida);
 
