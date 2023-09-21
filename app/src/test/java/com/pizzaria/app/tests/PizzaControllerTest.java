@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @WebMvcTest(PizzaController.class)
 @AutoConfigureMockMvc
-public class PizzaControllerTest {
+class PizzaControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

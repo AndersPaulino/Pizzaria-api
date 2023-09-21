@@ -32,7 +32,7 @@ import static org.springframework.mock.http.server.reactive.MockServerHttpReques
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProdutoController.class)
-public class ProdutoControllerTest {
+class ProdutoControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

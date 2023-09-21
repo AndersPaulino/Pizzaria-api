@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ClienteController.class)
-public class ClienteControllerTest {
+class ClienteControllerTest {
     @Autowired
     private MockMvc mockMvc;
 

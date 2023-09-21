@@ -1,5 +1,6 @@
 package com.pizzaria.app.testService;
 
+import com.pizzaria.app.controller.BebidaController;
 import com.pizzaria.app.dto.ClienteDTO;
 import com.pizzaria.app.dto.EnderecoDTO;
 import com.pizzaria.app.entity.Cliente;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +22,13 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ClienteServiceTest {
+@WebMvcTest(ClienteService.class)
+class ClienteServiceTest {
 
     @InjectMocks
     private ClienteService clienteService;
 
-    @Mock
+    @MockBean
     private ClienteRepository clienteRepository;
 
     @BeforeEach
