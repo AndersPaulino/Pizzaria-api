@@ -2,6 +2,7 @@ package com.pizzaria.app.controller.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pizzaria.app.controller.ProdutoController;
+import com.pizzaria.app.dto.ProdutoDTO;
 import com.pizzaria.app.entity.Produto;
 import com.pizzaria.app.repository.ProdutoRepository;
 import com.pizzaria.app.service.ProdutoService;
@@ -83,8 +84,33 @@ public class ProdutoControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].valorProduto").value(15.0));
     }
+    @Test
+    public void testCadastrarProduto() throws Exception {
+        ProdutoDTO produtoDTO = new ProdutoDTO();
+        produtoDTO.setValorProduto(BigDecimal.valueOf(20.0));
+
+        when(produtoService.cadastrarProduto(produtoDTO)).thenReturn(produtoDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/produto")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(produtoDTO)))
+                .andExpect(status().isOk());
+    }
 
 
+    @Test
+    public void testAtualizarProduto() throws Exception {
+        Long produtoId = 1L;
+        ProdutoDTO produtoDTO = new ProdutoDTO();
+        produtoDTO.setValorProduto(BigDecimal.valueOf(25.0));
+
+        when(produtoService.atualizarProduto(produtoId, produtoDTO)).thenReturn(produtoDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/produto/{id}", produtoId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(produtoDTO)))
+                .andExpect(status().isOk());
+    }
     @Test
     public void testDeletarProduto() throws Exception {
         Long produtoId = 1L;
