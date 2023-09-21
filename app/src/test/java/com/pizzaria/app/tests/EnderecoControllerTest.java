@@ -30,6 +30,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EnderecoController.class)
+@AutoConfigureMockMvc
 public class EnderecoControllerTest {
 
     @Autowired
@@ -43,7 +44,7 @@ public class EnderecoControllerTest {
 
     @BeforeEach
     public void setUp() {
-        objectMapper = new ObjectMapper();
+        // Configurar comportamento dos mocks conforme necessário
     }
 
     @Test

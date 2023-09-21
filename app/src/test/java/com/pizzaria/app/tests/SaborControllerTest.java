@@ -1,15 +1,18 @@
 package com.pizzaria.app.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pizzaria.app.controller.PizzaController;
 import com.pizzaria.app.controller.SaborController;
 import com.pizzaria.app.dto.SaborDTO;
 import com.pizzaria.app.entity.Sabor;
 import com.pizzaria.app.service.SaborService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -22,22 +25,21 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(SaborController.class)
+//@WebMvcTest(SaborController.class)
+//@AutoConfigureMockMvc
 public class SaborControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @MockBean
-    private SaborService saborService;
-    private static final String SABOR_CALABRESA = "Calabresa";
-    private static final String SABOR_API_URL_WITH_ID = "/api/sabor/";
-    private static final String SABOR_API_URL = "/api/sabor";
 
+    @Mock
+    private SaborService saborService;
 
     @BeforeEach
     public void setUp() {
+        MockitoAnnotations.initMocks(this);
         SaborController saborController = new SaborController(saborService);
         mockMvc = MockMvcBuilders.standaloneSetup(saborController).build();
         objectMapper = new ObjectMapper();
@@ -48,16 +50,16 @@ public class SaborControllerTest {
         // Create a new SaborDTO with expected values
         SaborDTO expectedSaborDTO = new SaborDTO();
         expectedSaborDTO.setId(1L);
-        expectedSaborDTO.setNomeSabor(SABOR_CALABRESA);
+        expectedSaborDTO.setNomeSabor("Calabresa");
         expectedSaborDTO.setAtivo(true);
 
         when(saborService.findById(1L)).thenReturn(expectedSaborDTO);
 
-        mockMvc.perform(get(SABOR_API_URL_WITH_ID+"1")
+        mockMvc.perform(get("/api/sabor/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.nomeSabor").value(SABOR_CALABRESA))
+                .andExpect(jsonPath("$.nomeSabor").value("Calabresa"))
                 .andExpect(jsonPath("$.ativo").value(true));
     }
 
@@ -67,7 +69,7 @@ public class SaborControllerTest {
 
         SaborDTO saborDTO1 = new SaborDTO();
         saborDTO1.setId(1L);
-        saborDTO1.setNomeSabor(SABOR_CALABRESA);
+        saborDTO1.setNomeSabor("Calabresa");
         saborDTO1.setAtivo(true);
 
         SaborDTO saborDTO2 = new SaborDTO();
@@ -79,11 +81,11 @@ public class SaborControllerTest {
 
         when(saborService.findAll()).thenReturn(sabores);
 
-        mockMvc.perform(get(SABOR_API_URL)
+        mockMvc.perform(get("/api/sabor")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].nomeSabor").value(SABOR_CALABRESA))
+                .andExpect(jsonPath("$[0].nomeSabor").value("Calabresa"))
                 .andExpect(jsonPath("$[0].ativo").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].nomeSabor").value("Mussarela"))
@@ -100,7 +102,7 @@ public class SaborControllerTest {
 
         when(saborService.cadastrar(any(Sabor.class))).thenReturn(sabor);
 
-        mockMvc.perform(post(SABOR_API_URL)
+        mockMvc.perform(post("/api/sabor")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sabor)))
                 .andExpect(status().isOk())
@@ -117,7 +119,7 @@ public class SaborControllerTest {
 
         when(saborService.atualizar(any(SaborDTO.class))).thenReturn(saborDTO);
 
-        mockMvc.perform(put(SABOR_API_URL_WITH_ID+"1")
+        mockMvc.perform(put("/api/sabor/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(saborDTO)))
                 .andExpect(status().isOk())
@@ -129,7 +131,7 @@ public class SaborControllerTest {
 
     @Test
     public void testDeletar() throws Exception {
-        mockMvc.perform(delete(SABOR_API_URL_WITH_ID+"1")
+        mockMvc.perform(delete("/api/sabor/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Registro excluído com sucesso!"));

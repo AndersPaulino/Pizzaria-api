@@ -3,12 +3,15 @@ package com.pizzaria.app.testService;
 import com.pizzaria.app.dto.EnderecoDTO;
 import com.pizzaria.app.entity.Endereco;
 import com.pizzaria.app.repository.EnderecoRepository;
+import com.pizzaria.app.service.ClienteService;
 import com.pizzaria.app.service.EnderecoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +19,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+@WebMvcTest(EnderecoService.class)
+class EnderecoServiceTest {
 
-public class EnderecoServiceTest {
-
-    @Mock
+    @MockBean
     private EnderecoRepository enderecoRepository;
 
     @InjectMocks

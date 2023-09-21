@@ -24,11 +24,8 @@ public class EnderecoService {
         endereco.setRua(enderecoDTO.getRua());
         endereco.setNumero(enderecoDTO.getNumero());
 
-        try {
-            endereco = enderecoRepository.save(endereco);
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Erro ao salvar o endereço no repositório.", e);
-        }
+
+        endereco = enderecoRepository.save(endereco);
 
         enderecoDTO.setId(endereco.getId());
         return enderecoDTO;

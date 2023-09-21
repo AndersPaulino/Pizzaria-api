@@ -4,10 +4,13 @@ import com.pizzaria.app.dto.PizzaDTO;
 import com.pizzaria.app.entity.Pizza;
 import com.pizzaria.app.entity.Tamanho;
 import com.pizzaria.app.repository.PizzaRepository;
+import com.pizzaria.app.service.ClienteService;
 import com.pizzaria.app.service.PizzaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class PizzaServiceTest {
+class PizzaServiceTest {
 
     @Mock
     private PizzaRepository pizzaRepository;

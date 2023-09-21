@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @WebMvcTest(PizzaController.class)
+@AutoConfigureMockMvc
 public class PizzaControllerTest {
 
     @Autowired
@@ -43,8 +45,7 @@ public class PizzaControllerTest {
 
     @BeforeEach
     public void setUp() {
-        objectMapper = new ObjectMapper();
-
+        // Configurar comportamento dos mocks conforme necessário
     }
 
     @Test
@@ -109,6 +110,7 @@ public class PizzaControllerTest {
         SaborDTO saborDTOFicticio = new SaborDTO();
         saborDTOFicticio.setId(1L);
         saborDTOFicticio.setAtivo(true);
+        saborDTOFicticio.setRegistro(LocalDateTime.now());
         saborDTOFicticio.setNomeSabor("Sabor Teste");
 
         Mockito.when(saborService.findById(Mockito.anyLong())).thenReturn(saborDTOFicticio);
@@ -118,6 +120,7 @@ public class PizzaControllerTest {
         PizzaDTO pizzaDTO = new PizzaDTO();
         pizzaDTO.setId(1L);
         pizzaDTO.setAtivo(true);
+        pizzaDTO.setRegistro(LocalDateTime.now());
         pizzaDTO.setSabor(new ArrayList<>());
         pizzaDTO.setTamanho(null);
         pizzaDTO.setValorPizza(BigDecimal.valueOf(15.0));
@@ -136,6 +139,7 @@ public class PizzaControllerTest {
         PizzaDTO pizzaDTO = new PizzaDTO();
         pizzaDTO.setId(1L);
         pizzaDTO.setAtivo(true);
+        pizzaDTO.setRegistro(LocalDateTime.now());
         pizzaDTO.setSabor(new ArrayList<>());
         pizzaDTO.setTamanho(null);
         pizzaDTO.setValorPizza(BigDecimal.valueOf(20.0));
