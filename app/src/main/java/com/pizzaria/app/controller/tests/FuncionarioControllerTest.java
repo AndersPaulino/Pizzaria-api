@@ -39,6 +39,7 @@ public class FuncionarioControllerTest {
     private static final String FUNCIONARIO_API_URL = "/funcionarios";
     private static final String FUNCIONARIO_API_URL_WITH_ID = "/funcionarios/";
     private static final String FUNCIONARIO_BUSCAR_URL = "/funcionarios/buscar?nome=";
+    private static final String NOME_MARCOS = "Marcos";
 
     @BeforeEach
     public void setUp() {
@@ -106,7 +107,7 @@ public class FuncionarioControllerTest {
         // Crie uma lista de FuncionarioDTOs para simular o retorno do serviço
         FuncionarioDTO funcionarioDTO1 = new FuncionarioDTO();
         funcionarioDTO1.setId(1L);
-        funcionarioDTO1.setNome("Marcos");
+        funcionarioDTO1.setNome(NOME_MARCOS);
 
         FuncionarioDTO funcionarioDTO2 = new FuncionarioDTO();
         funcionarioDTO2.setId(2L);
@@ -114,15 +115,15 @@ public class FuncionarioControllerTest {
 
         List<FuncionarioDTO> funcionariosDTO = Arrays.asList(funcionarioDTO1, funcionarioDTO2);
 
-        when(funcionarioService.buscarFuncionariosPorNomeDTO("Marcos")).thenReturn(funcionariosDTO);
+        when(funcionarioService.buscarFuncionariosPorNomeDTO(NOME_MARCOS)).thenReturn(funcionariosDTO);
 
         // Realize a solicitação GET para /funcionarios/buscar?nome=João
-        mockMvc.perform(get(FUNCIONARIO_BUSCAR_URL+"Marcos")
+        mockMvc.perform(get(FUNCIONARIO_BUSCAR_URL+NOME_MARCOS)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].nome").value("Marcos"))
+                .andExpect(jsonPath("$[0].nome").value(NOME_MARCOS))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].nome").value("Vitoria"));
     }
