@@ -18,11 +18,11 @@ public class BebidaService {
         this.bebidaRepository = bebidaRepository;
     }
 
-    public BebidaDTO findById(Long id) {
-        final String notFoundMessage = "Bebida não encontrada com ID: ";
+    private static final String MENSAGEM_ERRO_ID = "Bebida não encontrada com ID:";
 
+    public BebidaDTO findById(Long id) {
         Bebida bebida = bebidaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(notFoundMessage + id));
+                .orElseThrow(() -> new IllegalArgumentException(MENSAGEM_ERRO_ID+id));
 
         return new BebidaDTO(bebida);
     }
@@ -48,7 +48,7 @@ public class BebidaService {
 
     public BebidaDTO atualizarBebida(Long bebidaId, BebidaDTO bebidaDTO) {
         Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
-                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
+                .orElseThrow(() -> new IllegalArgumentException(MENSAGEM_ERRO_ID+bebidaId));
         atualizarCampos(bebidaExistente, bebidaDTO);
         Bebida bebidaAtualizada = bebidaRepository.save(bebidaExistente);
         return new BebidaDTO(bebidaAtualizada);
@@ -65,7 +65,7 @@ public class BebidaService {
 
     public void deleteBebida(Long bebidaId) {
         Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
-                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
+                .orElseThrow(() -> new IllegalArgumentException(MENSAGEM_ERRO_ID+bebidaId));
         bebidaRepository.delete(bebidaExistente);
     }
 }

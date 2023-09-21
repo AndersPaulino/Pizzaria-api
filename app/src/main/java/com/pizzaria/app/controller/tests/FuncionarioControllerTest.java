@@ -6,7 +6,6 @@ import com.pizzaria.app.dto.FuncionarioDTO;
 import com.pizzaria.app.service.FuncionarioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -40,6 +39,7 @@ public class FuncionarioControllerTest {
     private static final String FUNCIONARIO_API_URL_WITH_ID = "/funcionarios/";
     private static final String FUNCIONARIO_BUSCAR_URL = "/funcionarios/buscar?nome=";
     private static final String NOME_MARCOS = "Marcos";
+    private static final String NOME_EDUARDO = "Eduardo";
 
     @BeforeEach
     public void setUp() {
@@ -133,16 +133,16 @@ public class FuncionarioControllerTest {
         // Configurar um FuncionarioDTO fictício para enviar no corpo da requisição
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
         funcionarioDTO.setId(1L);
-        funcionarioDTO.setNome("Eduardo");
+        funcionarioDTO.setNome(NOME_EDUARDO);
 
-        when(funcionarioService.cadastrarFuncionario(argThat(dto -> dto.getNome().equals("Eduardo"))))
+        when(funcionarioService.cadastrarFuncionario(argThat(dto -> dto.getNome().equals(NOME_EDUARDO))))
                 .thenReturn(funcionarioDTO);
         mockMvc.perform(MockMvcRequestBuilders.post(FUNCIONARIO_API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(funcionarioDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Eduardo"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value(NOME_EDUARDO));
     }
 
     @Test
