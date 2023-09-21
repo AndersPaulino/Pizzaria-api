@@ -53,15 +53,11 @@ public class BebidaControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(bebidaController).build();
         objectMapper = new ObjectMapper();
         bebidaDTO.setNomeBebida("Coca-Cola");
-        bebidaDTO.setValorBebida(BigDecimal.valueOf(5.0));
-        bebidaDTO.setAtivo(true);
-        bebidaDTO.setRegistro(LocalDateTime.now());
-        bebidaDTO.setId(1L);
     }
 
     @Test
     public void testFindById() throws Exception {
-
+        BebidaDTO bebidaDTO = new BebidaDTO(1L, "Coca-Cola", BigDecimal.valueOf(5.0), true, LocalDateTime.now());
         when(bebidaService.findById(1L)).thenReturn(bebidaDTO);
 
         mockMvc.perform(get(BEBIDA_API_URL + "1")

@@ -162,7 +162,23 @@ public class VendaControllerTest {
     public void testBuscarVendaPorId() throws Exception {
         Long vendaId = 1L;
 
-        Optional<Venda> optionalVenda = Optional.of(new Venda());
+        Venda venda = new Venda();
+        venda.setId(vendaId);
+        venda.setValorVenda(BigDecimal.valueOf(200.0));
+
+        Cliente cliente = new Cliente();
+        cliente.setId(1L);
+        venda.setCliente(cliente);
+
+        Funcionario funcionario = new Funcionario();
+        funcionario.setId(2L);
+        venda.setFuncionario(funcionario);
+
+        Produto produto = new Produto();
+        produto.setId(3L);
+        venda.setProduto(produto);
+
+        Optional<Venda> optionalVenda = Optional.of(venda);
 
         when(vendaService.buscarVendaPorId(vendaId)).thenReturn(optionalVenda);
 
@@ -175,6 +191,7 @@ public class VendaControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.produto.id").value(3L));
     }
 
+
     @Test
     public void testAtualizarVenda() throws Exception {
         Long vendaId = 1L;
@@ -183,18 +200,24 @@ public class VendaControllerTest {
 
         when(vendaService.atualizarVenda(vendaId, vendaDTO)).thenAnswer(invocation -> {
             VendaDTO updatedVendaDTO = invocation.getArgument(1);
+            updatedVendaDTO.setId(vendaId);
             return ResponseEntity.ok(updatedVendaDTO);
         });
 
-        mockMvc.perform(MockMvcRequestBuilders.put(VENDA_API_URL_WITH_ID + vendaId)
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(VENDA_API_URL_WITH_ID+"1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(vendaDTO)))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_VALOR_VENDA).value(125.0));
+                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_VALOR_VENDA).value(125.0))
+                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_ID).value(vendaId));
     }
+
+
+
     @Test
     public void testDeletarVenda() throws Exception {
-        Long vendaId = 1L;
+        long vendaId = 1L;
 
         mockMvc.perform(MockMvcRequestBuilders.delete(VENDA_API_URL_WITH_ID + vendaId)
                         .contentType(MediaType.APPLICATION_JSON))

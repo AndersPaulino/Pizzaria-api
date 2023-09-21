@@ -34,7 +34,7 @@ public class BebidaController {
         return bebidaService.findAll();
     }
 
-
+ anderson-dev
     @GetMapping("ativo/{ativo}")
     public ResponseEntity<List<BebidaDTO>> findByAtivo(@PathVariable boolean ativo) {
         try {
@@ -52,7 +52,7 @@ public class BebidaController {
 
 
     @GetMapping("/nome/{nomeBebida}")
-    public BebidaDTO findByName(@PathVariable String nomeBebida) {
+    public List<BebidaDTO> findByName(@PathVariable String nomeBebida) {
         return bebidaService.findByName(nomeBebida);
     }
 
@@ -118,7 +118,7 @@ public class BebidaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
+anderson-dev
     @DeleteMapping("/deletar/{id}")
 
     public ResponseEntity<String> deletarBebida(@PathVariable Long id) {
