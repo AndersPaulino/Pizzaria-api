@@ -8,27 +8,19 @@ import com.pizzaria.app.repository.ProdutoRepository;
 import com.pizzaria.app.service.ProdutoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProdutoController.class)
@@ -46,9 +38,12 @@ public class ProdutoControllerTest {
     @MockBean
     private ProdutoRepository produtoRepository;
 
+    private static final String PRODUTO_API_URL = "/produto";
+    private static final String PRODUTO_API_URL_WITH_ID = "/produto/";
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        objectMapper = new ObjectMapper();
+
     }
 
     @Test
@@ -60,7 +55,7 @@ public class ProdutoControllerTest {
 
         when(produtoRepository.findById(produtoId)).thenReturn(Optional.of(produto));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/produto/{id}", produtoId)
+        mockMvc.perform(MockMvcRequestBuilders.get(PRODUTO_API_URL_WITH_ID+produtoId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(produtoId))
@@ -83,7 +78,7 @@ public class ProdutoControllerTest {
 
         when(produtoRepository.findAll()).thenReturn(produtos);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/produto")
+        mockMvc.perform(MockMvcRequestBuilders.get(PRODUTO_API_URL)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
@@ -91,13 +86,38 @@ public class ProdutoControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].valorProduto").value(15.0));
     }
+    @Test
+    public void testCadastrarProduto() throws Exception {
+        ProdutoDTO produtoDTO = new ProdutoDTO();
+        produtoDTO.setValorProduto(BigDecimal.valueOf(20.0));
+
+        when(produtoService.cadastrarProduto(produtoDTO)).thenReturn(produtoDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(PRODUTO_API_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(produtoDTO)))
+                .andExpect(status().isOk());
+    }
 
 
+    @Test
+    public void testAtualizarProduto() throws Exception {
+        Long produtoId = 1L;
+        ProdutoDTO produtoDTO = new ProdutoDTO();
+        produtoDTO.setValorProduto(BigDecimal.valueOf(25.0));
+
+        when(produtoService.atualizarProduto(produtoId, produtoDTO)).thenReturn(produtoDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(PRODUTO_API_URL_WITH_ID+produtoId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(produtoDTO)))
+                .andExpect(status().isOk());
+    }
     @Test
     public void testDeletarProduto() throws Exception {
         Long produtoId = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/produto/{id}", produtoId)
+        mockMvc.perform(MockMvcRequestBuilders.delete(PRODUTO_API_URL_WITH_ID+produtoId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

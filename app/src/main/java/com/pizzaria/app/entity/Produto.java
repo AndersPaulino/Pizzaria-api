@@ -7,7 +7,6 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NavigableMap;
 
 @Entity
 @Table(name = "tb_produto", schema = "public")

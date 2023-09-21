@@ -13,22 +13,14 @@ import java.util.List;
 
 @Getter @Setter
 public class ProdutoDTO {
-
     private Long id;
-
     private boolean ativo;
-
     private LocalDateTime registro;
-
     private List<Pizza> pizzaList = new ArrayList<>();
-
     private List<Bebida> bebidaList = new ArrayList<>();
-
     private BigDecimal valorProduto;
 
-    public ProdutoDTO(){
-
-    }
+    public ProdutoDTO(){}
     public ProdutoDTO(Produto produto){
         id = produto.getId();
         ativo = produto.isAtivo();

@@ -3,6 +3,7 @@ package com.pizzaria.app.controller;
 import com.pizzaria.app.dto.BebidaDTO;
 import com.pizzaria.app.service.BebidaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -89,11 +90,18 @@ public class BebidaController {
     public ResponseEntity<String> cadastrarBebida(@RequestBody BebidaDTO bebidaDTO) {
         try {
             BebidaDTO bebidaCadastrada = bebidaService.cadastrar(bebidaDTO);
-            return ResponseEntity.ok("Registro cadastrado com sucesso!");
+            Long idBebidaCadastrada = bebidaCadastrada.getId();
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Location", "/api/bebida/" + idBebidaCadastrada);
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .headers(headers)
+                    .body("Registro cadastrado com sucesso! ID da bebida: " + idBebidaCadastrada);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<String> atualizarBebida(@PathVariable Long id, @RequestBody BebidaDTO bebidaDTO) {

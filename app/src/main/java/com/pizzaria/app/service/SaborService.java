@@ -27,15 +27,13 @@ public class SaborService {
 
     public List<SaborDTO> findAll() {
         List<Sabor> sabores = saborRepository.findAll();
-        return sabores.stream().map(SaborDTO::new).collect(Collectors.toList());
+        return sabores.stream().map(SaborDTO::new).toList();
     }
 
-    @Transactional
     public Sabor cadastrar(Sabor sabor) {
         return saborRepository.save(sabor);
     }
 
-    @Transactional
     public SaborDTO atualizar(SaborDTO saborDTO) {
         Sabor saborExistente = saborRepository.findById(saborDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Sabor not found with ID: " + saborDTO.getId()));
@@ -45,8 +43,6 @@ public class SaborService {
         return new SaborDTO(saborAtualizado);
     }
 
-
-    @Transactional
     public void deletar(Long id) {
         saborRepository.deleteById(id);
     }
