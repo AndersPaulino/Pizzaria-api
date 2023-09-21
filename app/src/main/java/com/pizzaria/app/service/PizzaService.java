@@ -35,10 +35,9 @@ public class PizzaService {
         return pizzass.stream().map(PizzaDTO::new).collect(Collectors.toList());
     }
 
-    public String cadastrar(Pizza pizza) {
+    public Pizza cadastrarPizza(Pizza pizza) {
         validarPizza(pizza);
-        pizzaRepository.save(pizza);
-        return "Registro cadastrado com sucesso!";
+        return pizzaRepository.save(pizza);
     }
 
     private void validarPizza(Pizza pizza) {
@@ -76,7 +75,6 @@ public class PizzaService {
         Pizza pizzaExistente = pizzaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("A pizza com o ID " + id + " não existe."));
 
-        // Atualize os campos da pizza existente com os valores da pizza atualizada
         pizzaExistente.setTamanho(pizzaAtualizada.getTamanho());
         pizzaExistente.setSabor(pizzaAtualizada.getSabor());
         pizzaExistente.setValorPizza(pizzaAtualizada.getValorPizza());
@@ -84,7 +82,7 @@ public class PizzaService {
         return pizzaRepository.save(pizzaExistente);
     }
     public void deletarPizza(Long id) {
-        System.out.println("Deletando pizza com ID: " + id); // Adicione esta linha para depuração
+        System.out.println("Deletando pizza com ID: " + id);
 
         Pizza pizza = pizzaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("A pizza com o ID " + id + " não existe."));

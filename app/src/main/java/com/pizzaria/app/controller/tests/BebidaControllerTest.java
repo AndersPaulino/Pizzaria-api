@@ -7,8 +7,6 @@ import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.service.BebidaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BebidaController.class)
 public class BebidaControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -37,10 +34,9 @@ public class BebidaControllerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         BebidaController bebidaController = new BebidaController(bebidaService);
         mockMvc = MockMvcBuilders.standaloneSetup(bebidaController).build();
-        objectMapper = new ObjectMapper(); // Initialize objectMapper here
+        objectMapper = new ObjectMapper();
     }
 
     @Test

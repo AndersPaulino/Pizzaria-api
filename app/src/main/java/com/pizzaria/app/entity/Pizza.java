@@ -31,6 +31,8 @@ public class Pizza extends AbstractEntity{
     private List<Sabor> sabor = new ArrayList<>();
 
     @Getter @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cl_tamanho")
     private Tamanho tamanho;
 
     @Getter @Setter

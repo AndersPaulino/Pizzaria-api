@@ -5,7 +5,6 @@ import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.repository.BebidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,13 +30,11 @@ public class BebidaService {
         return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public List<BebidaDTO> findByName(String nomeBebida) {
         List<Bebida> bebidas = bebidaRepository.findByNomeBebida(nomeBebida);
         return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
     }
 
-    @Transactional
     public BebidaDTO cadastrar(BebidaDTO bebidaDTO) {
         Bebida bebida = new Bebida();
         atualizarCampos(bebida, bebidaDTO);
@@ -45,7 +42,6 @@ public class BebidaService {
         return new BebidaDTO(bebidaCadastrada);
     }
 
-    @Transactional
     public BebidaDTO atualizarBebida(Long bebidaId, BebidaDTO bebidaDTO) {
         Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
                 .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
@@ -54,7 +50,6 @@ public class BebidaService {
         return new BebidaDTO(bebidaAtualizada);
     }
 
-    @Transactional
     private void atualizarCampos(Bebida bebida, BebidaDTO bebidaDTO) {
         if (bebidaDTO.getNomeBebida() != null) {
             bebida.setNomeBebida(bebidaDTO.getNomeBebida());
@@ -64,7 +59,6 @@ public class BebidaService {
         }
     }
 
-    @Transactional
     public void deleteBebida(Long bebidaId) {
         Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
                 .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));

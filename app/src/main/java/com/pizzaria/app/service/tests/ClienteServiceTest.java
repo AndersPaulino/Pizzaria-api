@@ -34,12 +34,11 @@ public class ClienteServiceTest {
 
     @Test
     public void testCriarCliente() {
-        // Dados de teste
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setNome("João");
         clienteDTO.setCpf("1234567890");
 
-        EnderecoDTO enderecoDTO = new EnderecoDTO(); // Use EnderecoDTO em vez de Endereco
+        EnderecoDTO enderecoDTO = new EnderecoDTO();
         enderecoDTO.setBairro("Bairro Teste");
         enderecoDTO.setRua("Rua Teste");
         enderecoDTO.setNumero(42);
@@ -58,14 +57,12 @@ public class ClienteServiceTest {
 
         clienteCriado.setEndereco(endereco);
 
-        // Simulando o repositório
         when(clienteRepository.save(any(Cliente.class))).thenAnswer(invocation -> {
             Cliente clienteSalvo = invocation.getArgument(0);
-            clienteSalvo.setId(1L); // Definir manualmente o ID para 1
+            clienteSalvo.setId(1L);
             return clienteSalvo;
         });
 
-        // Chamada ao serviço
         ClienteDTO clienteCriadoDTO = clienteService.criarCliente(clienteDTO);
 
         // Verificações
@@ -82,7 +79,6 @@ public class ClienteServiceTest {
 
     @Test
     public void testListarTodosClientesDTO() {
-        // Dados de teste
         List<Cliente> clientes = new ArrayList<>();
         Cliente cliente1 = new Cliente();
         cliente1.setId(1L);
@@ -106,10 +102,8 @@ public class ClienteServiceTest {
         cliente2.setEndereco(endereco2);
         clientes.add(cliente2);
 
-        // Simulando o repositório
         when(clienteRepository.findAll()).thenReturn(clientes);
 
-        // Chamada ao serviço
         List<ClienteDTO> clienteDTOs = clienteService.listarTodosClientesDTO();
 
         // Verificações
@@ -221,16 +215,21 @@ public class ClienteServiceTest {
         // Chamada ao serviço
         Optional<Cliente> clienteEncontrado = clienteService.buscarClientePorId(id);
 
-        // Verificações
-        assertTrue(clienteEncontrado.isPresent());
-        Cliente cliente = clienteEncontrado.get();
-        assertEquals(cliente1.getId(), cliente.getId());
-        assertEquals(cliente1.getNome(), cliente.getNome());
-        assertEquals(cliente1.getCpf(), cliente.getCpf());
-        assertNotNull(cliente.getEndereco());
-        assertEquals(cliente1.getEndereco().getBairro(), cliente.getEndereco().getBairro());
-        assertEquals(cliente1.getEndereco().getRua(), cliente.getEndereco().getRua());
-        assertEquals(cliente1.getEndereco().getNumero(), cliente.getEndereco().getNumero());
+        // Verifica se o cliente foi encontrado
+        if (clienteEncontrado.isPresent()) {
+            Cliente cliente = clienteEncontrado.get();
+
+            // Realize as verificações dos atributos
+            assertEquals(cliente1.getId(), cliente.getId());
+            assertEquals(cliente1.getNome(), cliente.getNome());
+            assertEquals(cliente1.getCpf(), cliente.getCpf());
+            assertNotNull(cliente.getEndereco());
+            assertEquals(cliente1.getEndereco().getBairro(), cliente.getEndereco().getBairro());
+            assertEquals(cliente1.getEndereco().getRua(), cliente.getEndereco().getRua());
+            assertEquals(cliente1.getEndereco().getNumero(), cliente.getEndereco().getNumero());
+        } else {
+            fail("Cliente não encontrado");
+        }
     }
 
     @Test
