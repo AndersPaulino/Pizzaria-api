@@ -135,9 +135,8 @@ public class FuncionarioControllerTest {
         funcionarioDTO.setId(1L);
         funcionarioDTO.setNome("Eduardo");
 
-        // Configurar comportamento do mock para retornar o FuncionarioDTO cadastrado
-        Mockito.when(funcionarioService.cadastrarFuncionario(Mockito.any(FuncionarioDTO.class))).thenReturn(funcionarioDTO);
-
+        when(funcionarioService.cadastrarFuncionario(argThat(dto -> dto.getNome().equals("Eduardo"))))
+                .thenReturn(funcionarioDTO);
         mockMvc.perform(MockMvcRequestBuilders.post(FUNCIONARIO_API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(funcionarioDTO)))

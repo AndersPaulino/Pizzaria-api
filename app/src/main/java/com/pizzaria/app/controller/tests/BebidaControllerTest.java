@@ -104,7 +104,7 @@ public class BebidaControllerTest {
 
         when(bebidaService.atualizarBebida(eq(1L), any(BebidaDTO.class))).thenReturn(bebidaDTO);
 
-        mockMvc.perform(put(BEBIDA_API_URL + "1") // Use o ID da bebida na URL
+        mockMvc.perform(put(BEBIDA_API_URL + "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(bebidaDTO)))
                 .andExpect(status().isOk())

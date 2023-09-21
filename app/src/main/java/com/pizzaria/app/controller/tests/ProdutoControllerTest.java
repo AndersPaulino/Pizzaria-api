@@ -8,7 +8,6 @@ import com.pizzaria.app.repository.ProdutoRepository;
 import com.pizzaria.app.service.ProdutoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,6 +38,8 @@ public class ProdutoControllerTest {
     @MockBean
     private ProdutoRepository produtoRepository;
 
+    private static final String PRODUTO_API_URL = "/produto";
+    private static final String PRODUTO_API_URL_WITH_ID = "/produto/";
     @BeforeEach
     public void setUp() {
         objectMapper = new ObjectMapper();
@@ -54,7 +55,7 @@ public class ProdutoControllerTest {
 
         when(produtoRepository.findById(produtoId)).thenReturn(Optional.of(produto));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/produto/{id}", produtoId)
+        mockMvc.perform(MockMvcRequestBuilders.get(PRODUTO_API_URL_WITH_ID+produtoId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(produtoId))
@@ -77,7 +78,7 @@ public class ProdutoControllerTest {
 
         when(produtoRepository.findAll()).thenReturn(produtos);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/produto")
+        mockMvc.perform(MockMvcRequestBuilders.get(PRODUTO_API_URL)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
@@ -92,7 +93,7 @@ public class ProdutoControllerTest {
 
         when(produtoService.cadastrarProduto(produtoDTO)).thenReturn(produtoDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/produto")
+        mockMvc.perform(MockMvcRequestBuilders.post(PRODUTO_API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(produtoDTO)))
                 .andExpect(status().isOk());
@@ -107,7 +108,7 @@ public class ProdutoControllerTest {
 
         when(produtoService.atualizarProduto(produtoId, produtoDTO)).thenReturn(produtoDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/produto/{id}", produtoId)
+        mockMvc.perform(MockMvcRequestBuilders.put(PRODUTO_API_URL_WITH_ID+produtoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(produtoDTO)))
                 .andExpect(status().isOk());
@@ -116,7 +117,7 @@ public class ProdutoControllerTest {
     public void testDeletarProduto() throws Exception {
         Long produtoId = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/produto/{id}", produtoId)
+        mockMvc.perform(MockMvcRequestBuilders.delete(PRODUTO_API_URL_WITH_ID+produtoId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
