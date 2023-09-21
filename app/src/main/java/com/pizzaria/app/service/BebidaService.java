@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +33,7 @@ public class BebidaService {
 
     @Transactional(readOnly = true)
     public List<BebidaDTO> findByName(String nomeBebida) {
-        List<Bebida> bebidas = bebidaRepository.buscarBebidaporNome(nomeBebida);
+        List<Bebida> bebidas = bebidaRepository.findByNomeBebida(nomeBebida);
         return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
     }
 
