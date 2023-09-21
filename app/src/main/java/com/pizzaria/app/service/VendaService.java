@@ -44,7 +44,6 @@ public class VendaService {
         venda.setEmitirNota(vendaDTO.isEmitirNota());
         venda.setEntregar(vendaDTO.isEntregar());
 
-        //Calculo com valor de venda é aqui!!!!!!!!!!!!!!!!!
         venda.setValorVenda(vendaDTO.getValorVenda());
 
         vendaRepository.save(venda);
@@ -86,7 +85,6 @@ public class VendaService {
             venda.setEmitirNota(vendaDTO.isEmitirNota());
             venda.setEntregar(vendaDTO.isEntregar());
 
-            // Calculo da venda é aqui!!!!!!!
             venda.setValorVenda(vendaDTO.getValorVenda());
 
             vendaRepository.save(venda);

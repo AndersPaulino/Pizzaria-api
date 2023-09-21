@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @Getter @Setter
 public class PizzaDTO {
     private Long id;
@@ -26,9 +27,7 @@ public class PizzaDTO {
 
     private int qtdeSabor;
 
-    public PizzaDTO(){
-    }
-
+    public PizzaDTO(){}
     public Pizza toPizza() {
         Pizza pizza = new Pizza();
         pizza.setId(id);
@@ -50,7 +49,6 @@ public class PizzaDTO {
         valorPizza = pizza.getValorPizza();
         qtdeSabor = pizza.getQtdeSabor();
     }
-
     public static PizzaDTO fromPizza(Pizza pizza) {
         return new PizzaDTO(pizza);
     }

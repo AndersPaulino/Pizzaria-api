@@ -30,7 +30,6 @@ public class BebidaDTO {
         registro = bebida.getRegistro();
     }
 
-    public BebidaDTO() {
+    public BebidaDTO() {}
 
-    }
 }

@@ -20,7 +20,7 @@ import java.util.Optional;
 public class PizzaController {
 
     private final PizzaService pizzaService;
-    private SaborService saborService;
+    private final SaborService saborService;
 
     @Autowired
     public PizzaController(PizzaService pizzaService, SaborService saborService) {
@@ -61,7 +61,7 @@ public class PizzaController {
             pizza.setTamanho(pizzaDTO.getTamanho());
             pizza.setValorPizza(pizzaDTO.getValorPizza());
 
-            pizzaService.cadastrar(pizza);
+            pizzaService.cadastrarPizza(pizza);
             return ResponseEntity.ok("Registro cadastrado com sucesso!");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -70,16 +70,9 @@ public class PizzaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PizzaDTO> atualizarPizza(@PathVariable Long id, @RequestBody PizzaDTO pizzaDTO) {
-        // Lógica para atualizar a pizza no serviço
-        PizzaDTO pizzaAtualizada = PizzaDTO.fromPizza(pizzaService.atualizarPizza(id, pizzaDTO.toPizza()));
+        PizzaDTO pizzaAtualizada = new PizzaDTO(pizzaService.atualizarPizza(id, pizzaDTO.toPizza()));
 
-        // Verifique se a pizza foi atualizada com sucesso e retorne-a no formato JSON
-        if (pizzaAtualizada != null) {
-            return ResponseEntity.ok(pizzaAtualizada);
-        } else {
-            // Se a atualização falhou, retorne uma resposta de erro adequada
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(pizzaAtualizada);
     }
 
 

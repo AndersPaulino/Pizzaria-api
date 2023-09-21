@@ -5,6 +5,8 @@ import com.pizzaria.app.entity.Pizza;
 import com.pizzaria.app.entity.Sabor;
 import com.pizzaria.app.entity.Tamanho;
 import com.pizzaria.app.repository.PizzaRepository;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,10 +37,9 @@ public class PizzaService {
         return pizzass.stream().map(PizzaDTO::new).collect(Collectors.toList());
     }
 
-    public String cadastrar(Pizza pizza) {
+    public void cadastrarPizza(Pizza pizza) {
         validarPizza(pizza);
         pizzaRepository.save(pizza);
-        return "Registro cadastrado com sucesso!";
     }
 
     private void validarPizza(Pizza pizza) {
@@ -76,19 +77,15 @@ public class PizzaService {
         Pizza pizzaExistente = pizzaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("A pizza com o ID " + id + " não existe."));
 
-        // Atualize os campos da pizza existente com os valores da pizza atualizada
         pizzaExistente.setTamanho(pizzaAtualizada.getTamanho());
         pizzaExistente.setSabor(pizzaAtualizada.getSabor());
         pizzaExistente.setValorPizza(pizzaAtualizada.getValorPizza());
 
         return pizzaRepository.save(pizzaExistente);
     }
-    public void deletarPizza(Long id) {
-        System.out.println("Deletando pizza com ID: " + id); // Adicione esta linha para depuração
-
-        Pizza pizza = pizzaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("A pizza com o ID " + id + " não existe."));
-
-        pizzaRepository.delete(pizza);
+    public void deletarPizza(Long pizzaId) {
+        Pizza pizzaExistente = pizzaRepository.findById(pizzaId)
+                .orElseThrow(() -> new IllegalStateException("Pizza não encontrada com ID: " + pizzaId));
+        pizzaRepository.delete(pizzaExistente);
     }
 }
