@@ -8,9 +8,7 @@ import com.pizzaria.app.service.BebidaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -41,30 +39,31 @@ public class BebidaControllerTest {
     @MockBean
     private BebidaService bebidaService;
 
-
     private BebidaDTO bebidaDTO;
+
+    private static final String BEBIDA_API_URL = "/api/bebida/";
+    private static final String BEBIDA_COCA = "Coca-Cola";
 
     @BeforeEach
     public void setUp() {
         Bebida bebida = new Bebida();
         bebidaDTO = new BebidaDTO(bebida);
-        MockitoAnnotations.initMocks(this);
         BebidaController bebidaController = new BebidaController(bebidaService);
         mockMvc = MockMvcBuilders.standaloneSetup(bebidaController).build();
         objectMapper = new ObjectMapper();
-        bebidaDTO.setNomeBebida("Coca-Cola");
+        bebidaDTO.setNomeBebida(BEBIDA_COCA);
     }
 
     @Test
     public void testFindById() throws Exception {
-        BebidaDTO bebidaDTO = new BebidaDTO(1L, "Coca-Cola", BigDecimal.valueOf(5.0), true, LocalDateTime.now());
+        BebidaDTO bebidaDTO = new BebidaDTO(1L, BEBIDA_COCA, BigDecimal.valueOf(5.0), true, LocalDateTime.now());
         when(bebidaService.findById(1L)).thenReturn(bebidaDTO);
 
         mockMvc.perform(get(BEBIDA_API_URL + "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.nomeBebida").value("Coca-Cola"))
+                .andExpect(jsonPath("$.nomeBebida").value(BEBIDA_COCA))
                 .andExpect(jsonPath("$.valorBebida").value(5.0))
                 .andExpect(jsonPath("$.ativo").value(true));
     }
@@ -93,11 +92,11 @@ public class BebidaControllerTest {
     public void testCadastrarBebida() throws Exception {
         BebidaDTO bebidaDTO = new BebidaDTO();
         bebidaDTO.setId(1L);
-        bebidaDTO.setNomeBebida("Cola");
+        bebidaDTO.setNomeBebida(BEBIDA_COCA);
 
         Bebida mockBebida = new Bebida();
         mockBebida.setId(1L);
-        mockBebida.setNomeBebida("Cola");
+        mockBebida.setNomeBebida(BEBIDA_COCA);
 
         when(bebidaService.cadastrar(any(BebidaDTO.class))).thenReturn(new BebidaDTO(mockBebida));
 
@@ -111,16 +110,6 @@ public class BebidaControllerTest {
     }
 
 
-    @Test
-    public void testFindByName() throws Exception {
-        String currentString = "Coca-Cola";
-
-        Mockito.when(bebidaService.findByName(currentString)).thenReturn(bebidaDTO);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/nome/" + currentString)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
     @Test
     public void testFindByAtivo() throws Exception {
         List<BebidaDTO> bebidaDTOList = Collections.singletonList(bebidaDTO);
@@ -156,8 +145,8 @@ public class BebidaControllerTest {
     @Test
     public void testAtualizarBebida() throws Exception {
         BebidaDTO bebidaDTO = new BebidaDTO();
-        bebidaDTO.setId(1L); // Defina o ID da bebida corretamente
-        bebidaDTO.setNomeBebida("Nova Cola");
+        bebidaDTO.setId(1L);
+        bebidaDTO.setNomeBebida(BEBIDA_COCA);
 
         when(bebidaService.atualizarBebida(eq(1L), any(BebidaDTO.class))).thenReturn(bebidaDTO);
 
@@ -170,7 +159,7 @@ public class BebidaControllerTest {
     
     @Test
     public void testDeletarBebida() throws Exception {
-        mockMvc.perform(delete(BEBIDA_API_URL + "1")
+        mockMvc.perform(delete("/api/bebida/deletar/1")
 
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

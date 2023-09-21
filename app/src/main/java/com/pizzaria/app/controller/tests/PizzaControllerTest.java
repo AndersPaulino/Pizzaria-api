@@ -109,7 +109,6 @@ public class PizzaControllerTest {
         SaborDTO saborDTOFicticio = new SaborDTO();
         saborDTOFicticio.setId(1L);
         saborDTOFicticio.setAtivo(true);
-        saborDTOFicticio.setRegistro(LocalDateTime.now());
         saborDTOFicticio.setNomeSabor("Sabor Teste");
 
         // Configurar o comportamento do serviço de Sabor para retornar o objeto fictício
@@ -120,7 +119,6 @@ public class PizzaControllerTest {
         PizzaDTO pizzaDTO = new PizzaDTO();
         pizzaDTO.setId(1L);
         pizzaDTO.setAtivo(true);
-        pizzaDTO.setRegistro(LocalDateTime.now());
         pizzaDTO.setSabor(new ArrayList<>());
         pizzaDTO.setTamanho(null);
         pizzaDTO.setValorPizza(BigDecimal.valueOf(15.0));
@@ -139,7 +137,6 @@ public class PizzaControllerTest {
         PizzaDTO pizzaDTO = new PizzaDTO();
         pizzaDTO.setId(1L);
         pizzaDTO.setAtivo(true);
-        pizzaDTO.setRegistro(LocalDateTime.now());
         pizzaDTO.setSabor(new ArrayList<>());
         pizzaDTO.setTamanho(null);
         pizzaDTO.setValorPizza(BigDecimal.valueOf(20.0));

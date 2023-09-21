@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BebidaService {
@@ -34,7 +35,6 @@ public class BebidaService {
         List<Bebida> bebidas = bebidaRepository.findAll();
         return bebidas.stream().map(BebidaDTO::new).toList();
     }
-    @Transactional(readOnly = true)
     public List<BebidaDTO> findByAtivo(boolean ativo) {
         List<Bebida> bebidas = bebidaRepository.findByAtivo(ativo);
 
@@ -53,7 +53,6 @@ public class BebidaService {
     }
 
 
-    @Transactional(readOnly = true)
     public List<BebidaDTO> findByDiaRegistro(LocalDate registro) {
         List<Bebida> bebidas = bebidaRepository.findByDiaRegistro(registro);
 
@@ -66,7 +65,6 @@ public class BebidaService {
         return bebidaDTOS;
     }
 
-    @Transactional(readOnly = true)
     public List<BebidaDTO> findByDiaAtualizar(LocalDate atualizar) {
         List<Bebida> bebidas = bebidaRepository.findByDiaAtualizar(atualizar);
 
@@ -79,7 +77,6 @@ public class BebidaService {
         return bebidaDTOS;
     }
 
-    @Transactional
     public BebidaDTO cadastrar(BebidaDTO bebidaDTO) {
         Bebida bebida = new Bebida();
         atualizarCampos(bebida, bebidaDTO);
@@ -110,7 +107,6 @@ public class BebidaService {
         bebidaRepository.delete(bebidaExistente);
     }
 
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void desativar(Long id) {
         Optional<Bebida> bebidaOptional = bebidaRepository.findById(id);
 

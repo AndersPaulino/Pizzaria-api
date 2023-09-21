@@ -34,7 +34,6 @@ public class BebidaController {
         return bebidaService.findAll();
     }
 
- anderson-dev
     @GetMapping("ativo/{ativo}")
     public ResponseEntity<List<BebidaDTO>> findByAtivo(@PathVariable boolean ativo) {
         try {
@@ -102,7 +101,6 @@ public class BebidaController {
         }
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<String> atualizarBebida(@PathVariable Long id, @RequestBody BebidaDTO bebidaDTO) {
         try {
@@ -118,9 +116,7 @@ public class BebidaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-anderson-dev
     @DeleteMapping("/deletar/{id}")
-
     public ResponseEntity<String> deletarBebida(@PathVariable Long id) {
         try {
             bebidaService.deleteBebida(id);
@@ -131,7 +127,7 @@ anderson-dev
     }
 
     @DeleteMapping("/desativar/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id) {
+    public ResponseEntity<String> deletar(@PathVariable Long id) {
         try {
             bebidaService.desativar(id);
             return ResponseEntity.ok().body("Registro desativado com sucesso!");
