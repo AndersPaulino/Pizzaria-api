@@ -1,4 +1,4 @@
-package com.pizzaria.app.controller.tests;
+package com.pizzaria.app.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pizzaria.app.controller.PizzaController;
@@ -49,7 +49,7 @@ public class PizzaControllerTest {
 
     @Test
     public void testFindPizzaById() throws Exception {
-        // Configurar comportamento do mock para retornar uma PizzaDTO fictícia
+
         PizzaDTO pizzaFicticia = new PizzaDTO();
         pizzaFicticia.setId(1L);
         pizzaFicticia.setAtivo(true);
@@ -70,7 +70,7 @@ public class PizzaControllerTest {
 
     @Test
     public void testFindAllPizzas() throws Exception {
-        // Configurar comportamento do mock para retornar uma lista de PizzaDTOs fictícias
+
         List<PizzaDTO> pizzas = new ArrayList<>();
 
         PizzaDTO pizza1 = new PizzaDTO();
@@ -105,17 +105,16 @@ public class PizzaControllerTest {
 
     @Test
     public void testCadastrarPizza() throws Exception {
-        // Criar um objeto SaborDTO fictício para o serviço de Sabor
+
         SaborDTO saborDTOFicticio = new SaborDTO();
         saborDTOFicticio.setId(1L);
         saborDTOFicticio.setAtivo(true);
         saborDTOFicticio.setNomeSabor("Sabor Teste");
 
-        // Configurar o comportamento do serviço de Sabor para retornar o objeto fictício
         Mockito.when(saborService.findById(Mockito.anyLong())).thenReturn(saborDTOFicticio);
 
 
-        // Configurar uma PizzaDTO fictícia para enviar no corpo da requisição
+
         PizzaDTO pizzaDTO = new PizzaDTO();
         pizzaDTO.setId(1L);
         pizzaDTO.setAtivo(true);
@@ -133,7 +132,7 @@ public class PizzaControllerTest {
 
     @Test
     public void testAtualizarPizza() throws Exception {
-        // Configurar uma PizzaDTO fictícia para enviar no corpo da requisição
+
         PizzaDTO pizzaDTO = new PizzaDTO();
         pizzaDTO.setId(1L);
         pizzaDTO.setAtivo(true);
@@ -142,7 +141,7 @@ public class PizzaControllerTest {
         pizzaDTO.setValorPizza(BigDecimal.valueOf(20.0));
         pizzaDTO.setQtdeSabor(0);
 
-        // Configurar comportamento do mock para retornar a PizzaDTO atualizada
+
         Mockito.when(pizzaService.atualizarPizza(any(Long.class), any(Pizza.class))).thenReturn(pizzaDTO.toPizza());
 
         mockMvc.perform(MockMvcRequestBuilders.put("/pizza/1")

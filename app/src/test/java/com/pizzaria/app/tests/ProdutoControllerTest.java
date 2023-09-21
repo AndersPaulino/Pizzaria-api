@@ -1,4 +1,4 @@
-package com.pizzaria.app.controller.tests;
+package com.pizzaria.app.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pizzaria.app.controller.ProdutoController;

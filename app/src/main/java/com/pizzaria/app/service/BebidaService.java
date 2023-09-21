@@ -5,10 +5,14 @@ import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.repository.BebidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BebidaService {
@@ -20,19 +24,15 @@ public class BebidaService {
         this.bebidaRepository = bebidaRepository;
     }
 
-    private static final String MENSAGEM_ERRO_ID = "Bebida não encontrada com ID:";
-
     public BebidaDTO findById(Long id) {
         Bebida bebida = bebidaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(MENSAGEM_ERRO_ID+id));
-
+                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + id));
         return new BebidaDTO(bebida);
     }
 
-
     public List<BebidaDTO> findAll() {
         List<Bebida> bebidas = bebidaRepository.findAll();
-        return bebidas.stream().map(BebidaDTO::new).toList();
+        return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
     }
     @Transactional(readOnly = true)
     public List<BebidaDTO> findByAtivo(boolean ativo) {
@@ -47,11 +47,11 @@ public class BebidaService {
         return bebidaDTOS;
     }
 
+    @Transactional(readOnly = true)
     public List<BebidaDTO> findByName(String nomeBebida) {
-        List<Bebida> bebidas = bebidaRepository.findByNomeBebida(nomeBebida);
-        return bebidas.stream().map(BebidaDTO::new).toList();
+        List<Bebida> bebidas = bebidaRepository.buscarBebidaporNome(nomeBebida);
+        return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
     }
-
 
     @Transactional(readOnly = true)
     public List<BebidaDTO> findByDiaRegistro(LocalDate registro) {
@@ -87,14 +87,16 @@ public class BebidaService {
         return new BebidaDTO(bebidaCadastrada);
     }
 
+    @Transactional
     public BebidaDTO atualizarBebida(Long bebidaId, BebidaDTO bebidaDTO) {
         Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
-                .orElseThrow(() -> new IllegalArgumentException(MENSAGEM_ERRO_ID+bebidaId));
+                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
         atualizarCampos(bebidaExistente, bebidaDTO);
         Bebida bebidaAtualizada = bebidaRepository.save(bebidaExistente);
         return new BebidaDTO(bebidaAtualizada);
     }
 
+    @Transactional
     private void atualizarCampos(Bebida bebida, BebidaDTO bebidaDTO) {
         if (bebidaDTO.getNomeBebida() != null) {
             bebida.setNomeBebida(bebidaDTO.getNomeBebida());
@@ -104,11 +106,13 @@ public class BebidaService {
         }
     }
 
+    @Transactional
     public void deleteBebida(Long bebidaId) {
         Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
-                .orElseThrow(() -> new IllegalArgumentException(MENSAGEM_ERRO_ID+bebidaId));
+                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
         bebidaRepository.delete(bebidaExistente);
     }
+anderson-dev
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void desativar(Long id) {

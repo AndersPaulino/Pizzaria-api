@@ -1,4 +1,4 @@
-package com.pizzaria.app.service.tests;
+package com.pizzaria.app.testService;
 
 import com.pizzaria.app.dto.EnderecoDTO;
 import com.pizzaria.app.entity.Endereco;

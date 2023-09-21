@@ -1,4 +1,4 @@
-package com.pizzaria.app.controller.tests;
+package com.pizzaria.app.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pizzaria.app.controller.EnderecoController;
@@ -202,7 +202,7 @@ public class EnderecoControllerTest {
 
     @Test
     public void testAtualizarEndereco() throws Exception {
-        // Dados de teste
+
         Long enderecoId = 1L;
         EnderecoDTO enderecoDTO = new EnderecoDTO();
         enderecoDTO.setBairro("Novo Bairro");
@@ -215,11 +215,11 @@ public class EnderecoControllerTest {
         enderecoAtualizado.setRua(enderecoDTO.getRua());
         enderecoAtualizado.setNumero(enderecoDTO.getNumero());
 
-        // Simulando o serviço
+
         when(enderecoService.atualizarEndereco(eq(enderecoId), any(EnderecoDTO.class)))
                 .thenReturn(enderecoAtualizado);
 
-        // Chamada ao endpoint
+
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
                         .put("/enderecos/{id}", enderecoId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -227,7 +227,7 @@ public class EnderecoControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // Verificações
+
         verify(enderecoService, times(1)).atualizarEndereco(eq(enderecoId), any(EnderecoDTO.class));
         String content = result.getResponse().getContentAsString();
         Endereco enderecoResponse = objectMapper.readValue(content, Endereco.class);

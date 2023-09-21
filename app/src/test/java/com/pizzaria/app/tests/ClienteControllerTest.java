@@ -5,6 +5,7 @@ import com.pizzaria.app.controller.ClienteController;
 import com.pizzaria.app.dto.ClienteDTO;
 import com.pizzaria.app.entity.Cliente;
 import com.pizzaria.app.service.ClienteService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -37,6 +38,10 @@ public class ClienteControllerTest {
     @MockBean
     private ClienteService clienteService;
 
+    @BeforeEach
+    public void setUp(){
+
+    }
     @Test
     public void testCriarCliente() throws Exception {
         // Dados de teste
