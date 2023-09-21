@@ -49,4 +49,7 @@ public class PizzaDTO {
         valorPizza = pizza.getValorPizza();
         qtdeSabor = pizza.getQtdeSabor();
     }
+    public static PizzaDTO fromPizza(Pizza pizza) {
+        return new PizzaDTO(pizza);
+    }
 }

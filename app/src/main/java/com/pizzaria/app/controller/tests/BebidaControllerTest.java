@@ -7,16 +7,25 @@ import com.pizzaria.app.entity.Bebida;
 import com.pizzaria.app.service.BebidaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -32,13 +41,18 @@ public class BebidaControllerTest {
     @MockBean
     private BebidaService bebidaService;
 
-    private static final String BEBIDA_API_URL = "/api/bebida/";
+
+    private BebidaDTO bebidaDTO;
 
     @BeforeEach
     public void setUp() {
+        Bebida bebida = new Bebida();
+        bebidaDTO = new BebidaDTO(bebida);
+        MockitoAnnotations.initMocks(this);
         BebidaController bebidaController = new BebidaController(bebidaService);
         mockMvc = MockMvcBuilders.standaloneSetup(bebidaController).build();
         objectMapper = new ObjectMapper();
+        bebidaDTO.setNomeBebida("Coca-Cola");
     }
 
     @Test
@@ -96,6 +110,49 @@ public class BebidaControllerTest {
         verify(bebidaService, times(1)).cadastrar(any(BebidaDTO.class));
     }
 
+
+    @Test
+    public void testFindByName() throws Exception {
+        String currentString = "Coca-Cola";
+
+        Mockito.when(bebidaService.findByName(currentString)).thenReturn(bebidaDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/nome/" + currentString)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    @Test
+    public void testFindByAtivo() throws Exception {
+        List<BebidaDTO> bebidaDTOList = Collections.singletonList(bebidaDTO);
+        Mockito.when(bebidaService.findByAtivo(true)).thenReturn(bebidaDTOList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/ativo/true")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testFindByDiaRegistro() throws Exception {
+        List<BebidaDTO> bebidaDTOList = Collections.singletonList(bebidaDTO);
+        LocalDate currentDate = LocalDate.now();
+        Mockito.when(bebidaService.findByDiaRegistro(currentDate)).thenReturn(bebidaDTOList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/registro/dia/" + currentDate)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testFindByDiaAtualizar() throws Exception {
+        List<BebidaDTO> bebidaDTOList = Collections.singletonList(bebidaDTO);
+        LocalDate currentDate = LocalDate.now();
+        Mockito.when(bebidaService.findByDiaAtualizar(currentDate)).thenReturn(bebidaDTOList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bebida/atualizar/dia/" + currentDate)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
     @Test
     public void testAtualizarBebida() throws Exception {
         BebidaDTO bebidaDTO = new BebidaDTO();
@@ -114,10 +171,21 @@ public class BebidaControllerTest {
     @Test
     public void testDeletarBebida() throws Exception {
         mockMvc.perform(delete(BEBIDA_API_URL + "1")
+
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Registro excluído com sucesso!"));
 
         verify(bebidaService, times(1)).deleteBebida(1L);
+    }
+
+    @Test
+    public void testDesativarBebida() throws Exception {
+        mockMvc.perform(delete("/api/bebida/desativar/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Registro desativado com sucesso!"));
+
+        verify(bebidaService, times(1)).desativar(1L);
     }
 }
