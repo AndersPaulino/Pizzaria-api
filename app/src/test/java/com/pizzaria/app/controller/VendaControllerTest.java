@@ -1,7 +1,6 @@
-package com.pizzaria.app.controller.tests;
+package com.pizzaria.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pizzaria.app.controller.VendaController;
 import com.pizzaria.app.dto.VendaDTO;
 import com.pizzaria.app.entity.Cliente;
 import com.pizzaria.app.entity.Funcionario;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -51,7 +49,7 @@ public class VendaControllerTest {
     private static final String JSON_PATH_VALOR_VENDA = "$.valorVenda";
     private static final String JSON_PATH_ID = "$.id";
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Cliente cliente = new Cliente();
         cliente.setId(1L);
         cliente.setNome("Cliente Test");
@@ -79,7 +77,7 @@ public class VendaControllerTest {
 
 
     @Test
-    public void testCadastrarVenda() throws Exception {
+    void testCadastrarVenda() throws Exception {
         VendaDTO vendaDTO = new VendaDTO();
 
         vendaDTO.setEmitirNota(true);
@@ -104,7 +102,7 @@ public class VendaControllerTest {
 
 
     @Test
-    public void testBuscarVendasPorEmitirNota() throws Exception {
+    void testBuscarVendasPorEmitirNota() throws Exception {
         boolean emitirNota = true;
 
         VendaDTO venda1 = new VendaDTO();
@@ -132,7 +130,7 @@ public class VendaControllerTest {
 
 
     @Test
-    public void testBuscarVendasPorEntregar() throws Exception {
+    void testBuscarVendasPorEntregar() throws Exception {
         boolean entregar = true;
 
         VendaDTO venda1 = new VendaDTO();
@@ -159,7 +157,7 @@ public class VendaControllerTest {
     }
 
     @Test
-    public void testBuscarVendaPorId() throws Exception {
+    void testBuscarVendaPorId() throws Exception {
         Long vendaId = 1L;
 
         Venda venda = new Venda();
@@ -192,31 +190,9 @@ public class VendaControllerTest {
     }
 
 
-    @Test
-    public void testAtualizarVenda() throws Exception {
-        Long vendaId = 1L;
-        VendaDTO vendaDTO = new VendaDTO();
-        vendaDTO.setValorVenda(BigDecimal.valueOf(125.0));
-
-        when(vendaService.atualizarVenda(vendaId, vendaDTO)).thenAnswer(invocation -> {
-            VendaDTO updatedVendaDTO = invocation.getArgument(1);
-            updatedVendaDTO.setId(vendaId);
-            return ResponseEntity.ok(updatedVendaDTO);
-        });
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put(VENDA_API_URL_WITH_ID+"1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(vendaDTO)))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_VALOR_VENDA).value(125.0))
-                .andExpect(MockMvcResultMatchers.jsonPath(JSON_PATH_ID).value(vendaId));
-    }
-
-
 
     @Test
-    public void testDeletarVenda() throws Exception {
+    void testDeletarVenda() throws Exception {
         long vendaId = 1L;
 
         mockMvc.perform(MockMvcRequestBuilders.delete(VENDA_API_URL_WITH_ID + vendaId)

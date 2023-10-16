@@ -1,7 +1,6 @@
-package com.pizzaria.app.tests;
+package com.pizzaria.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pizzaria.app.controller.PizzaController;
 import com.pizzaria.app.dto.PizzaDTO;
 import com.pizzaria.app.dto.SaborDTO;
 import com.pizzaria.app.entity.Pizza;
@@ -43,13 +42,17 @@ public class PizzaControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private PizzaDTO pizzaDTO;
+
+
     @BeforeEach
-    public void setUp() {
-        // Configurar comportamento dos mocks conforme necessário
+    void setUp() {
+        Pizza pizza = new Pizza();
+        pizzaDTO = new PizzaDTO(pizza);
     }
 
     @Test
-    public void testFindPizzaById() throws Exception {
+    void testFindPizzaById() throws Exception {
 
         PizzaDTO pizzaFicticia = new PizzaDTO();
         pizzaFicticia.setId(1L);
@@ -70,7 +73,7 @@ public class PizzaControllerTest {
     }
 
     @Test
-    public void testFindAllPizzas() throws Exception {
+    void  testFindAllPizzas() throws Exception {
 
         List<PizzaDTO> pizzas = new ArrayList<>();
 
@@ -105,7 +108,7 @@ public class PizzaControllerTest {
 
 
     @Test
-    public void testCadastrarPizza() throws Exception {
+    void testCadastrarPizza() throws Exception {
 
         SaborDTO saborDTOFicticio = new SaborDTO();
         saborDTOFicticio.setId(1L);
@@ -134,7 +137,7 @@ public class PizzaControllerTest {
     }
 
     @Test
-    public void testAtualizarPizza() throws Exception {
+    void testAtualizarPizza() throws Exception {
 
         PizzaDTO pizzaDTO = new PizzaDTO();
         pizzaDTO.setId(1L);
@@ -158,7 +161,7 @@ public class PizzaControllerTest {
 
 
     @Test
-    public void testDeletarPizza() throws Exception {
+    void testDeletarPizza() throws Exception {
         Long pizzaId = 1L;
         Mockito.doNothing().when(pizzaService).deletarPizza(pizzaId);
 

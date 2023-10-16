@@ -11,12 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/pizza")
+@RequestMapping("/api/pizza")
 public class PizzaController {
 
     private final PizzaService pizzaService;
@@ -41,32 +44,31 @@ public class PizzaController {
     }
 
     @PostMapping
-    public ResponseEntity<String> cadastrar(@RequestBody PizzaDTO pizzaDTO) {
-
+    public ResponseEntity<String> cadastrar(@RequestBody Pizza pizza) {
         try {
+            List<Sabor> sabores = pizza.getSabor();
 
-            List<SaborDTO> saborDTOs = new ArrayList<>();
-            for (Sabor saborDTO : pizzaDTO.getSabor()) {
-                Optional<SaborDTO> saborOptional = Optional.ofNullable(saborService.findById(saborDTO.getId()));
-                if (saborOptional.isPresent()) {
-                    saborDTOs.add(saborOptional.get());
-                } else {
-                    return null;
+            if (sabores == null || sabores.isEmpty()) {
+                return ResponseEntity.badRequest().body("A pizza deve ter pelo menos um sabor.");
+            }
+
+            for (Sabor sabor : sabores) {
+                Optional<SaborDTO> saborOptional = saborService.findById(sabor.getId());
+
+                if (saborOptional.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Sabor não encontrado com o ID: " + sabor.getId());
                 }
             }
 
-
-            Pizza pizza = new Pizza();
-            pizza.setSabor(pizzaDTO.getSabor());
-            pizza.setTamanho(pizzaDTO.getTamanho());
-            pizza.setValorPizza(pizzaDTO.getValorPizza());
-
             pizzaService.cadastrarPizza(pizza);
             return ResponseEntity.ok("Registro cadastrado com sucesso!");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno no servidor");
         }
     }
+
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<PizzaDTO> atualizarPizza(@PathVariable Long id, @RequestBody PizzaDTO pizzaDTO) {

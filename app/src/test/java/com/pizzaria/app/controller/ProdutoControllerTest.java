@@ -1,7 +1,6 @@
-package com.pizzaria.app.tests;
+package com.pizzaria.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pizzaria.app.controller.ProdutoController;
 import com.pizzaria.app.dto.ProdutoDTO;
 import com.pizzaria.app.entity.Produto;
 import com.pizzaria.app.repository.ProdutoRepository;
@@ -41,13 +40,13 @@ class ProdutoControllerTest {
     private static final String PRODUTO_API_URL = "/produto";
     private static final String PRODUTO_API_URL_WITH_ID = "/produto/";
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         objectMapper = new ObjectMapper();
 
     }
 
     @Test
-    public void testFindById() throws Exception {
+    void testFindById() throws Exception {
         Long produtoId = 1L;
         Produto produto = new Produto();
         produto.setId(produtoId);
@@ -63,7 +62,7 @@ class ProdutoControllerTest {
     }
 
     @Test
-    public void testFindAll() throws Exception {
+    void testFindAll() throws Exception {
         Produto produto1 = new Produto();
         produto1.setId(1L);
         produto1.setValorProduto(BigDecimal.valueOf(10.0));
@@ -87,7 +86,7 @@ class ProdutoControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].valorProduto").value(15.0));
     }
     @Test
-    public void testCadastrarProduto() throws Exception {
+    void testCadastrarProduto() throws Exception {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setValorProduto(BigDecimal.valueOf(20.0));
 
@@ -101,7 +100,7 @@ class ProdutoControllerTest {
 
 
     @Test
-    public void testAtualizarProduto() throws Exception {
+    void testAtualizarProduto() throws Exception {
         Long produtoId = 1L;
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setValorProduto(BigDecimal.valueOf(25.0));
@@ -114,7 +113,7 @@ class ProdutoControllerTest {
                 .andExpect(status().isOk());
     }
     @Test
-    public void testDeletarProduto() throws Exception {
+    void testDeletarProduto() throws Exception {
         Long produtoId = 1L;
 
         mockMvc.perform(MockMvcRequestBuilders.delete(PRODUTO_API_URL_WITH_ID+produtoId)

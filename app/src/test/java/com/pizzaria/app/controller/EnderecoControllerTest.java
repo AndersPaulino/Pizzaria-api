@@ -1,13 +1,11 @@
-package com.pizzaria.app.tests;
+package com.pizzaria.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pizzaria.app.controller.EnderecoController;
 import com.pizzaria.app.dto.EnderecoDTO;
 import com.pizzaria.app.entity.Endereco;
 import com.pizzaria.app.service.EnderecoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(EnderecoController.class)
 @AutoConfigureMockMvc
-public class EnderecoControllerTest {
+class EnderecoControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -67,7 +65,7 @@ public class EnderecoControllerTest {
 
 
     @Test
-    public void testListarEnderecos() throws Exception {
+    void testListarEnderecos() throws Exception {
         List<Endereco> enderecos = new ArrayList<>();
         Endereco endereco1 = new Endereco();
         endereco1.setId(1L);
@@ -95,7 +93,7 @@ public class EnderecoControllerTest {
     }
 
     @Test
-    public void testBuscarEnderecoPorBairro() throws Exception {
+    void testBuscarEnderecoPorBairro() throws Exception {
         String bairro = "Bairro Teste";
         List<Endereco> enderecos = new ArrayList<>();
         Endereco endereco1 = new Endereco();
@@ -124,7 +122,7 @@ public class EnderecoControllerTest {
     }
 
     @Test
-    public void testBuscarEnderecoPorRua() throws Exception {
+    void testBuscarEnderecoPorRua() throws Exception {
         String rua = "Rua Teste";
         List<Endereco> enderecos = new ArrayList<>();
         Endereco endereco1 = new Endereco();
@@ -153,7 +151,7 @@ public class EnderecoControllerTest {
     }
 
     @Test
-    public void testBuscarEnderecoPorNumero() throws Exception {
+    void testBuscarEnderecoPorNumero() throws Exception {
         int numero = 123;
         List<Endereco> enderecos = new ArrayList<>();
         Endereco endereco1 = new Endereco();
@@ -182,7 +180,7 @@ public class EnderecoControllerTest {
     }
 
     @Test
-    public void testBuscarEnderecoPorId() throws Exception {
+    void testBuscarEnderecoPorId() throws Exception {
         Long enderecoId = 1L;
         Endereco endereco = new Endereco();
         endereco.setId(enderecoId);
@@ -202,7 +200,7 @@ public class EnderecoControllerTest {
     }
 
     @Test
-    public void testAtualizarEndereco() throws Exception {
+    void testAtualizarEndereco() throws Exception {
 
         Long enderecoId = 1L;
         EnderecoDTO enderecoDTO = new EnderecoDTO();
@@ -240,7 +238,7 @@ public class EnderecoControllerTest {
 
 
     @Test
-    public void testDeletarEndereco() throws Exception {
+    void testDeletarEndereco() throws Exception {
         Long enderecoId = 1L;
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/enderecos/{id}", enderecoId)

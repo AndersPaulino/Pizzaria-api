@@ -5,6 +5,8 @@ import com.pizzaria.app.entity.Cliente;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter
 public class ClienteDTO {
     private Long id;
