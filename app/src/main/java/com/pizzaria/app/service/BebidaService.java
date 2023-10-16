@@ -111,12 +111,14 @@ public class BebidaService {
 
     public void desativar(Long id) {
         Optional<Bebida> bebidaOptional = bebidaRepository.findById(id);
+        Bebida bebida = bebidaOptional.get();
 
         if (bebidaOptional.isPresent()) {
-            Bebida bebida = bebidaOptional.get();
             bebida.setAtivo(false);
+            bebidaRepository.save(bebida);
+            throw new IllegalArgumentException("Bebida desativado com sucesso!");
         } else {
-            throw new IllegalArgumentException("ID de estoque inválido!");
+            throw new IllegalArgumentException("ID da Bebida inválido!");
         }
     }
 }
