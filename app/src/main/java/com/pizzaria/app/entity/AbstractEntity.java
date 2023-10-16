@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-public class AbstractEntity {
+public abstract class AbstractEntity {
     @Id
     @Getter @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +24,12 @@ public class AbstractEntity {
     private LocalDateTime atualizar;
 
     @PrePersist
-    private void prePersist(){
+    void prePersist(){
         this.registro = LocalDateTime.now();
         this.ativo = true;
     }
     @PreUpdate
-    private void preUpdate(){
+    void preUpdate(){
         this.atualizar = LocalDateTime.now();
     }
 }

@@ -1,9 +1,10 @@
 package com.pizzaria.app.controller;
 
 import com.pizzaria.app.dto.BebidaDTO;
+import com.pizzaria.app.entity.Bebida;
+import com.pizzaria.app.repository.BebidaRepository;
 import com.pizzaria.app.service.BebidaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,25 +16,42 @@ import java.util.List;
 @RequestMapping("/api/bebida")
 public class BebidaController {
     private final BebidaService bebidaService;
+    private final BebidaRepository bebidaRepository;
 
     @Autowired
-    public BebidaController(BebidaService bebidaService) {
+    public BebidaController(BebidaService bebidaService,
+                            BebidaRepository bebidaRepository) {
         this.bebidaService = bebidaService;
+        this.bebidaRepository = bebidaRepository;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BebidaDTO> findById(@PathVariable Long id) {
-        BebidaDTO bebidaDTO = bebidaService.findById(id);
-        return bebidaDTO != null
-                ? ResponseEntity.ok(bebidaDTO)
-                : ResponseEntity.notFound().build();
+       return bebidaService.findById(id)
+               .map(ResponseEntity::ok)
+               .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public List<BebidaDTO> findAll() {
-        return bebidaService.findAll();
+    public ResponseEntity<List<BebidaDTO>> findAll() {
+        List<BebidaDTO> bebidaDTOS = bebidaService.findAll();
+        return ResponseEntity.ok(bebidaDTOS);
     }
 
+    @GetMapping("/nome/{nomeBebida}")
+    public ResponseEntity<BebidaDTO> findByName(@PathVariable String nomeBebida) {
+        try{
+            BebidaDTO bebidaDTO = bebidaService.findByName(nomeBebida);
+
+            if (bebidaDTO != null){
+                return ResponseEntity.ok(bebidaDTO);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @GetMapping("ativo/{ativo}")
     public ResponseEntity<List<BebidaDTO>> findByAtivo(@PathVariable boolean ativo) {
@@ -48,12 +66,6 @@ public class BebidaController {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-
-    @GetMapping("/nome/{nomeBebida}")
-    public BebidaDTO findByName(@PathVariable String nomeBebida) {
-        return bebidaService.findByName(nomeBebida);
     }
 
     @GetMapping("registro/dia/{registro}")
@@ -87,16 +99,10 @@ public class BebidaController {
     }
 
     @PostMapping
-    public ResponseEntity<String> cadastrarBebida(@RequestBody BebidaDTO bebidaDTO) {
+    public ResponseEntity<String> cadastrarBebida(@RequestBody Bebida bebida) {
         try {
-            BebidaDTO bebidaCadastrada = bebidaService.cadastrar(bebidaDTO);
-            Long idBebidaCadastrada = bebidaCadastrada.getId();
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", "/api/bebida/" + idBebidaCadastrada);
-
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .headers(headers)
-                    .body("Registro cadastrado com sucesso! ID da bebida: " + idBebidaCadastrada);
+            bebidaService.cadastrar(bebida);
+            return ResponseEntity.ok().body("Registro cadastrado com sucesso!");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -104,16 +110,10 @@ public class BebidaController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarBebida(@PathVariable Long id, @RequestBody BebidaDTO bebidaDTO) {
+    public ResponseEntity<String> atualizarBebida(@PathVariable Long id, @RequestBody Bebida bebida) {
         try {
-            bebidaDTO.setId(id);
-            BebidaDTO bebidaAtualizada = bebidaService.atualizarBebida(id, bebidaDTO);
-
-            if (bebidaAtualizada != null) {
-                return ResponseEntity.ok("Registro atualizado com sucesso!");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar bebida.");
-            }
+            bebidaService.atualizar(id, bebida);
+            return ResponseEntity.ok().body("Registro atualizado com sucesso!");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -131,7 +131,7 @@ public class BebidaController {
     }
 
     @DeleteMapping("/desativar/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id) {
+    public ResponseEntity<String> deletar(@PathVariable Long id) {
         try {
             bebidaService.desativar(id);
             return ResponseEntity.ok().body("Registro desativado com sucesso!");
