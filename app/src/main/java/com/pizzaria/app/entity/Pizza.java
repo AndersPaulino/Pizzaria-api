@@ -13,14 +13,8 @@ import java.util.List;
 public class Pizza extends AbstractEntity{
 
     @Getter @Setter
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "cl_pizza.sabor",
-            uniqueConstraints = @UniqueConstraint(
-                    columnNames = {
-                            "pizza.id",
-                            "sabor.id"
-                    }
-            ),
             joinColumns =  @JoinColumn(
                     name = "pizza.id"
             ),
