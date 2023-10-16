@@ -13,13 +13,15 @@ public class BebidaDTO {
     private BigDecimal valorBebida;
     private boolean ativo;
     private LocalDateTime registro;
+    private LocalDateTime atualizar;
 
-    public BebidaDTO(Long id, String nomeBebida, BigDecimal valorBebida, boolean ativo, LocalDateTime registro) {
+    public BebidaDTO(Long id, String nomeBebida, BigDecimal valorBebida, boolean ativo, LocalDateTime registro, LocalDateTime atualizar) {
         this.id = id;
         this.nomeBebida = nomeBebida;
         this.valorBebida = valorBebida;
         this.ativo = ativo;
         this.registro = registro;
+        this.atualizar = atualizar;
     }
 
     public BebidaDTO(Bebida bebida) {
@@ -28,8 +30,7 @@ public class BebidaDTO {
         valorBebida = bebida.getValorBebida();
         ativo = bebida.isAtivo();
         registro = bebida.getRegistro();
+        atualizar = bebida.getAtualizar();
     }
-
-    public BebidaDTO() {}
 
 }

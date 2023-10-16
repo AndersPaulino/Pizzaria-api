@@ -1,7 +1,6 @@
-package com.pizzaria.app.controller.tests;
+package com.pizzaria.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pizzaria.app.controller.ClienteController;
 import com.pizzaria.app.dto.ClienteDTO;
 import com.pizzaria.app.entity.Cliente;
 import com.pizzaria.app.service.ClienteService;
@@ -38,12 +37,15 @@ class ClienteControllerTest {
     @MockBean
     private ClienteService clienteService;
 
+    private ClienteDTO clienteDTO;
+
     @BeforeEach
     public void setUp(){
-
+        Cliente cliente = new Cliente();
+        clienteDTO = new ClienteDTO(cliente);
     }
     @Test
-    public void testCriarCliente() throws Exception {
+    void testCriarCliente() throws Exception {
         // Dados de teste
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setNome("João");
@@ -68,7 +70,7 @@ class ClienteControllerTest {
     }
 
     @Test
-    public void testListarTodosClientes() throws Exception {
+    void testListarTodosClientes() throws Exception {
         // Dados de teste
         ClienteDTO cliente1 = new ClienteDTO();
         cliente1.setId(1L);
@@ -92,8 +94,9 @@ class ClienteControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(clientesDTO.size()));
     }
 
+
     @Test
-    public void testBuscarClientesPorNome() throws Exception {
+    void testBuscarClientesPorNome() throws Exception {
         // Dados de teste
         String nome = "Cliente 1";
         Cliente cliente1 = new Cliente();
@@ -114,7 +117,7 @@ class ClienteControllerTest {
     }
 
     @Test
-    public void testBuscarClientesPorCpf() throws Exception {
+    void testBuscarClientesPorCpf() throws Exception {
         // Dados de teste
         String cpf = "1234567890";
         Cliente cliente1 = new Cliente();
@@ -135,7 +138,7 @@ class ClienteControllerTest {
     }
 
     @Test
-    public void testBuscarClientePorId() throws Exception {
+    void testBuscarClientePorId() throws Exception {
         // Dados de teste
         Long clienteId = 1L;
         Cliente cliente = new Cliente();
@@ -162,7 +165,24 @@ class ClienteControllerTest {
     }
 
     @Test
-    public void testAtualizarCliente() throws Exception {
+    void testBuscarClientePorIdClienteNaoEncontrado() throws Exception {
+        Long clienteId = 1L;
+
+        // Simular o serviço retornando um cliente vazio (cliente não encontrado)
+        when(clienteService.buscarClientePorId(clienteId)).thenReturn(Optional.empty());
+
+        // Executar a requisição GET para buscar o cliente pelo ID
+        mockMvc.perform(MockMvcRequestBuilders.get("/clientes/{id}", clienteId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+
+
+
+
+    @Test
+    void testAtualizarCliente() throws Exception {
         // Dados de teste
         Long clienteId = 1L;
         ClienteDTO clienteDTO = new ClienteDTO();
@@ -196,7 +216,7 @@ class ClienteControllerTest {
     }
 
     @Test
-    public void testDeletarCliente() throws Exception {
+    void testDeletarCliente() throws Exception {
         // Dados de teste
         Long id = 1L;
 

@@ -9,10 +9,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BebidaService {
@@ -23,106 +21,104 @@ public class BebidaService {
     public BebidaService(BebidaRepository bebidaRepository) {
         this.bebidaRepository = bebidaRepository;
     }
-
-    public BebidaDTO findById(Long id) {
-        Bebida bebida = bebidaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + id));
-        return new BebidaDTO(bebida);
+    @Transactional(readOnly = true)
+    public Optional<BebidaDTO> findById(Long id) {
+        return bebidaRepository.findById(id).map(BebidaDTO::new);
     }
-
+    @Transactional(readOnly = true)
     public List<BebidaDTO> findAll() {
         List<Bebida> bebidas = bebidaRepository.findAll();
-        return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
+        return bebidas.stream().map(BebidaDTO::new).toList();
     }
+
+    @Transactional(readOnly = true)
+    public BebidaDTO findByName(String nomeBebida) {
+        Bebida bebidas = bebidaRepository.findByName(nomeBebida);
+        return new BebidaDTO(bebidas);
+    }
+
     @Transactional(readOnly = true)
     public List<BebidaDTO> findByAtivo(boolean ativo) {
         List<Bebida> bebidas = bebidaRepository.findByAtivo(ativo);
 
-        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
-
-        for (Bebida bebida : bebidas) {
-            BebidaDTO dto = new BebidaDTO(bebida);
-            bebidaDTOS.add(dto);
-        }
-        return bebidaDTOS;
-    }
-
-    @Transactional(readOnly = true)
-    public List<BebidaDTO> findByName(String nomeBebida) {
-        List<Bebida> bebidas = bebidaRepository.buscarBebidaporNome(nomeBebida);
-        return bebidas.stream().map(BebidaDTO::new).collect(Collectors.toList());
+        return bebidas.stream()
+                .map(BebidaDTO::new)
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public List<BebidaDTO> findByDiaRegistro(LocalDate registro) {
         List<Bebida> bebidas = bebidaRepository.findByDiaRegistro(registro);
 
-        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
-
-        for (Bebida bebida : bebidas) {
-            BebidaDTO dto = new BebidaDTO(bebida);
-            bebidaDTOS.add(dto);
-        }
-        return bebidaDTOS;
+        return bebidas.stream()
+                .map(BebidaDTO::new)
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public List<BebidaDTO> findByDiaAtualizar(LocalDate atualizar) {
         List<Bebida> bebidas = bebidaRepository.findByDiaAtualizar(atualizar);
 
-        List<BebidaDTO> bebidaDTOS = new ArrayList<>();
+        return bebidas.stream()
+                .map(BebidaDTO::new)
+                .toList();
+    }
 
-        for (Bebida bebida : bebidas) {
-            BebidaDTO dto = new BebidaDTO(bebida);
-            bebidaDTOS.add(dto);
+    @Transactional(rollbackFor = Exception.class)
+    public void cadastrar(Bebida bebida) {
+        validarBebibda(bebida);
+        bebidaRepository.save(bebida);
+    }
+
+
+    public void validarBebibda(final Bebida bebida) {
+        if (bebida.getNomeBebida() == null || bebida.getNomeBebida().isEmpty()) {
+            throw new IllegalArgumentException("Nome da Bebida não informado!");
         }
-        return bebidaDTOS;
-    }
-
-    @Transactional
-    public BebidaDTO cadastrar(BebidaDTO bebidaDTO) {
-        Bebida bebida = new Bebida();
-        atualizarCampos(bebida, bebidaDTO);
-        Bebida bebidaCadastrada = bebidaRepository.save(bebida);
-        return new BebidaDTO(bebidaCadastrada);
-    }
-
-    @Transactional
-    public BebidaDTO atualizarBebida(Long bebidaId, BebidaDTO bebidaDTO) {
-        Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
-                .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
-        atualizarCampos(bebidaExistente, bebidaDTO);
-        Bebida bebidaAtualizada = bebidaRepository.save(bebidaExistente);
-        return new BebidaDTO(bebidaAtualizada);
-    }
-
-    @Transactional
-    private void atualizarCampos(Bebida bebida, BebidaDTO bebidaDTO) {
-        if (bebidaDTO.getNomeBebida() != null) {
-            bebida.setNomeBebida(bebidaDTO.getNomeBebida());
-        }
-        if (bebidaDTO.getValorBebida() != null) {
-            bebida.setValorBebida(bebidaDTO.getValorBebida());
+        if (bebida.getValorBebida() == null) {
+            throw new IllegalArgumentException("Valor da Bebida não informado!");
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public void atualizar(Long id, Bebida bebida){
+        validarBebibda(bebida);
+        Optional<Bebida> bebidaOptional = bebidaRepository.findById(id);
+        Bebida bebidaExistente = bebidaOptional.get();
+
+        if (bebidaOptional.isPresent()){
+            if (bebida.getNomeBebida() != null){
+                bebidaExistente.setNomeBebida(bebida.getNomeBebida());
+                bebidaRepository.save(bebidaExistente);
+            }
+            if (bebida.getValorBebida() != null){
+                bebidaExistente.setValorBebida(bebida.getValorBebida());
+                bebidaRepository.save(bebidaExistente);
+            }
+        }else {
+            throw new IllegalArgumentException("Id da Bebida inválido!");
+        }
+    }
+
+
     public void deleteBebida(Long bebidaId) {
         Bebida bebidaExistente = bebidaRepository.findById(bebidaId)
                 .orElseThrow(() -> new IllegalArgumentException("Bebida não encontrada com ID: " + bebidaId));
         bebidaRepository.delete(bebidaExistente);
     }
-anderson-dev
 
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+
+
     public void desativar(Long id) {
         Optional<Bebida> bebidaOptional = bebidaRepository.findById(id);
+        Bebida bebida = bebidaOptional.get();
 
         if (bebidaOptional.isPresent()) {
-            Bebida bebida = bebidaOptional.get();
             bebida.setAtivo(false);
+            bebidaRepository.save(bebida);
+            throw new IllegalArgumentException("Bebida desativado com sucesso!");
         } else {
-            throw new IllegalArgumentException("ID de estoque inválido!");
+            throw new IllegalArgumentException("ID da Bebida inválido!");
         }
     }
 }

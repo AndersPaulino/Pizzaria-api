@@ -1,16 +1,13 @@
-package com.pizzaria.app.testService;
+package com.pizzaria.app.service;
 
-import com.pizzaria.app.controller.BebidaController;
 import com.pizzaria.app.dto.ClienteDTO;
 import com.pizzaria.app.dto.EnderecoDTO;
 import com.pizzaria.app.entity.Cliente;
 import com.pizzaria.app.entity.Endereco;
 import com.pizzaria.app.repository.ClienteRepository;
-import com.pizzaria.app.service.ClienteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,12 +29,12 @@ class ClienteServiceTest {
     private ClienteRepository clienteRepository;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testCriarCliente() {
+    void testCriarCliente() {
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setNome("João");
         clienteDTO.setCpf("1234567890");
@@ -69,7 +66,7 @@ class ClienteServiceTest {
 
         ClienteDTO clienteCriadoDTO = clienteService.criarCliente(clienteDTO);
 
-        // Verificações
+
         assertNotNull(clienteCriadoDTO);
         assertEquals(clienteCriado.getId(), clienteCriadoDTO.getId());
         assertEquals(clienteCriado.getNome(), clienteCriadoDTO.getNome());
@@ -82,7 +79,7 @@ class ClienteServiceTest {
 
 
     @Test
-    public void testListarTodosClientesDTO() {
+    void testListarTodosClientesDTO() {
         List<Cliente> clientes = new ArrayList<>();
         Cliente cliente1 = new Cliente();
         cliente1.setId(1L);
@@ -110,7 +107,7 @@ class ClienteServiceTest {
 
         List<ClienteDTO> clienteDTOs = clienteService.listarTodosClientesDTO();
 
-        // Verificações
+
         assertNotNull(clienteDTOs);
         assertEquals(2, clienteDTOs.size());
 
@@ -134,8 +131,8 @@ class ClienteServiceTest {
     }
 
     @Test
-    public void testBuscarClientesPorNome() {
-        // Dados de teste
+    void testBuscarClientesPorNome() {
+
         String nome = "Cliente 1";
         Cliente cliente1 = new Cliente();
         cliente1.setId(1L);
@@ -147,13 +144,11 @@ class ClienteServiceTest {
         endereco1.setNumero(1);
         cliente1.setEndereco(endereco1);
 
-        // Simulando o repositório
+
         when(clienteRepository.findByNome(nome)).thenReturn(List.of(cliente1));
 
-        // Chamada ao serviço
         List<Cliente> clientesEncontrados = clienteService.buscarClientesPorNome(nome);
 
-        // Verificações
         assertNotNull(clientesEncontrados);
         assertEquals(1, clientesEncontrados.size());
         Cliente clienteEncontrado = clientesEncontrados.get(0);
@@ -167,8 +162,8 @@ class ClienteServiceTest {
     }
 
     @Test
-    public void testBuscarClientesPorCpf() {
-        // Dados de teste
+    void testBuscarClientesPorCpf() {
+
         String cpf = "123456";
         Cliente cliente1 = new Cliente();
         cliente1.setId(1L);
@@ -180,7 +175,6 @@ class ClienteServiceTest {
         endereco1.setNumero(1);
         cliente1.setEndereco(endereco1);
 
-        // Simulando o repositório
         when(clienteRepository.findByCpf(cpf)).thenReturn(List.of(cliente1));
 
         // Chamada ao serviço
@@ -237,8 +231,8 @@ class ClienteServiceTest {
     }
 
     @Test
-    public void testAtualizarCliente() {
-        // Dados de teste
+    void testAtualizarCliente() {
+
         Long id = 1L;
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setNome("Novo Nome");
@@ -264,7 +258,7 @@ class ClienteServiceTest {
     }
 
     @Test
-    public void testAtualizarClienteNaoEncontrado() {
+    void testAtualizarClienteNaoEncontrado() {
         // Dados de teste
         Long id = 1L;
         ClienteDTO clienteDTO = new ClienteDTO();
@@ -282,7 +276,7 @@ class ClienteServiceTest {
     }
 
     @Test
-    public void testDeletarCliente() {
+    void testDeletarCliente() {
         // Dados de teste
         Long id = 1L;
 

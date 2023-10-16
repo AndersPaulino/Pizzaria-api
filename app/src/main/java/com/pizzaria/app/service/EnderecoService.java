@@ -14,22 +14,29 @@ import java.util.Optional;
 public class EnderecoService {
     @Autowired
     private EnderecoRepository enderecoRepository;
-
+    private static final String msg = "Ola mundo";
     public EnderecoDTO criarEndereco(EnderecoDTO enderecoDTO) {
-        if (enderecoDTO == null) {
-            throw new IllegalArgumentException("O objeto enderecoDTO não pode ser nulo.");
+        try {
+            Endereco endereco = new Endereco();
+            endereco.setBairro(enderecoDTO.getBairro());
+            endereco.setRua(enderecoDTO.getRua());
+            endereco.setNumero(enderecoDTO.getNumero());
+
+            endereco = enderecoRepository.save(endereco);
+
+            EnderecoDTO novoEnderecoDTO = new EnderecoDTO();
+            novoEnderecoDTO.setId(endereco.getId());
+            novoEnderecoDTO.setBairro(endereco.getBairro());
+            novoEnderecoDTO.setRua(endereco.getRua());
+            novoEnderecoDTO.setNumero(endereco.getNumero());
+
+            return novoEnderecoDTO;
+        } catch (Exception e) {
+
+            throw new RuntimeException(msg);
         }
-        Endereco endereco = new Endereco();
-        endereco.setBairro(enderecoDTO.getBairro());
-        endereco.setRua(enderecoDTO.getRua());
-        endereco.setNumero(enderecoDTO.getNumero());
-
-
-        endereco = enderecoRepository.save(endereco);
-
-        enderecoDTO.setId(endereco.getId());
-        return enderecoDTO;
     }
+
 
 
     public List<Endereco> buscarEnderecosPorBairro(String bairro) {

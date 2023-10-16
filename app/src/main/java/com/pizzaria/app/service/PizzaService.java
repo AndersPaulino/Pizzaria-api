@@ -5,11 +5,12 @@ import com.pizzaria.app.entity.Pizza;
 import com.pizzaria.app.entity.Sabor;
 import com.pizzaria.app.entity.Tamanho;
 import com.pizzaria.app.repository.PizzaRepository;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class PizzaService {
     public PizzaService(PizzaRepository pizzaRepository) {
         this.pizzaRepository = pizzaRepository;
     }
-
+    @Transactional(readOnly = true)
     public PizzaDTO findById(Long id) {
         Pizza entity = pizzaRepository.findById(id).orElse(null);
         if (entity == null) {
@@ -31,10 +32,34 @@ public class PizzaService {
         }
         return new PizzaDTO(entity);
     }
-
+    @Transactional(readOnly = true)
     public List<PizzaDTO> findAll() {
         List<Pizza> pizzass = pizzaRepository.findAll();
         return pizzass.stream().map(PizzaDTO::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PizzaDTO> findByAtivo(boolean ativo){
+        List<Pizza> pizzas = pizzaRepository.findByAivo(ativo);
+        return pizzas.stream()
+                .map(PizzaDTO::new)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PizzaDTO> findByDiaRegistro(LocalDate registro){
+        List<Pizza> pizzas = pizzaRepository.findByDiaRegistro(registro);
+        return pizzas.stream()
+                .map(PizzaDTO::new)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PizzaDTO> findByDiaAtualizar(LocalDate atualizar){
+        List<Pizza> pizzas = pizzaRepository.findByDiaAtualizar(atualizar);
+        return pizzas.stream()
+                .map(PizzaDTO::new)
+                .toList();
     }
 
     public void cadastrarPizza(Pizza pizza) {

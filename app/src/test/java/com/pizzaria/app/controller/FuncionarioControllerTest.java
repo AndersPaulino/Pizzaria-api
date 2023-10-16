@@ -1,9 +1,7 @@
-package com.pizzaria.app.controller.tests;
+package com.pizzaria.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pizzaria.app.controller.FuncionarioController;
 import com.pizzaria.app.dto.FuncionarioDTO;
-import com.pizzaria.app.entity.Funcionario;
 import com.pizzaria.app.service.FuncionarioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(FuncionarioController.class)
 @AutoConfigureMockMvc
-public class FuncionarioControllerTest {
+class FuncionarioControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,7 +42,7 @@ public class FuncionarioControllerTest {
     }
 
     @Test
-    public void testListarTodosFuncionarios() throws Exception {
+    void testListarTodosFuncionarios() throws Exception {
         // Crie uma lista de FuncionarioDTOs para simular o retorno do serviço
         FuncionarioDTO funcionarioDTO1 = new FuncionarioDTO();
         funcionarioDTO1.setId(1L);
@@ -71,7 +69,7 @@ public class FuncionarioControllerTest {
     }
 
     @Test
-    public void testBuscarFuncionarioPorIdExistente() throws Exception {
+    void testBuscarFuncionarioPorIdExistente() throws Exception {
         // Crie um FuncionarioDTO para simular o retorno do serviço
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
         funcionarioDTO.setId(1L);
@@ -90,7 +88,7 @@ public class FuncionarioControllerTest {
     }
 
     @Test
-    public void testBuscarFuncionarioPorIdInexistente() throws Exception {
+    void testBuscarFuncionarioPorIdInexistente() throws Exception {
         // Configure o comportamento do mock do serviço para retornar Optional vazio
         when(funcionarioService.buscarFuncionarioPorIdDTO(1L)).thenReturn(Optional.empty());
 
