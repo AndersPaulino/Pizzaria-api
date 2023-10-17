@@ -12,53 +12,99 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/clientes")
+@CrossOrigin(origins = "*")
 public class ClienteController {
+    private final ClienteService clienteService;
+
     @Autowired
-    private ClienteService clienteService;
-
-    @PostMapping
-    public ResponseEntity<ClienteDTO> criarCliente(@RequestBody ClienteDTO clienteDTO) {
-        ClienteDTO clienteCriado = clienteService.criarCliente(clienteDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(clienteCriado);
-    }
-
-    @GetMapping("/nome/{nome}")
-    public List<Cliente> buscarClientesPorNome(@PathVariable String nome) {
-        return clienteService.buscarClientesPorNome(nome);
-    }
-
-    @GetMapping("/cpf/{cpf}")
-    public List<Cliente> buscarClientesPorCpf(@PathVariable String cpf) {
-        return clienteService.buscarClientesPorCpf(cpf);
-    }
-
-
-    @GetMapping
-    public ResponseEntity<List<ClienteDTO>> listarTodosClientes() {
-        List<ClienteDTO> clientesDTO = clienteService.listarTodosClientesDTO();
-        return ResponseEntity.ok(clientesDTO);
+    public ClienteController(ClienteService clienteService) {
+        this.clienteService = clienteService;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
-        Optional<Cliente> clienteOptional = clienteService.buscarClientePorId(id);
+    public ResponseEntity<ClienteDTO> findById(@PathVariable Long id) {
+        return clienteService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
-        if (clienteOptional.isPresent()) {
-            Cliente cliente = clienteOptional.get();
-            return ResponseEntity.ok(cliente);
-        } else {
-            return ResponseEntity.notFound().build();
+    @GetMapping
+    public ResponseEntity<List<ClienteDTO>> findAll() {
+        List<ClienteDTO> clienteDTOS = clienteService.findAll();
+        return ResponseEntity.ok(clienteDTOS);
+    }
+
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<ClienteDTO> findByName(@PathVariable String nome) {
+        try {
+            ClienteDTO clienteDTO = clienteService.findByNome(nome);
+
+            if (clienteDTO != null) {
+                return ResponseEntity.ok(clienteDTO);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<ClienteDTO> findByCpf(@PathVariable String cpf) {
+        try {
+            ClienteDTO clienteDTO = clienteService.findByCpf(cpf);
 
-    @PutMapping("/{id}")
-    public Cliente atualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
-        return clienteService.atualizarCliente(id, clienteDTO);
+            if (clienteDTO != null) {
+                return ResponseEntity.ok(clienteDTO);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public void deletarCliente(@PathVariable Long id) {
-        clienteService.deletarCliente(id);
+// ... (similar adjustments for other endpoints)
+
+    @PostMapping
+    public ResponseEntity<String> cadastrarCliente(@RequestBody Cliente cliente) {
+        try {
+            clienteService.cadastrar(cliente);
+            return ResponseEntity.ok().body("Registro cadastrado com sucesso!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
+        try {
+            clienteService.attualizar(id, cliente);
+            return ResponseEntity.ok().body("Registro atualizado com sucesso!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<String> deletarCliente(@PathVariable Long id) {
+        try {
+            clienteService.deleteClient(id);
+            return ResponseEntity.ok("Registro excluído com sucesso!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/desativar/{id}")
+    public ResponseEntity<String> desativarCliente(@PathVariable Long id) {
+        try {
+            clienteService.desativar(id);
+            return ResponseEntity.ok().body("Registro desativado com sucesso!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao desativar o registro.");
+        }
     }
 }

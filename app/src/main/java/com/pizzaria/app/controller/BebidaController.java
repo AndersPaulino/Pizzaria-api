@@ -2,7 +2,6 @@ package com.pizzaria.app.controller;
 
 import com.pizzaria.app.dto.BebidaDTO;
 import com.pizzaria.app.entity.Bebida;
-import com.pizzaria.app.repository.BebidaRepository;
 import com.pizzaria.app.service.BebidaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

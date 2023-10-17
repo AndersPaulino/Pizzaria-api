@@ -15,10 +15,10 @@ import java.util.List;
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     @EntityGraph(attributePaths = "endereco")
-    List<Cliente> findByNome(String nome);
+    Cliente findByNome(String nome);
 
     @EntityGraph(attributePaths = "endereco")
-    List<Cliente> findByCpf(String cpf);
+    Cliente findByCpf(String cpf);
 
     @Query("SELECT e FROM Cliente e WHERE e.ativo = :ativo")
     public List<Cliente> findByAtivo(@Param("ativo") boolean ativo);
