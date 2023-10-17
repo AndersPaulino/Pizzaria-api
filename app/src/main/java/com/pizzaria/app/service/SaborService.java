@@ -69,14 +69,15 @@ public class SaborService {
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void atualizar(Long id, Sabor sabor) {
         Optional<Sabor> sabors = saborRepository.findById(id);
-        Sabor saborExistente = sabors.get();
 
-        if (sabors != null){
-            if (sabor.getNomeSabor() != null){
+        if (sabors.isPresent()) {
+            Sabor saborExistente = sabors.get();
+
+            if (sabor.getNomeSabor() != null) {
                 saborExistente.setNomeSabor(sabor.getNomeSabor());
                 saborRepository.save(saborExistente);
             }
-        }else {
+        } else {
             throw new IllegalArgumentException("Id do Sabor Inválido!");
         }
     }
