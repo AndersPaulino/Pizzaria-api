@@ -40,7 +40,7 @@ class ClienteControllerTest {
     private ClienteDTO clienteDTO;
 
     @BeforeEach
-    public void setUp(){
+    void setUp(){
         Cliente cliente = new Cliente();
         clienteDTO = new ClienteDTO(cliente);
     }

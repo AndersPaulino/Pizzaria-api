@@ -14,7 +14,7 @@ import java.util.Optional;
 public class EnderecoService {
     @Autowired
     private EnderecoRepository enderecoRepository;
-    private static final String msg = "Ola mundo";
+    private static final String mensagem = "Ola mundo";
     public EnderecoDTO criarEndereco(EnderecoDTO enderecoDTO) {
         try {
             Endereco endereco = new Endereco();
@@ -33,7 +33,7 @@ public class EnderecoService {
             return novoEnderecoDTO;
         } catch (Exception e) {
 
-            throw new RuntimeException(msg);
+            throw new RuntimeException(mensagem);
         }
     }
 

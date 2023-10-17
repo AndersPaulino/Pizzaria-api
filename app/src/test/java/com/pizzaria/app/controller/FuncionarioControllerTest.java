@@ -38,7 +38,7 @@ class FuncionarioControllerTest {
     private FuncionarioService funcionarioService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
     }
 
     @Test
@@ -99,7 +99,7 @@ class FuncionarioControllerTest {
     }
 
     @Test
-    public void testBuscarFuncionariosPorNome() throws Exception {
+    void testBuscarFuncionariosPorNome() throws Exception {
         // Crie uma lista de FuncionarioDTOs para simular o retorno do serviço
         FuncionarioDTO funcionarioDTO1 = new FuncionarioDTO();
         funcionarioDTO1.setId(1L);
@@ -126,7 +126,7 @@ class FuncionarioControllerTest {
     }
 
     @Test
-    public void testCadastrarFuncionario() throws Exception {
+    void testCadastrarFuncionario() throws Exception {
         // Configurar um FuncionarioDTO fictício para enviar no corpo da requisição
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
         funcionarioDTO.setId(1L);
@@ -144,7 +144,7 @@ class FuncionarioControllerTest {
     }
 
     @Test
-    public void testAtualizarFuncionario() throws Exception {
+    void testAtualizarFuncionario() throws Exception {
         // Dados de teste
         Long funcionarioId = 1L;
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
@@ -174,11 +174,8 @@ class FuncionarioControllerTest {
         assertEquals(funcionarioDTO.getNome(), funcionarioResponse.getNome());
     }
 
-
-
-
     @Test
-    public void testDeletarFuncionario() throws Exception {
+    void testDeletarFuncionario() throws Exception {
         // Realize a solicitação DELETE para /funcionarios/1
         mockMvc.perform(delete("/funcionarios/1"))
                 .andExpect(status().isNoContent());

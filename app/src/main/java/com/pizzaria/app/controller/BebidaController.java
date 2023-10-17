@@ -14,15 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/bebida")
+@CrossOrigin(origins = "*")
 public class BebidaController {
     private final BebidaService bebidaService;
-    private final BebidaRepository bebidaRepository;
-
     @Autowired
-    public BebidaController(BebidaService bebidaService,
-                            BebidaRepository bebidaRepository) {
+    public BebidaController(BebidaService bebidaService) {
         this.bebidaService = bebidaService;
-        this.bebidaRepository = bebidaRepository;
     }
 
     @GetMapping("/{id}")

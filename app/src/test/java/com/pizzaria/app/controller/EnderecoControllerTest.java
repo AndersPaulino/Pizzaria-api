@@ -41,12 +41,12 @@ class EnderecoControllerTest {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         // Configurar comportamento dos mocks conforme necessário
     }
 
     @Test
-    public void testCriarEndereco() throws Exception {
+    void testCriarEndereco() throws Exception {
         EnderecoDTO enderecoDTO = new EnderecoDTO();
         enderecoDTO.setBairro("Bairro Teste");
         enderecoDTO.setRua("Rua Teste");
