@@ -14,7 +14,7 @@ class ClientDTOTest {
 
     @Test
     public void testDefaultConstructor() {
-        clienteDTO = new ClienteDTO();
+        clienteDTO = new ClienteDTO(cliente);
 
         assertThat(clienteDTO).isNotNull();
         assertThat(clienteDTO.getId()).isNull();
@@ -23,7 +23,7 @@ class ClientDTOTest {
         assertThat(clienteDTO.getEndereco()).isNull();
     }
 
-   /* @Test
+    @Test
     public void testConstructorWithClienteObject() {
         cliente.setId(1L);
         cliente.setNome("John Doe");
@@ -36,11 +36,11 @@ class ClientDTOTest {
         assertThat(clienteDTO.getNome()).isEqualTo(cliente.getNome());
         assertThat(clienteDTO.getCpf()).isEqualTo(cliente.getCpf());
         assertThat(clienteDTO.getEndereco()).isNull(); // Assuming there is no address in ClienteDTO constructor
-    }*/
+    }
 
     @Test
     public void testGetterAndSetterMethods() {
-        clienteDTO = new ClienteDTO();
+        clienteDTO = new ClienteDTO(cliente);
 
         clienteDTO.setId(1L);
         clienteDTO.setNome("Jane Doe");
