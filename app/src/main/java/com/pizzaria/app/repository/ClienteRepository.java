@@ -23,7 +23,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     @Query("SELECT e FROM Cliente e WHERE e.ativo = :ativo")
     public List<Cliente> findByAtivo(@Param("ativo") boolean ativo);
 
-    @Query("SELECT e FROM Client e WHERE DATE(e.registro) = :registro")
+    @Query("SELECT e FROM Cliente e WHERE DATE(e.registro) = :registro")
     List<Cliente> findByDiaRegistro(@Param("registro") LocalDate registro);
 
     @Query("SELECT e FROM Cliente e WHERE DATE(e.atualizar) = :atualizar")
