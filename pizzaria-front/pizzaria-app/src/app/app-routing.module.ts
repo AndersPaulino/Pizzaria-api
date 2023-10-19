@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: "login", component: LoginComponent },
   {
     path: "admin", component: IndexComponent, children: [
-      { path: "bebidas", component: BebidasListComponent }
+      { path: "bebida", component: BebidasListComponent }
     ]
   }
 
