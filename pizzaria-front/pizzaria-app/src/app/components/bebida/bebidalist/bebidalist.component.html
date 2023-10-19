@@ -15,8 +15,8 @@
                 <tbody>
                     <tr *ngFor="let bebida of lista; let i = index">
                         <th scope="row">{{ bebida.id }}</th>
-                        <td> {{ bebida.nome }} </td>
-                        <td> {{ bebida.idade }} </td>
+                        <td> {{ bebida.nomeBebida }} </td>
+                        <td> {{ bebida.valorBebida }} </td>
                         <td>
                             <button class="btn btn-primary" (click)="editar(modal1, bebida, i)">Editar</button>
                             <!--<button class="btn btn-danger" (click)="deletar(bebida.id)">Excluir</button>  BOTAO DE EXCLUIR    -->
@@ -38,7 +38,7 @@
     </div>
     <div class="modal-body">
 
-        <app-bebidadetails [bebida]="bebidaSelecionadaParaEdicao" (retorno)="addOuEditarBebida($event)"></app-bebidadetails>
+        <app-bebida-details [bebida]="bebidaSelecionadaParaEdicao" (retorno)="addOuEditarBebida($event)"></app-bebida-details>
 
     </div>
     <div class="modal-footer">

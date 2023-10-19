@@ -11,11 +11,19 @@ export class BebidaService {
     API: string = 'http://localhost:8080/api/bebida';
     http = inject(HttpClient);
 
-    findAll(): Observable<Bebida[]> {
+      listAll(): Observable<Bebida[]> {
         return this.http.get<Bebida[]>(this.API);
       }
 
       cadastrarBebida(bebida: Bebida): Observable<Bebida> {
         return this.http.post<Bebida>(this.API, bebida);
+      }
+
+      atualizarBebida(id: number, bebida: Bebida): Observable<Bebida> {
+        return this.http.put<Bebida>(`${this.API}/${id}`, bebida);
+      }
+    
+      deletarBebida(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.API}/${id}`);
       }
 }
