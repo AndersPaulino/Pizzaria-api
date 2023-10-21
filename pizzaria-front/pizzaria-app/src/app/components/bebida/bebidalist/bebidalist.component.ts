@@ -34,6 +34,19 @@ export class BebidasListComponent {
     });
   }
 
+  exemploErro() {
+    this.bebidaService.exemploErro().subscribe({
+      next: lista => { // QUANDO DÁ CERTO
+        this.lista = lista;
+      },
+      error: erro => { // QUANDO DÁ ERRO
+        alert('Observe o erro no console!');
+        console.error(erro);
+      }
+    });
+
+  }
+
   adicionar(modal: any) {
     this.bebidaSelecionadaParaEdicao = new Bebida();
     this.modalService.open(modal, { size: 'sm' });

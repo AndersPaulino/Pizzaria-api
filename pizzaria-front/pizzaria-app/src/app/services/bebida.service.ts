@@ -15,15 +15,19 @@ export class BebidaService {
         return this.http.get<Bebida[]>(this.API);
       }
 
-      cadastrarBebida(bebida: Bebida): Observable<Bebida> {
-        return this.http.post<Bebida>(this.API, bebida);
+      cadastrarBebida(bebida: Bebida): Observable<string> {
+        return this.http.post(this.API, bebida, { responseType: 'text' });
       }
 
-      atualizarBebida(id: number, bebida: Bebida): Observable<Bebida> {
-        return this.http.put<Bebida>(`${this.API}/${id}`, bebida);
+      atualizarBebida(id: number, bebida: Bebida): Observable<string> {
+        return this.http.put(`${this.API}/${id}`, bebida, { responseType: 'text' });
       }
-    
-      deletarBebida(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.API}/${id}`);
+
+      deletarBebida(id: number): Observable<string> {
+        return this.http.delete(`${this.API}/deletar/${id}`,{ responseType: 'text' });
+      }
+
+      exemploErro(): Observable<Bebida[]> {
+        return this.http.get<Bebida[]>(this.API + '/erro');
       }
 }
