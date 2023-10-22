@@ -59,13 +59,20 @@ export class BebidasListComponent {
   }
 
   addOuEditarBebida(bebida: Bebida) {
+    const onComplete = () => {
+      this.listAll();
+      this.modalService.dismissAll();
+    };
+
     if (bebida.id) {
-      this.bebidaService.atualizarBebida(bebida.id, bebida).subscribe(() => this.listAll());
+      console.log("Aqui foi atualizar");
+      this.bebidaService.atualizarBebida(bebida.id, bebida).subscribe(onComplete);
     } else {
-      this.bebidaService.cadastrarBebida(bebida).subscribe(() => this.listAll());
+      console.log("Aqui foi cadastrar");
+      this.bebidaService.cadastrarBebida(bebida).subscribe(onComplete);
     }
-    this.modalService.dismissAll();
   }
+  
 
   deletar(id: number) {
     this.bebidaService.deletarBebida(id).subscribe(() => this.listAll());

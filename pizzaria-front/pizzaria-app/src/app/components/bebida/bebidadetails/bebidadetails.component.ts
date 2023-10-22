@@ -14,27 +14,9 @@ export class BebidaDetailsComponent {
 
   bebidaService = inject(BebidaService);
 
-  constructor(){}
+  constructor() { }
 
   salvar() {
-    this.bebidaService.cadastrarBebida(this.bebida).subscribe({
-      next: (resposta: string) => {
-        console.log('Resposta do servidor:', resposta);
-        if (resposta === 'Registro cadastrado com sucesso!') {
-          // A resposta do servidor indica sucesso
-          console.log('Bebida cadastrada com sucesso:', this.bebida);
-          this.retorno.emit(this.bebida);
-        } else {
-          // A resposta do servidor indica um erro
-          console.error('Erro ao cadastrar a bebida:', resposta);
-        }
-      },
-      error: (erro) => {
-        alert('Erro na solicitação ao servidor. Verifique o console para detalhes.');
-        console.error(erro);
-      }
-    });
+    this.retorno.emit(this.bebida);
   }
-  
-  
 }
