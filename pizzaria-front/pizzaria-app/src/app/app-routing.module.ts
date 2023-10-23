@@ -4,6 +4,7 @@ import { BebidasListComponent } from './components/bebida/bebidalist/bebidalist.
 import { LoginComponent } from './components/sistema/login/login.component';
 import { IndexComponent } from './components/layout/index/index.component';
 import { SaborlistComponent } from './components/sabor/saborlist/saborlist.component';
+import { EnderecolistComponent } from './components/endereco/enderecolist/enderecolist.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "login", pathMatch: 'full' },
@@ -11,7 +12,8 @@ const routes: Routes = [
   {
     path: "admin", component: IndexComponent, children: [
       { path: "bebida", component: BebidasListComponent },
-      { path: "sabor", component: SaborlistComponent }
+      { path: "sabor", component: SaborlistComponent },
+      { path: "endereco", component: EnderecolistComponent }
     ]
   }
 

@@ -16,7 +16,7 @@ export class BebidaDetailsComponent {
 
   constructor(){}
 
-  salvar() {
+  salvar(){
     this.retorno.emit(this.bebida);
   }
 }

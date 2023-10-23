@@ -4,40 +4,21 @@ import com.pizzaria.app.dto.EnderecoDTO;
 import com.pizzaria.app.entity.Endereco;
 import com.pizzaria.app.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class EnderecoService {
+    private final EnderecoRepository enderecoRepository;
+
     @Autowired
-    private EnderecoRepository enderecoRepository;
-    private static final String mensagem = "Ola mundo";
-    public EnderecoDTO criarEndereco(EnderecoDTO enderecoDTO) {
-        try {
-            Endereco endereco = new Endereco();
-            endereco.setBairro(enderecoDTO.getBairro());
-            endereco.setRua(enderecoDTO.getRua());
-            endereco.setNumero(enderecoDTO.getNumero());
-
-            endereco = enderecoRepository.save(endereco);
-
-            EnderecoDTO novoEnderecoDTO = new EnderecoDTO();
-            novoEnderecoDTO.setId(endereco.getId());
-            novoEnderecoDTO.setBairro(endereco.getBairro());
-            novoEnderecoDTO.setRua(endereco.getRua());
-            novoEnderecoDTO.setNumero(endereco.getNumero());
-
-            return novoEnderecoDTO;
-        } catch (Exception e) {
-
-            throw new RuntimeException(mensagem);
-        }
+    public EnderecoService(EnderecoRepository enderecoRepository) {
+        this.enderecoRepository = enderecoRepository;
     }
-
-
 
     public List<Endereco> buscarEnderecosPorBairro(String bairro) {
         return enderecoRepository.findByBairro(bairro);
@@ -51,30 +32,46 @@ public class EnderecoService {
         return enderecoRepository.findByNumero(numero);
     }
 
-    public List<Endereco> listarTodosEnderecos() {
-        return enderecoRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<EnderecoDTO> findAll() {
+        List<Endereco> enderecos = enderecoRepository.findAll();
+        return enderecos.stream().map(EnderecoDTO::new).toList();
     }
 
-    public Optional<Endereco> buscarEnderecoPorId(Long id) {
-        return enderecoRepository.findById(id);
+    @Transactional(readOnly = true)
+    public Optional<EnderecoDTO> findById(Long id) {
+        return enderecoRepository.findById(id).map(EnderecoDTO::new);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public void cadastrar(Endereco endereco) {
+        enderecoRepository.save(endereco);
     }
 
-    public Endereco atualizarEndereco(Long id, EnderecoDTO enderecoDTO) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Endereco atualizarEndereco(Long id, Endereco endereco) {
         Optional<Endereco> enderecoOptional = enderecoRepository.findById(id);
 
         if (enderecoOptional.isPresent()) {
-            Endereco endereco = enderecoOptional.get();
-            endereco.setBairro(enderecoDTO.getBairro());
-            endereco.setRua(enderecoDTO.getRua());
-            endereco.setNumero(enderecoDTO.getNumero());
+            Endereco enderecoExistente = enderecoOptional.get();
 
-            return enderecoRepository.save(endereco);
+            if (endereco.getBairro() != null) {
+                enderecoExistente.setBairro(endereco.getBairro());
+            }
+            if (endereco.getRua() != null) {
+                enderecoExistente.setRua(endereco.getRua());
+            }
+            if (endereco.getNumero() != 0) {
+                enderecoExistente.setNumero(endereco.getNumero());
+            }
+            return enderecoRepository.save(enderecoExistente);
         } else {
             throw new RuntimeException("Endereço não encontrado para o ID: " + id);
         }
     }
 
-    public void deletarEndereco(Long id) {
-        enderecoRepository.deleteById(id);
+    public void deletarEndereco(Long enderecoId) {
+        Endereco enderecoExistente = enderecoRepository.findById(enderecoId)
+                .orElseThrow(() -> new IllegalArgumentException("Endereco não encontrada com ID: " + enderecoId));
+        enderecoRepository.delete(enderecoExistente);
     }
 }

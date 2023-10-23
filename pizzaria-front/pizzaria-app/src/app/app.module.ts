@@ -14,6 +14,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { SaborlistComponent } from './components/sabor/saborlist/saborlist.component';
 import { SabordetailsComponent } from './components/sabor/sabordetails/sabordetails.component';
+import { EnderecolistComponent } from './components/endereco/enderecolist/enderecolist.component';
+import { EnderecodetailsComponent } from './components/endereco/enderecodetails/enderecodetails.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { SabordetailsComponent } from './components/sabor/sabordetails/sabordeta
     HeaderComponent,
     IndexComponent,
     SaborlistComponent,
-    SabordetailsComponent
+    SabordetailsComponent,
+    EnderecolistComponent,
+    EnderecodetailsComponent
   ],
   imports: [
     FormsModule,

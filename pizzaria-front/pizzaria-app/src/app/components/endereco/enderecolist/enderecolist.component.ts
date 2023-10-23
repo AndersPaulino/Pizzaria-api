@@ -1,29 +1,29 @@
 import { Component, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Bebida } from 'src/app/models/bebida';
-import { BebidaService } from 'src/app/services/bebida.service';
+import { Endereco } from 'src/app/models/endereco';
+import { EnderecoService } from 'src/app/services/endereco.service';
 
 @Component({
-  selector: 'app-bebidas-list',
-  templateUrl: './bebidalist.component.html',
-  styleUrls: ['./bebidalist.component.scss']
+  selector: 'app-enderecolist',
+  templateUrl: './enderecolist.component.html',
+  styleUrls: ['./enderecolist.component.scss']
 })
-export class BebidasListComponent {
+export class EnderecolistComponent {
 
-  lista: Bebida[] = [];
+  lista: Endereco[] = [];
 
-  bebidaSelecionadaParaEdicao: Bebida = new Bebida();
+  enderecoSelecionadoParaEdicao: Endereco = new Endereco();
   indiceSelecionadoParaEdicao!: number;
 
   modalService = inject(NgbModal);
-  bebidaService = inject(BebidaService);
+  enderecoService = inject(EnderecoService);
 
   constructor() {
     this.listAll();
   }
 
   listAll() {
-    this.bebidaService.listAll().subscribe({
+    this.enderecoService.listAll().subscribe({
       next: lista => {
         this.lista = lista;
       },
@@ -35,7 +35,7 @@ export class BebidasListComponent {
   }
 
   exemploErro() {
-    this.bebidaService.exemploErro().subscribe({
+    this.enderecoService.exemploErro().subscribe({
       next: lista => { // QUANDO DÁ CERTO
         this.lista = lista;
       },
@@ -47,32 +47,32 @@ export class BebidasListComponent {
   }
 
   adicionar(modal: any) {
-    this.bebidaSelecionadaParaEdicao = new Bebida();
+    this.enderecoSelecionadoParaEdicao = new Endereco();
     this.modalService.open(modal, { size: 'sm' });
   }
 
-  editar(modal: any, bebida: Bebida, indice: number) {
-    this.bebidaSelecionadaParaEdicao = { ...bebida };
+  editar(modal: any, endereco: Endereco, indice: number) {
+    this.enderecoSelecionadoParaEdicao = { ...endereco };
     this.indiceSelecionadoParaEdicao = indice;
     this.modalService.open(modal, { size: 'sm' });
   }
 
-  addOuEditarBebida(bebida: Bebida) {
+  addOuEditarEndereco(endereco: Endereco) {
     const onComplete = () => {
       this.listAll();
       this.modalService.dismissAll();
     };
 
-    if (bebida.id) {
+    if (endereco.id) {
       console.log("Aqui foi atualizar");
-      this.bebidaService.atualizarBebida(bebida.id, bebida).subscribe(onComplete);
+      this.enderecoService.atualizarEndereco(endereco.id, endereco).subscribe(onComplete);
     } else {
       console.log("Aqui foi cadastrar");
-      this.bebidaService.cadastrarBebida(bebida).subscribe(onComplete);
+      this.enderecoService.cadastrarEndereco(endereco).subscribe(onComplete);
     }
   }
 
   deletar(id: number) {
-    this.bebidaService.deletarBebida(id).subscribe(() => this.listAll());
+    this.enderecoService.deletarEndereco(id).subscribe(() => this.listAll());
   }
 }
