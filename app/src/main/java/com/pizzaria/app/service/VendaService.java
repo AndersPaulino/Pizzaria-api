@@ -35,8 +35,6 @@ public class VendaService {
         venda.setCliente(clienteService.buscarClientePorId(vendaDTO.getCliente().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado")));
 
-        venda.setFuncionario(funcionarioService.buscarFuncionarioPorId(vendaDTO.getFuncionario().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado")));
 
         venda.setProduto(produtoService.buscarProdutoPorId(vendaDTO.getProduto().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado")));
@@ -75,8 +73,6 @@ public class VendaService {
             venda.setCliente(clienteService.buscarClientePorId(vendaDTO.getCliente().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado")));
 
-            venda.setFuncionario(funcionarioService.buscarFuncionarioPorId(vendaDTO.getFuncionario().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado")));
 
             venda.setProduto(produtoService.buscarProdutoPorId(vendaDTO.getProduto().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado")));
