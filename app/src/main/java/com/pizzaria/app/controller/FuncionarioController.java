@@ -1,5 +1,6 @@
 package com.pizzaria.app.controller;
 
+import com.pizzaria.app.dto.BebidaDTO;
 import com.pizzaria.app.dto.FuncionarioDTO;
 import com.pizzaria.app.entity.Funcionario;
 import com.pizzaria.app.service.FuncionarioService;
@@ -65,5 +66,10 @@ public class FuncionarioController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @GetMapping("erro")
+    private ResponseEntity<List<FuncionarioDTO>> exemploErro(){
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 }
