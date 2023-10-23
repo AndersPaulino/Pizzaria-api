@@ -12,6 +12,8 @@ import { HeaderComponent } from './components/layout/header/header.component';
 import { IndexComponent } from './components/layout/index/index.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import { SaborlistComponent } from './components/sabor/saborlist/saborlist.component';
+import { SabordetailsComponent } from './components/sabor/sabordetails/sabordetails.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     FooterComponent,
     HeaderComponent,
-    IndexComponent
+    IndexComponent,
+    SaborlistComponent,
+    SabordetailsComponent
   ],
   imports: [
     FormsModule,

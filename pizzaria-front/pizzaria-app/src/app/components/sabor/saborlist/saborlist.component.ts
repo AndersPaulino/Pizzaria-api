@@ -1,29 +1,28 @@
 import { Component, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Bebida } from 'src/app/models/bebida';
-import { BebidaService } from 'src/app/services/bebida.service';
-
+import { Sabor } from 'src/app/models/sabor';
+import { SaborService } from 'src/app/services/sabor.service';
 @Component({
-  selector: 'app-bebidas-list',
-  templateUrl: './bebidalist.component.html',
-  styleUrls: ['./bebidalist.component.scss']
+  selector: 'app-saborlist',
+  templateUrl: './saborlist.component.html',
+  styleUrls: ['./saborlist.component.scss']
 })
-export class BebidasListComponent {
+export class SaborlistComponent {
 
-  lista: Bebida[] = [];
+  lista: Sabor[] = [];
 
-  bebidaSelecionadaParaEdicao: Bebida = new Bebida();
+  saborSelecionadaParaEdicao: Sabor = new Sabor();
   indiceSelecionadoParaEdicao!: number;
 
   modalService = inject(NgbModal);
-  bebidaService = inject(BebidaService);
+  saborService = inject(SaborService);
 
   constructor() {
     this.listAll();
   }
 
   listAll() {
-    this.bebidaService.listAll().subscribe({
+    this.saborService.listAll().subscribe({
       next: lista => {
         this.lista = lista;
       },
@@ -35,7 +34,7 @@ export class BebidasListComponent {
   }
 
   exemploErro() {
-    this.bebidaService.exemploErro().subscribe({
+    this.saborService.exemploErro().subscribe({
       next: lista => { // QUANDO DÁ CERTO
         this.lista = lista;
       },
@@ -47,33 +46,32 @@ export class BebidasListComponent {
   }
 
   adicionar(modal: any) {
-    this.bebidaSelecionadaParaEdicao = new Bebida();
+    this.saborSelecionadaParaEdicao = new Sabor();
     this.modalService.open(modal, { size: 'sm' });
   }
 
-  editar(modal: any, bebida: Bebida, indice: number) {
-    this.bebidaSelecionadaParaEdicao = { ...bebida };
+  editar(modal: any, sabor: Sabor, indice: number) {
+    this.saborSelecionadaParaEdicao = { ...sabor };
     this.indiceSelecionadoParaEdicao = indice;
     this.modalService.open(modal, { size: 'sm' });
   }
 
-  addOuEditarBebida(bebida: Bebida) {
+  addOuEditarSabor(sabor: Sabor) {
     const onComplete = () => {
       this.listAll();
       this.modalService.dismissAll();
     };
 
-    if (bebida.id) {
+    if (sabor.id) {
       console.log("Aqui foi atualizar");
-      this.bebidaService.atualizarBebida(bebida.id, bebida).subscribe(onComplete);
+      this.saborService.atualizarSabor(sabor.id, sabor).subscribe(onComplete);
     } else {
       console.log("Aqui foi cadastrar");
-      this.bebidaService.cadastrarBebida(bebida).subscribe(onComplete);
+      this.saborService.cadastrarSabor(sabor).subscribe(onComplete);
     }
   }
-  
 
   deletar(id: number) {
-    this.bebidaService.deletarBebida(id).subscribe(() => this.listAll());
+    this.saborService.deletarSabor(id).subscribe(() => this.listAll());
   }
 }
