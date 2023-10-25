@@ -6,16 +6,17 @@ import com.pizzaria.app.entity.Endereco;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 public class ClienteDTO {
     private Long id;
     private String nome;
     private String cpf;
-    private Endereco endereco;
+    private List<Endereco> endereco = new ArrayList<>();
 
-    public ClienteDTO(Long id, String nome, String cpf, Endereco endereco) {
+    public ClienteDTO(Long id, String nome, String cpf, List<Endereco> endereco) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;

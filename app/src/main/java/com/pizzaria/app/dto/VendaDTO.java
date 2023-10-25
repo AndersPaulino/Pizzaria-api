@@ -1,32 +1,45 @@
 package com.pizzaria.app.dto;
 
+import com.pizzaria.app.entity.Cliente;
+import com.pizzaria.app.entity.Funcionario;
+import com.pizzaria.app.entity.Produto;
 import com.pizzaria.app.entity.Venda;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 public class VendaDTO {
 
     private Long id;
-    private ClienteDTO cliente;
-    private FuncionarioDTO funcionario;
-    private ProdutoDTO produto;
+    private Cliente cliente;
+    private Funcionario funcionario;
+    private List<Produto> produto = new ArrayList<>();
     private boolean emitirNota;
     private boolean entregar;
     private BigDecimal valorVenda;
 
-    public VendaDTO() {}
+    public VendaDTO(Long id, Cliente cliente, Funcionario funcionario, List<Produto> produto, boolean emitirNota, boolean entregar, BigDecimal valorVenda) {
+        this.id = id;
+        this.cliente = cliente;
+        this.funcionario = funcionario;
+        this.produto = produto;
+        this.emitirNota = emitirNota;
+        this.entregar = entregar;
+        this.valorVenda = valorVenda;
+    }
 
     public VendaDTO(Venda venda) {
-        this.id = venda.getId();
-        this.cliente = new ClienteDTO(venda.getCliente());
-        this.funcionario = new FuncionarioDTO(venda.getFuncionario());
-        this.produto = new ProdutoDTO(venda.getProduto());
-        this.emitirNota = venda.isEmitirNota();
-        this.entregar = venda.isEntregar();
-        this.valorVenda = venda.getValorVenda();
+        id = venda.getId();
+        cliente = venda.getCliente();
+        funcionario = venda.getFuncionario();
+        produto = venda.getProduto();
+        emitirNota = venda.isEmitirNota();
+        entregar = venda.isEntregar();
+        valorVenda = venda.getValorVenda();
     }
 }
 
