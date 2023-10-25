@@ -14,23 +14,13 @@ import java.util.List;
 @RequestMapping("/api/endereco")
 @CrossOrigin(origins = "*")
 public class EnderecoController {
-    private final EnderecoService enderecoService;
 
+
+    private EnderecoService enderecoService;
     @Autowired
-    public EnderecoController(EnderecoService enderecoService) {
+    public EnderecoController(EnderecoService enderecoService){
         this.enderecoService = enderecoService;
     }
-
-    @PostMapping
-    public ResponseEntity<String> cadastrarEndereco(@RequestBody Endereco endereco) {
-        try {
-            enderecoService.cadastrar(endereco);
-            return ResponseEntity.ok("Registro cadastrado com sucesso!");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
     @GetMapping("/bairro/{bairro}")
     public ResponseEntity<List<Endereco>> buscarEnderecosPorBairro(@PathVariable String bairro) {
         List<Endereco> enderecos = enderecoService.buscarEnderecosPorBairro(bairro);
@@ -73,30 +63,36 @@ public class EnderecoController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    @PostMapping
+    public ResponseEntity<String> cadastrar(@RequestBody Endereco endereco){
+        try {
+            enderecoService.cadastrar(endereco);
+            return ResponseEntity.ok().body("Registro cadastrado com sucesso!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
 
     @PutMapping("/{id}")
     public ResponseEntity<String> atualizarEndereco(@PathVariable Long id, @RequestBody Endereco endereco) {
         try {
-            enderecoService.atualizarEndereco(id, endereco);
+
+            enderecoService.atualizar(id, endereco);
             return ResponseEntity.ok().body("Registro atualizado com sucesso!");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
 
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<String> deletarEndereco(@PathVariable Long id) {
         try {
-            enderecoService.deletarEndereco(id);
-            return ResponseEntity.ok("Registro excluído com sucesso!");
-        } catch (IllegalArgumentException e) {
+            enderecoService.deleteEndereco(id);
+            return ResponseEntity.ok("Registro excluido com sucesso!");
+        } catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-    }
 
-    @GetMapping("erro")
-    private ResponseEntity<List<EnderecoDTO>> exemploErro(){
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 }

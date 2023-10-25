@@ -8,13 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/api/cliente")
 @CrossOrigin(origins = "*")
 public class ClienteController {
-    private final ClienteService clienteService;
+    private ClienteService clienteService;
 
     @Autowired
     public ClienteController(ClienteService clienteService) {
@@ -76,7 +75,7 @@ public class ClienteController {
     @PutMapping("/{id}")
     public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         try {
-            clienteService.attualizar(id, cliente);
+            clienteService.atualizar(id, cliente);
             return ResponseEntity.ok().body("Registro atualizado com sucesso!");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
