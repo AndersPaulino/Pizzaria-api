@@ -9,7 +9,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "tb_funcionario", schema = "public")
 public class Funcionario extends AbstractEntity {
-
     @Getter @Setter
     @Column(name = "cl_nome", nullable = false, length = 255)
     private String nome;

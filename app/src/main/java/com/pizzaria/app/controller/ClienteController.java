@@ -21,10 +21,9 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> findById(@PathVariable Long id) {
-        return clienteService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ClienteDTO> buscarClientePorId(@PathVariable Long id) {
+        Optional<ClienteDTO> clienteDTO = clienteService.buscarClientePorIdDTO(id);
+        return clienteDTO.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping

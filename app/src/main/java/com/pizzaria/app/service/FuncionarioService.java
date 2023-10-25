@@ -5,6 +5,8 @@ import com.pizzaria.app.entity.Funcionario;
 import com.pizzaria.app.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,11 @@ public class FuncionarioService {
         return funcionarioDTO;
     }
 
+    @Transactional(readOnly = true)
+    public List<FuncionarioDTO> findAll() {
+        List<Funcionario> funcionarios = funcionarioRepository.findAll();
+        return funcionarios.stream().map(FuncionarioDTO::new).toList();
+    }
     public List<FuncionarioDTO> listarTodosFuncionariosDTO() {
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         return funcionarios.stream().map(this::convertToDTO).collect(Collectors.toList());
@@ -34,8 +41,9 @@ public class FuncionarioService {
         return funcionario.map(this::convertToDTO);
     }
 
-    public Optional<Funcionario> buscarFuncionarioPorId(Long id) {
-        return funcionarioRepository.findById(id);
+    @Transactional(readOnly = true)
+    public Optional<FuncionarioDTO> findById(Long id) {
+        return funcionarioRepository.findById(id).map(FuncionarioDTO::new);
     }
 
     public List<FuncionarioDTO> buscarFuncionariosPorNomeDTO(String nome) {
@@ -43,32 +51,38 @@ public class FuncionarioService {
         return funcionarios.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    public FuncionarioDTO cadastrarFuncionario(FuncionarioDTO funcionarioDTO) {
-        Funcionario funcionario = new Funcionario();
-        funcionario.setNome(funcionarioDTO.getNome());
-
+    @Transactional(rollbackFor = Exception.class)
+    public void cadastrar(Funcionario funcionario) {
         funcionarioRepository.save(funcionario);
-
-        funcionarioDTO.setId(funcionario.getId());
-        return funcionarioDTO;
     }
 
-    public FuncionarioDTO atualizarFuncionario(Long id, FuncionarioDTO funcionarioDTO) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Funcionario atualizarFuncionario(Long id, Funcionario funcionario) {
+        validarFuncionario(funcionario);
         Optional<Funcionario> funcionarioOptional = funcionarioRepository.findById(id);
-
         if (funcionarioOptional.isPresent()) {
-            Funcionario funcionario = funcionarioOptional.get();
-            funcionario.setNome(funcionarioDTO.getNome());
+            Funcionario funcionarioExistente = funcionarioOptional.get();
 
-            funcionarioRepository.save(funcionario);
-            return funcionarioDTO;
+            if (funcionario.getNome() != null) {
+                funcionarioExistente.setNome(funcionario.getNome());
+            }
+            return funcionarioRepository.save(funcionarioExistente);
+        } else {
+            throw new IllegalArgumentException("Id do Funcionário inválido!");
         }
-
-        return null;
     }
 
-    public void deletarFuncionario(Long id) {
-        funcionarioRepository.deleteById(id);
+    private void validarFuncionario(Funcionario funcionario) {
+        if (funcionario.getNome() == null) {
+            throw new IllegalArgumentException("Nome do Funcionário não informado!");
+        }
+    }
+
+
+    public void deletarFuncionario(Long funcionarioId) {
+        Funcionario funcionarioExistente = funcionarioRepository.findById(funcionarioId)
+                .orElseThrow(() -> new IllegalArgumentException("Funcionario não encontrada com ID: " + funcionarioId));
+        funcionarioRepository.delete(funcionarioExistente);
     }
 
 }

@@ -4,7 +4,6 @@ import com.pizzaria.app.dto.EnderecoDTO;
 import com.pizzaria.app.entity.Endereco;
 import com.pizzaria.app.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import java.util.Optional;
 
 @Service
 public class EnderecoService {
+
 
     private EnderecoRepository enderecoRepository;
     @Autowired
@@ -33,6 +33,7 @@ public class EnderecoService {
     public List<Endereco> buscarEnderecosPorNumero(int numero) {
         return enderecoRepository.findByNumero(numero);
     }
+
     @Transactional(readOnly = true)
     public List<Endereco> listarTodosEnderecos() {
         return enderecoRepository.findAll();
@@ -73,5 +74,4 @@ public class EnderecoService {
             throw new IllegalArgumentException("ID do endereço inválido!");
         }
     }
-
 }

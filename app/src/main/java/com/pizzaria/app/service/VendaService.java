@@ -16,6 +16,7 @@ public class VendaService {
 
     private VendaRepository vendaRepository;
 
+
     public VendaService(VendaRepository vendaRepository){
         this.vendaRepository = vendaRepository;
     }

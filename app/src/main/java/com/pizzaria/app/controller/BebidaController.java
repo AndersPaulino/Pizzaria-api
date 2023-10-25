@@ -116,7 +116,6 @@ public class BebidaController {
     }
 
     @DeleteMapping("/deletar/{id}")
-
     public ResponseEntity<String> deletarBebida(@PathVariable Long id) {
         try {
             bebidaService.deleteBebida(id);
@@ -136,5 +135,10 @@ public class BebidaController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao desativar o registro.");
         }
+    }
+
+    @GetMapping("erro")
+    private ResponseEntity<List<BebidaDTO>> exemploErro(){
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 }

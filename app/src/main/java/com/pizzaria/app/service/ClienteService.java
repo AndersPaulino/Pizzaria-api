@@ -1,7 +1,9 @@
 package com.pizzaria.app.service;
 
 import com.pizzaria.app.dto.ClienteDTO;
+import com.pizzaria.app.dto.FuncionarioDTO;
 import com.pizzaria.app.entity.Cliente;
+import com.pizzaria.app.entity.Funcionario;
 import com.pizzaria.app.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ClienteService {
@@ -22,11 +24,24 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    @Transactional(readOnly = true)
-    public Optional<ClienteDTO> findById(Long id){
-        return clienteRepository.findById(id)
-                .map(ClienteDTO::new);
+    private ClienteDTO convertToDTO(Cliente cliente) {
+        ClienteDTO clienteDTO = new ClienteDTO(cliente);
+        clienteDTO.setId(cliente.getId());
+        clienteDTO.setNome(cliente.getNome());
+        clienteDTO.setCpf(cliente.getCpf());
+        return clienteDTO;
     }
+
+    @Transactional(readOnly = true)
+    public Optional<Cliente> buscarClientePorId(Long id) {
+        return clienteRepository.findById(id);
+    }
+
+    public Optional<ClienteDTO> buscarClientePorIdDTO(Long id) {
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+        return cliente.map(this::convertToDTO);
+    }
+
     @Transactional(readOnly = true)
     public List<ClienteDTO> findAll(){
         List<Cliente> clientes = clienteRepository.findAll();

@@ -15,34 +15,53 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class EnderecoController {
 
+
     private EnderecoService enderecoService;
     @Autowired
     public EnderecoController(EnderecoService enderecoService){
         this.enderecoService = enderecoService;
     }
     @GetMapping("/bairro/{bairro}")
-    public List<Endereco> buscarEnderecosPorBairro(@PathVariable String bairro) {
-        return enderecoService.buscarEnderecosPorBairro(bairro);
+    public ResponseEntity<List<Endereco>> buscarEnderecosPorBairro(@PathVariable String bairro) {
+        List<Endereco> enderecos = enderecoService.buscarEnderecosPorBairro(bairro);
+        if (!enderecos.isEmpty()) {
+            return ResponseEntity.ok(enderecos);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/rua/{rua}")
-    public List<Endereco> buscarEnderecosPorRua(@PathVariable String rua) {
-        return enderecoService.buscarEnderecosPorRua(rua);
+    public ResponseEntity<List<Endereco>> buscarEnderecosPorRua(@PathVariable String rua) {
+        List<Endereco> enderecos = enderecoService.buscarEnderecosPorRua(rua);
+        if (!enderecos.isEmpty()) {
+            return ResponseEntity.ok(enderecos);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/numero/{numero}")
-    public List<Endereco> buscarEnderecosPorNumero(@PathVariable int numero) {
-        return enderecoService.buscarEnderecosPorNumero(numero);
+    public ResponseEntity<List<Endereco>> buscarEnderecosPorNumero(@PathVariable int numero) {
+        List<Endereco> enderecos = enderecoService.buscarEnderecosPorNumero(numero);
+        if (!enderecos.isEmpty()) {
+            return ResponseEntity.ok(enderecos);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping
-    public List<Endereco> listarEnderecos() {
-        return enderecoService.listarTodosEnderecos();
+    public ResponseEntity<List<EnderecoDTO>> findAll() {
+        List<EnderecoDTO> enderecosDTOS = enderecoService.findAll();
+        return ResponseEntity.ok(enderecosDTOS);
     }
 
     @GetMapping("/{id}")
-    public Endereco buscarEnderecoPorId(@PathVariable Long id) {
-        return enderecoService.buscarEnderecoPorId(id).orElse(null);
+    public ResponseEntity<EnderecoDTO> findById(@PathVariable Long id) {
+        return enderecoService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
     @PostMapping
     public ResponseEntity<String> cadastrar(@RequestBody Endereco endereco){
@@ -54,9 +73,11 @@ public class EnderecoController {
         }
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<String> atualizarEndereco(@PathVariable Long id, @RequestBody Endereco endereco) {
         try {
+
             enderecoService.atualizar(id, endereco);
             return ResponseEntity.ok().body("Registro atualizado com sucesso!");
         } catch (RuntimeException ex) {
