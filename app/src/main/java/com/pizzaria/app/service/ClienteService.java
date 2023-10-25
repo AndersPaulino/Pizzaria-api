@@ -65,8 +65,8 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public List<ClienteDTO> findByDiaAtualizar(LocalDate atualziar){
-        List<Cliente> clientes = clienteRepository.findByDiaAtualizar(atualziar);
+    public List<ClienteDTO> findByDiaAtualizar(LocalDate atualizar){
+        List<Cliente> clientes = clienteRepository.findByDiaAtualizar(atualizar);
 
         return clientes.stream()
                 .map(ClienteDTO::new)
@@ -79,7 +79,7 @@ public class ClienteService {
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void attualizar(Long id, Cliente cliente){
+    public void atualizar(Long id, Cliente cliente){
         Optional<Cliente> clienteOptional = clienteRepository.findById(id);
         Cliente cliente1 = clienteOptional.get();
         if (clienteOptional.isPresent()){
