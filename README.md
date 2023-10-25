@@ -29,12 +29,12 @@ Esta API permite gerenciar informações relacionadas a uma pizzaria, como clien
   Exemplo de JSON de entrada:
   ```json
     {
-        "nome": "Matheus Aguiar",
-        "cpf": "132.644.449-25",
+        "nome": "Fulano de Tal",
+        "cpf": "123.456.789-10",
         "endereco": {
-            "bairro": "Panorama",
-            "rua": "Belgica",
-            "numero": 511
+            "bairro": "Jd Alguma coisa",
+            "rua": "Rua de Tal",
+            "numero": 50
         }
     }
   ```
