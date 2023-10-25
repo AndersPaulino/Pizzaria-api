@@ -18,6 +18,8 @@ import { EnderecolistComponent } from './components/endereco/enderecolist/endere
 import { EnderecodetailsComponent } from './components/endereco/enderecodetails/enderecodetails.component';
 import { FuncionariodetailsComponent } from './components/funcionario/funcionariodetails/funcionariodetails.component';
 import { FuncionariolistComponent } from './components/funcionario/funcionariolist/funcionariolist.component';
+import { ClientedetailsComponent } from './components/cliente/clientedetails/clientedetails.component';
+import { ClientelistComponent } from './components/cliente/clientelist/clientelist.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { FuncionariolistComponent } from './components/funcionario/funcionarioli
     EnderecolistComponent,
     EnderecodetailsComponent,
     FuncionariodetailsComponent,
-    FuncionariolistComponent
+    FuncionariolistComponent,
+    ClientedetailsComponent,
+    ClientelistComponent
   ],
   imports: [
     FormsModule,

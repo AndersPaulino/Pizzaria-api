@@ -23,6 +23,7 @@
                             <button class="btn btn-primary" (click)="editar(modal1, endereco, i)">Editar</button>
                             <button class="btn btn-danger" (click)="deletar(endereco.id)">Excluir</button>
                         </td>
+                        <td *ngIf="modoLancamento"> <button type="button" class="btn btn-primary" (click)="lancamento( endereco)">Lançar</button> </td>
                     </tr>
                 </tbody>
             </table>

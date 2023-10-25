@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Endereco } from 'src/app/models/endereco';
 import { EnderecoService } from 'src/app/services/endereco.service';
 
@@ -9,13 +9,16 @@ import { EnderecoService } from 'src/app/services/endereco.service';
   styleUrls: ['./enderecolist.component.scss']
 })
 export class EnderecolistComponent {
-
   lista: Endereco[] = [];
+
+  @Output() retorno = new EventEmitter<Endereco>();
+  @Input() modoLancamento: boolean = false;
 
   enderecoSelecionadoParaEdicao: Endereco = new Endereco();
   indiceSelecionadoParaEdicao!: number;
 
   modalService = inject(NgbModal);
+  modalRef!: NgbModalRef;
   enderecoService = inject(EnderecoService);
 
   constructor() {
@@ -48,19 +51,19 @@ export class EnderecolistComponent {
 
   adicionar(modal: any) {
     this.enderecoSelecionadoParaEdicao = new Endereco();
-    this.modalService.open(modal, { size: 'sm' });
+    this.modalRef = this.modalService.open(modal, { size: 'sm' });
   }
 
   editar(modal: any, endereco: Endereco, indice: number) {
     this.enderecoSelecionadoParaEdicao = { ...endereco };
     this.indiceSelecionadoParaEdicao = indice;
-    this.modalService.open(modal, { size: 'sm' });
+    this.modalRef = this.modalService.open(modal, { size: 'sm' });
   }
 
   addOuEditarEndereco(endereco: Endereco) {
     const onComplete = () => {
       this.listAll();
-      this.modalService.dismissAll();
+      this.modalRef.dismiss();
     };
 
     if (endereco.id) {
@@ -74,5 +77,9 @@ export class EnderecolistComponent {
 
   deletar(id: number) {
     this.enderecoService.deletarEndereco(id).subscribe(() => this.listAll());
+  }
+
+  lancamento(endereco: Endereco){
+    this.retorno.emit(endereco);
   }
 }

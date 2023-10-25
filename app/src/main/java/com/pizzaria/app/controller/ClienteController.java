@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/api/cliente")
 @CrossOrigin(origins = "*")
 public class ClienteController {
     private final ClienteService clienteService;
@@ -103,5 +103,10 @@ public class ClienteController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao desativar o registro.");
         }
+    }
+
+    @GetMapping("erro")
+    private ResponseEntity<List<ClienteDTO>> exemploErro(){
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 }

@@ -45,9 +45,7 @@ public class ClienteService {
     @Transactional(readOnly = true)
     public List<ClienteDTO> findAll(){
         List<Cliente> clientes = clienteRepository.findAll();
-        return clientes.stream()
-                .map(ClienteDTO::new)
-                .toList();
+        return clientes.stream().map(ClienteDTO::new).toList();
     }
     @Transactional(readOnly = true)
     public ClienteDTO findByNome(String nome){
