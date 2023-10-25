@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "tb_cliente", schema = "public")
@@ -17,12 +20,12 @@ public class Cliente extends AbstractEntity {
     @Column(name = "cpf", nullable = false, length = 18)
     private String cpf;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Getter @Setter
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "cliente_endereco",
             joinColumns = @JoinColumn(name = "cliente_id"),
             inverseJoinColumns = @JoinColumn(name = "endereco_id"))
-    @Getter @Setter
-    private Endereco endereco;
+    private List<Endereco> endereco = new ArrayList<>();
 }
 
 

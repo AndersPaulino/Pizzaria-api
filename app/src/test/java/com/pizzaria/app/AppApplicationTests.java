@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class AppApplicationTests {
-	String ola = "Hello World!";
 	@Test
 	void contextLoads() {
 		assertTrue(true);

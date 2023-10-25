@@ -13,7 +13,7 @@ class ClientDTOTest {
     private ClienteDTO clienteDTO;
 
     @Test
-    public void testDefaultConstructor() {
+    void testDefaultConstructor() {
         clienteDTO = new ClienteDTO(cliente);
 
         assertThat(clienteDTO).isNotNull();
@@ -24,7 +24,7 @@ class ClientDTOTest {
     }
 
     @Test
-    public void testConstructorWithClienteObject() {
+    void testConstructorWithClienteObject() {
         cliente.setId(1L);
         cliente.setNome("John Doe");
         cliente.setCpf("12345678900");
@@ -39,7 +39,7 @@ class ClientDTOTest {
     }
 
     @Test
-    public void testGetterAndSetterMethods() {
+    void testGetterAndSetterMethods() {
         clienteDTO = new ClienteDTO(cliente);
 
         clienteDTO.setId(1L);
