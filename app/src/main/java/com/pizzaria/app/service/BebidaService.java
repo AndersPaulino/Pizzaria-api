@@ -30,7 +30,6 @@ public class BebidaService {
         List<Bebida> bebidas = bebidaRepository.findAll();
         return bebidas.stream().map(BebidaDTO::new).toList();
     }
-
     @Transactional(readOnly = true)
     public BebidaDTO findByName(String nomeBebida) {
         Bebida bebidas = bebidaRepository.findByName(nomeBebida);

@@ -33,7 +33,7 @@ export class ClientedetailsComponent {
     this.modalRef.dismiss();
   }
 
-lancar(modal: any) {
-  this.modalRef = this.modalService.open(modal, { size: 'lg' });
-}
+  lancar(modal: any) {
+    this.modalRef = this.modalService.open(modal, { size: 'lg' });
+  }
 }

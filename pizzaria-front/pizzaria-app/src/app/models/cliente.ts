@@ -4,9 +4,9 @@ export class Cliente {
     id!: number;
     nome!: string;
     cpf!: string;
-    enderecos: Endereco[]; // Declare a propriedade, mas não a inicialize diretamente
+    enderecos: Endereco[];
 
     constructor() {
-        this.enderecos = []; // Inicialize a propriedade no construtor
+        this.enderecos = [];
     }
 }
