@@ -81,6 +81,18 @@ export class ProdutolistComponent {
   lancamento(produto: Produto){
     this.retorno.emit(produto);
   }
-
+  calcularValorTotal(produto: any): number {
+    return (
+      produto.valorProduto +
+      (produto.bebidaList
+        ? produto.bebidaList.reduce((total: number, bebida: any) => total + bebida.valorBebida, 0)
+        : 0
+      ) +
+      (produto.pizzaList
+        ? produto.pizzaList.reduce((total: number, pizza: any) => total + pizza.valorPizza, 0)
+        : 0
+      )
+    );
+  }
 
 }

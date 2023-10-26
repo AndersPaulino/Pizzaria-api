@@ -8,8 +8,10 @@
                   <tr>
                     <th>#ID</th>
                     <th>Pizzas</th>
+                    <th>Valor</th>
                     <th>Bebidas</th>
                     <th>Valor</th>
+                    <th>Valor Total</th>
                     <th>Ações</th>
                   </tr>
                 </thead>
@@ -20,18 +22,31 @@
                       <ul>
                         <li *ngFor="let pizza of produto.pizzaList">
                           <ul>
-                            <li *ngFor="let sabor of pizza.sabor">{{ sabor.nomeSabor }} ({{ pizza.valorPizza }})
-                            </li>
+                            <li *ngFor="let sabor of pizza.sabor">{{ sabor.nomeSabor }} ({{ pizza.tamanho }})</li>
                           </ul>
                         </li>
                       </ul>
                     </td>
                     <td>
                       <ul>
-                        <li *ngFor="let bebida of produto.bebidaList">{{ bebida.nomeBebida }} ({{ bebida.valorBebida }})</li>
+                        <li *ngFor="let pizza of produto.pizzaList">
+                          <ul>
+                            <li>{{ "R$ " + pizza.valorPizza }}</li>
+                          </ul>
+                        </li>
                       </ul>
                     </td>
-                    <td>{{ produto.valorProduto }}</td>
+                    <td>
+                        <ul>
+                          <li *ngFor="let bebida of produto.bebidaList">{{ bebida.nomeBebida }}</li>
+                        </ul>
+                    </td>
+                    <td>
+                      <ul>
+                        <li *ngFor="let bebida of produto.bebidaList">{{ "R$ " + bebida.valorBebida }}</li>
+                      </ul>
+                    </td>
+                    <td>{{ "R$ " + calcularValorTotal(produto) }}</td>
                     <td>
                       <button class="btn btn-primary" (click)="editar(modal1, produto, i)">Editar</button>
                       <button class="btn btn-danger" (click)="deletar(produto.id)">Excluir</button>
