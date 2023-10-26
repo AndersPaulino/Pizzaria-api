@@ -36,5 +36,4 @@ public class Pizza extends AbstractEntity{
     @Getter @Setter
     @Column(name = "cl_valor_pizza")
     private BigDecimal valorPizza;
-
 }

@@ -21,7 +21,7 @@ public class Cliente extends AbstractEntity {
     private String cpf;
 
     @Getter @Setter
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "cl_cliente.endereco",
             joinColumns =  @JoinColumn(
                     name = "cliente.id"

@@ -16,34 +16,25 @@ import java.util.Optional;
 @Service
 public class ClienteService {
 
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
     @Autowired
     public ClienteService(ClienteRepository clienteRepository){
         this.clienteRepository = clienteRepository;
-    }
-
-    private ClienteDTO convertToDTO(Cliente cliente) {
-        ClienteDTO clienteDTO = new ClienteDTO(cliente);
-        clienteDTO.setId(cliente.getId());
-        clienteDTO.setNome(cliente.getNome());
-        clienteDTO.setCpf(cliente.getCpf());
-        return clienteDTO;
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Cliente> buscarClientePorId(Long id) {
-        return clienteRepository.findById(id);
-    }
-
-    public Optional<ClienteDTO> buscarClientePorIdDTO(Long id) {
-        Optional<Cliente> cliente = clienteRepository.findById(id);
-        return cliente.map(this::convertToDTO);
     }
 
     @Transactional(readOnly = true)
     public List<ClienteDTO> findAll(){
         List<Cliente> clientes = clienteRepository.findAll();
         return clientes.stream().map(ClienteDTO::new).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public ClienteDTO findById(Long id) {
+        Cliente entity = clienteRepository.findById(id).orElse(null);
+        if (entity == null) {
+            return null;
+        }
+        return new ClienteDTO(entity);
     }
     @Transactional(readOnly = true)
     public ClienteDTO findByNome(String nome){
@@ -90,14 +81,14 @@ public class ClienteService {
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void atualizar(Long id, Cliente cliente){
-        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
-        Cliente cliente1 = clienteOptional.get();
-        if (clienteOptional.isPresent()){
-            clienteRepository.save(cliente1);
-        }else {
-            throw new IllegalArgumentException("Id do Cliente não encontrado!");
-        }
+    public Cliente atualizar(Long id, Cliente clienteAtualizado){
+        Cliente clienteExistente = clienteRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("O Cliente com o ID " + id + " não existe."));
+        clienteExistente.setNome(clienteAtualizado.getNome());
+        clienteExistente.setCpf(clienteAtualizado.getCpf());
+        clienteExistente.setEndereco(clienteAtualizado.getEndereco());
+
+        return clienteRepository.save(clienteExistente);
     }
 
     public void deleteClient(Long id){

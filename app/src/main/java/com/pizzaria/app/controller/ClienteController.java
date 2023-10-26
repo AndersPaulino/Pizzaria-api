@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cliente")
@@ -20,12 +19,6 @@ public class ClienteController {
     @Autowired
     public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> buscarClientePorId(@PathVariable Long id) {
-        Optional<ClienteDTO> clienteDTO = clienteService.buscarClientePorIdDTO(id);
-        return clienteDTO.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
@@ -94,13 +87,10 @@ public class ClienteController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-        try {
-            clienteService.atualizar(id, cliente);
-            return ResponseEntity.ok().body("Registro atualizado com sucesso!");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<ClienteDTO> atualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO clienteAtualizado = new ClienteDTO(clienteService.atualizar(id, clienteDTO.toCliente()));
+
+        return ResponseEntity.ok(clienteAtualizado);
     }
 
     @DeleteMapping("/deletar/{id}")

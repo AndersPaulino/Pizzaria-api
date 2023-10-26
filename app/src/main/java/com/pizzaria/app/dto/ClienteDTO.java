@@ -27,10 +27,13 @@ public class ClienteDTO {
         cliente.setRegistro(registro);
         cliente.setNome(nome);
         cliente.setCpf(cpf);
+        cliente.setEndereco(endereco);
         return cliente;
     }
     public ClienteDTO(Cliente cliente) {
         id = cliente.getId();
+        ativo = cliente.isAtivo();
+        registro = cliente.getRegistro();
         nome = cliente.getNome();
         cpf = cliente.getCpf();
         endereco = cliente.getEndereco();

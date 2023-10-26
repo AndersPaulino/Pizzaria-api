@@ -15,7 +15,7 @@ import java.util.Optional;
 public class EnderecoService {
 
 
-    private EnderecoRepository enderecoRepository;
+    private final EnderecoRepository enderecoRepository;
     @Autowired
     public EnderecoService(EnderecoRepository enderecoRepository){
         this.enderecoRepository = enderecoRepository;
@@ -41,8 +41,7 @@ public class EnderecoService {
     }
     @Transactional(readOnly = true)
     public Optional<EnderecoDTO> findById(Long id) {
-        return enderecoRepository.findById(id)
-                .map(EnderecoDTO::new);
+        return enderecoRepository.findById(id).map(EnderecoDTO::new);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -51,10 +50,21 @@ public class EnderecoService {
     }
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void atualizar(Long id, Endereco endereco){
-        Optional<Endereco> endereco1 = enderecoRepository.findById(id);
-        Endereco endereco2 = endereco1.get();
-        if (endereco1.isPresent()){
-            enderecoRepository.save(endereco2);
+        Optional<Endereco> enderecos = enderecoRepository.findById(id);
+        if (enderecos.isPresent()){
+            Endereco enderecoExistente = enderecos.get();
+            if (endereco.getBairro() != null) {
+                enderecoExistente.setBairro(endereco.getBairro());
+                enderecoRepository.save(enderecoExistente);
+            }
+            if (endereco.getRua() != null) {
+                enderecoExistente.setRua(endereco.getRua());
+                enderecoRepository.save(enderecoExistente);
+            }
+            if (endereco.getNumero() != 0) {
+                enderecoExistente.setNumero(endereco.getNumero());
+                enderecoRepository.save(enderecoExistente);
+            }
         }else {
             throw new IllegalArgumentException("Id do Endereço não encontrado!");
         }

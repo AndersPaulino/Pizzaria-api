@@ -67,10 +67,10 @@ export class EnderecolistComponent {
     };
 
     if (endereco.id) {
-      console.log("Aqui foi atualizar");
+      console.log("ENDERECO LIST Aqui foi atualizar");
       this.enderecoService.atualizarEndereco(endereco.id, endereco).subscribe(onComplete);
     } else {
-      console.log("Aqui foi cadastrar");
+      console.log("ENDERECO LIST Aqui foi cadastrar");
       this.enderecoService.cadastrarEndereco(endereco).subscribe(onComplete);
     }
   }

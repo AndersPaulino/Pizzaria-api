@@ -9,15 +9,15 @@ import lombok.Setter;
 public class Endereco extends AbstractEntity {
 
     @Getter @Setter
-    @Column(name = "bairro", nullable = false, length = 255)
+    @Column(name = "cl_bairro", nullable = false, length = 255)
     private String bairro;
 
     @Getter @Setter
-    @Column(name = "rua", nullable = false, length = 255)
+    @Column(name = "cl_rua", nullable = false, length = 255)
     private String rua;
 
     @Getter @Setter
-    @Column(name = "numero", nullable = false)
+    @Column(name = "cl_numero", nullable = false)
     private int numero;
 }
 
