@@ -32,22 +32,4 @@ public class Produto extends AbstractEntity{
     @Column(name = "cl_valor_pedido")
     private BigDecimal valorProduto;
 
-    public void calcularValorProduto() {
-        BigDecimal valorTotal = BigDecimal.ZERO;
-
-        if (pizzaList != null) {
-            for (Pizza pizza : pizzaList) {
-                valorTotal = valorTotal.add(pizza.getValorPizza());
-            }
-        }
-
-        if (bebidaList != null) {
-            for (Bebida bebida : bebidaList) {
-                valorTotal = valorTotal.add(bebida.getValorBebida());
-            }
-        }
-
-        valorProduto = valorTotal;
-    }
-
 }
