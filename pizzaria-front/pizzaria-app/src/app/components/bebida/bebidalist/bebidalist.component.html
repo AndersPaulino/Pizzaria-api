@@ -21,6 +21,7 @@
                             <button class="btn btn-primary" (click)="editar(modal1, bebida, i)">Editar</button>
                             <button class="btn btn-danger" (click)="deletar(bebida.id)">Excluir</button>
                         </td>
+                        <td *ngIf="modoLancamento"> <button type="button" class="btn btn-primary" (click)="lancamento( bebida)">Lançar</button> </td>
                     </tr>
                 </tbody>
             </table>

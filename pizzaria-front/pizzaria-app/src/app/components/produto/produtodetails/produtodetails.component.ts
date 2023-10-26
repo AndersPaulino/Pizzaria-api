@@ -17,7 +17,6 @@ export class ProdutodetailsComponent {
   produtoService = inject(ProdutoService);
 
   constructor() { }
-
   salvar() {
     this.retorno.emit(this.produto);
   }

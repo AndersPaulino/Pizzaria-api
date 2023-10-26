@@ -32,6 +32,8 @@
                             <button class="btn btn-primary" (click)="editar(modal1, pizza, i)">Editar</button>
                             <button class="btn btn-danger" (click)="deletar(pizza.id)">Excluir</button>
                         </td>
+                        <td *ngIf="modoLancamento"> <button type="button" class="btn btn-primary" (click)="lancamento( pizza)">Lançar</button> </td>
+
                     </tr>
 
                 </tbody>

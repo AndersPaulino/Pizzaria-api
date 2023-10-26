@@ -81,4 +81,6 @@ export class ProdutolistComponent {
   lancamento(produto: Produto){
     this.retorno.emit(produto);
   }
+
+
 }
