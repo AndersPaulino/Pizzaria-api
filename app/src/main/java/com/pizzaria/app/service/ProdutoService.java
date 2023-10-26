@@ -5,9 +5,10 @@ import com.pizzaria.app.entity.Produto;
 import com.pizzaria.app.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -18,40 +19,35 @@ public class ProdutoService {
     public ProdutoService(ProdutoRepository produtoRepository) {
         this.produtoRepository = produtoRepository;
     }
-    public Optional<Produto> buscarProdutoPorId(Long id){
-        return produtoRepository.findById(id);
+    @Transactional(readOnly = true)
+    public List<ProdutoDTO> findAll(){
+        List<Produto> produtos = produtoRepository.findAll();
+        return produtos.stream().map(ProdutoDTO::new).toList();
     }
 
-    public List<Produto> listarTodosProdutos() {
-        return produtoRepository.findAll();
+    @Transactional(readOnly = true)
+    public ProdutoDTO findById(Long id) {
+        Produto entity = produtoRepository.findById(id).orElse(null);
+        if (entity == null) {
+            return null;
+        }
+        return new ProdutoDTO(entity);
     }
-
-    public ProdutoDTO cadastrarProduto(ProdutoDTO produtoDTO) {
-        Produto produto = new Produto();
-        produto.setAtivo(produtoDTO.isAtivo());
-        produto.setRegistro(produtoDTO.getRegistro());
-        produto.setPizzaList(produtoDTO.getPizzaList());
-        produto.setBebidaList(produtoDTO.getBebidaList());
-        produto.setValorProduto(produtoDTO.getValorProduto());
-
+    @Transactional(rollbackFor = Exception.class)
+    public void cadastrar(Produto produto){
         produtoRepository.save(produto);
-
-        return new ProdutoDTO(produto);
     }
 
-    public ProdutoDTO atualizarProduto(Long id, ProdutoDTO produtoDTO) {
-        Produto produto = produtoRepository.findById(id)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Produto atualizar(Long id, Produto produtoAtualizado) {
+        Produto produtoExistente = produtoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
 
-        produto.setAtivo(produtoDTO.isAtivo());
-        produto.setRegistro(produtoDTO.getRegistro());
-        produto.setPizzaList(produtoDTO.getPizzaList());
-        produto.setBebidaList(produtoDTO.getBebidaList());
-        produto.setValorProduto(produtoDTO.getValorProduto());
+        produtoExistente.setPizzaList(produtoAtualizado.getPizzaList());
+        produtoExistente.setBebidaList(produtoAtualizado.getBebidaList());
+        produtoExistente.setValorProduto(produtoAtualizado.getValorProduto());
 
-        produtoRepository.save(produto);
-
-        return new ProdutoDTO(produto);
+        return produtoRepository.save(produtoExistente);
     }
 
     public void deletarProduto(Long id) {

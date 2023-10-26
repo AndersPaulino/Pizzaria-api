@@ -3,7 +3,6 @@ package com.pizzaria.app.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +13,25 @@ public class Produto extends AbstractEntity{
 
     @Getter @Setter
     @ManyToMany
-    @JoinTable(name = "tb_pedido_pizza",
-            joinColumns = @JoinColumn(name = "pedido_id"),
-            inverseJoinColumns = @JoinColumn(name = "pizza_id")
+    @JoinTable(name = "cl_produto.pizza",
+            joinColumns =  @JoinColumn(
+                    name = "produto.id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "pizza.id"
+            )
     )
     private List<Pizza> pizzaList = new ArrayList<>();
 
     @Getter @Setter
     @ManyToMany
-    @JoinTable(name = "tb_pedido_bebida",
-            joinColumns = @JoinColumn(name = "pedido_id"),
-            inverseJoinColumns = @JoinColumn(name = "bebida_id")
+    @JoinTable(name = "cl_produto.bebida",
+            joinColumns =  @JoinColumn(
+                    name = "produto.id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "bebida.id"
+            )
     )
     private List<Bebida> bebidaList = new ArrayList<>();
 
@@ -46,7 +53,6 @@ public class Produto extends AbstractEntity{
                 valorTotal = valorTotal.add(bebida.getValorBebida());
             }
         }
-
         valorProduto = valorTotal;
     }
 

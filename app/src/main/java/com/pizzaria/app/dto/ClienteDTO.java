@@ -20,7 +20,7 @@ public class ClienteDTO {
     private List<Endereco> endereco = new ArrayList<>();
 
     public ClienteDTO(){}
-    public  Cliente toCliente(){
+    public Cliente toCliente(){
         Cliente cliente = new Cliente();
         cliente.setId(id);
         cliente.setAtivo(ativo);

@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/cliente")
 @CrossOrigin(origins = "*")
 public class ClienteController {
-    private ClienteService clienteService;
+    private final ClienteService clienteService;
 
     @Autowired
     public ClienteController(ClienteService clienteService) {

@@ -21,6 +21,16 @@ public class ProdutoDTO {
     private BigDecimal valorProduto;
 
     public ProdutoDTO(){}
+    public Produto toProduto(){
+        Produto produto = new Produto();
+        produto.setId(id);
+        produto.setAtivo(ativo);
+        produto.setRegistro(registro);
+        produto.setPizzaList(pizzaList);
+        produto.setBebidaList(bebidaList);
+        produto.setValorProduto(valorProduto);
+        return produto;
+    }
     public ProdutoDTO(Produto produto){
         id = produto.getId();
         ativo = produto.isAtivo();
@@ -28,5 +38,9 @@ public class ProdutoDTO {
         pizzaList = produto.getPizzaList();
         bebidaList = produto.getBebidaList();
         valorProduto = produto.getValorProduto();
+    }
+
+    public static ProdutoDTO fromProduto(Produto produto){
+        return new ProdutoDTO(produto);
     }
 }

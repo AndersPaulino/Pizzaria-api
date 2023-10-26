@@ -105,7 +105,7 @@ class ProdutoControllerTest {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setValorProduto(BigDecimal.valueOf(25.0));
 
-        when(produtoService.atualizarProduto(produtoId, produtoDTO)).thenReturn(produtoDTO);
+        when(produtoService.atualizar(produtoId, produtoDTO)).thenReturn(produtoDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.put(PRODUTO_API_URL_WITH_ID+produtoId)
                         .contentType(MediaType.APPLICATION_JSON)
