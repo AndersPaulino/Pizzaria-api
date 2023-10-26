@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/pizza")
+@CrossOrigin(origins = "*")
 public class PizzaController {
 
     private final PizzaService pizzaService;
@@ -68,8 +69,6 @@ public class PizzaController {
     }
 
 
-
-
     @PutMapping("/{id}")
     public ResponseEntity<PizzaDTO> atualizarPizza(@PathVariable Long id, @RequestBody PizzaDTO pizzaDTO) {
         PizzaDTO pizzaAtualizada = new PizzaDTO(pizzaService.atualizarPizza(id, pizzaDTO.toPizza()));
@@ -77,11 +76,14 @@ public class PizzaController {
         return ResponseEntity.ok(pizzaAtualizada);
     }
 
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<String> deletarPizza(@PathVariable Long id) {
         pizzaService.deletarPizza(id);
         return ResponseEntity.ok("Pizza com ID " + id + " excluída com sucesso.");
     }
 
+    @GetMapping("erro")
+    private ResponseEntity<List<PizzaDTO>> exemploErro(){
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
 }

@@ -1,32 +1,33 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Sabor } from 'src/app/models/sabor';
-import { SaborService } from 'src/app/services/sabor.service';
+import { NgbModal , NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Pizza } from 'src/app/models/pizza';
+import { PizzaService } from 'src/app/services/pizza.service';
 @Component({
-  selector: 'app-saborlist',
-  templateUrl: './saborlist.component.html',
-  styleUrls: ['./saborlist.component.scss']
+  selector: 'app-pizzalist',
+  templateUrl: './pizzalist.component.html',
+  styleUrls: ['./pizzalist.component.scss']
 })
-export class SaborlistComponent {
-  lista: Sabor[] = [];
-  
-  @Output() retorno = new EventEmitter<Sabor>();
-  @Input() modoLancamento: boolean = false;
+export class PizzalistComponent {
 
+  lista: Pizza[] = [];
 
-  saborSelecionadaParaEdicao: Sabor = new Sabor();
+  pizzaSelecionadoParaEdicao: Pizza = new Pizza();
   indiceSelecionadoParaEdicao!: number;
+
+  @Output() retorno = new EventEmitter<Pizza>();
+  @Input() modoLancamento: boolean = false;
 
   modalService = inject(NgbModal);
   modalRef!: NgbModalRef;
-  saborService = inject(SaborService);
+
+  pizzaService = inject(PizzaService);
 
   constructor() {
     this.listAll();
   }
 
   listAll() {
-    this.saborService.listAll().subscribe({
+    this.pizzaService.listAll().subscribe({
       next: lista => {
         this.lista = lista;
       },
@@ -38,7 +39,7 @@ export class SaborlistComponent {
   }
 
   exemploErro() {
-    this.saborService.exemploErro().subscribe({
+    this.pizzaService.exemploErro().subscribe({
       next: lista => { // QUANDO DÁ CERTO
         this.lista = lista;
       },
@@ -50,36 +51,36 @@ export class SaborlistComponent {
   }
 
   adicionar(modal: any) {
-    this.saborSelecionadaParaEdicao = new Sabor();
+    this.pizzaSelecionadoParaEdicao = new Pizza();
     this.modalRef = this.modalService.open(modal, { size: 'sm' });
   }
 
-  editar(modal: any, sabor: Sabor, indice: number) {
-    this.saborSelecionadaParaEdicao = { ...sabor };
+  editar(modal: any, pizza: Pizza, indice: number) {
+    this.pizzaSelecionadoParaEdicao = { ...pizza };
     this.indiceSelecionadoParaEdicao = indice;
     this.modalRef = this.modalService.open(modal, { size: 'sm' });
   }
 
-  addOuEditarSabor(sabor: Sabor) {
+  addOuEditarPizza(pizza: Pizza) {
     const onComplete = () => {
       this.listAll();
       this.modalRef.dismiss();
     };
 
-    if (sabor.id) {
+    if (pizza.id) {
       console.log("Aqui foi atualizar");
-      this.saborService.atualizarSabor(sabor.id, sabor).subscribe(onComplete);
+      this.pizzaService.atualizarPizza(pizza.id, pizza).subscribe(onComplete);
     } else {
       console.log("Aqui foi cadastrar");
-      this.saborService.cadastrarSabor(sabor).subscribe(onComplete);
+      this.pizzaService.cadastrarPizza(pizza).subscribe(onComplete);
     }
   }
 
   deletar(id: number) {
-    this.saborService.deletarSabor(id).subscribe(() => this.listAll());
+    this.pizzaService.deletarPizza(id).subscribe(() => this.listAll());
   }
 
-  lancamento(sabor: Sabor){
-    this.retorno.emit(sabor);
+  lancamento(pizza: Pizza){
+    this.retorno.emit(pizza);
   }
 }
