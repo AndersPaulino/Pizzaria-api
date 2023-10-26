@@ -6,6 +6,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tb_produto", schema = "public")
@@ -39,22 +40,25 @@ public class Produto extends AbstractEntity{
     @Column(name = "cl_valor_pedido")
     private BigDecimal valorProduto;
 
-    @PreUpdate
-    public void calcularValorProduto() {
-        BigDecimal valorTotal = BigDecimal.ZERO;
-
-        if (pizzaList != null) {
-            for (Pizza pizza : pizzaList) {
-                valorTotal = valorTotal.add(pizza.getValorPizza());
-            }
-        }
-
-        if (bebidaList != null) {
-            for (Bebida bebida : bebidaList) {
-                valorTotal = valorTotal.add(bebida.getValorBebida());
-            }
-        }
-        valorProduto = valorTotal;
+    public BigDecimal calcularValorProduto() {
+        BigDecimal valorPizzas = calcularValorPizzas();
+        BigDecimal valorBebidas = calcularValorBebidas();
+        return valorPizzas.add(valorBebidas);
     }
-
+    private BigDecimal calcularValorPizzas() {
+        if (Objects.nonNull(pizzaList)) {
+            return pizzaList.stream()
+                    .map(Pizza::getValorPizza)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+        return BigDecimal.ZERO;
+    }
+    private BigDecimal calcularValorBebidas() {
+        if (Objects.nonNull(bebidaList)) {
+            return bebidaList.stream()
+                    .map(Bebida::getValorBebida)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+        return BigDecimal.ZERO;
+    }
 }

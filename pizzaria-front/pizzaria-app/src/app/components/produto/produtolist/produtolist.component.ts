@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Produto } from 'src/app/models/produto';
+import { Pizza } from 'src/app/models/pizza';
+import { Bebida } from 'src/app/models/bebida';
 import { ProdutoService } from 'src/app/services/produto.service';
 @Component({
   selector: 'app-produtolist',
@@ -64,35 +66,63 @@ export class ProdutolistComponent {
       this.listAll();
       this.modalRef.dismiss();
     };
-
+  
     if (produto.id) {
-      console.log("Aqui foi atualizar");
+      const valorBebidasAnterior = this.calcularValorBebidas(this.lista[this.indiceSelecionadoParaEdicao].bebidaList);
+      const valorPizzas = this.calcularValorPizzas(produto.pizzaList); // Calcular o valor das pizzas
+      const total = valorPizzas + this.calcularValorBebidas(produto.bebidaList) - valorBebidasAnterior;
+      
       this.produtoService.atualizarProduto(produto.id, produto).subscribe(onComplete);
     } else {
       console.log("Aqui foi cadastrar");
       this.produtoService.cadastrarProduto(produto).subscribe(onComplete);
     }
   }
-
+  
   deletar(id: number) {
     this.produtoService.deletarProduto(id).subscribe(() => this.listAll());
   }
-
-  lancamento(produto: Produto){
+  
+  lancamento(produto: Produto) {
     this.retorno.emit(produto);
   }
-  calcularValorTotal(produto: any): number {
-    return (
-      produto.valorProduto +
-      (produto.bebidaList
-        ? produto.bebidaList.reduce((total: number, bebida: any) => total + bebida.valorBebida, 0)
-        : 0
-      ) +
-      (produto.pizzaList
-        ? produto.pizzaList.reduce((total: number, pizza: any) => total + pizza.valorPizza, 0)
-        : 0
-      )
-    );
+  
+  calcularValorTotal(produto: Produto): number {
+    const valorPizzas = this.calcularValorPizzas(produto.pizzaList); // Calcular o valor das pizzas
+    const valorBebidas = this.calcularValorBebidas(produto.bebidaList);
+  
+    return produto.valorProduto + valorPizzas + valorBebidas;
   }
+  
+   
+  calcularValorPizzas(pizzaList: Pizza[]): number {
+    if (pizzaList) {
+      return pizzaList.reduce((subtotal: number, pizza: Pizza) => {
+        switch (pizza.tamanho) {
+          case "PEQUENA":
+            return subtotal + 20;
+          case "MEDIA":
+            return subtotal + 30;
+          case "GRANDE":
+            return subtotal + 40;
+          case "FAMILIA":
+            return subtotal + 50;
+          default:
+            return subtotal;
+        }
+      }, 0);
+    }
+    return 0;
+  }
+  
+  calcularValorBebidas(bebidaList: Bebida[]): number {
+    if (bebidaList) {
+      return bebidaList.reduce((subtotal: number, bebida: Bebida) => {
+        return subtotal + (bebida.valorBebida !== null && bebida.valorBebida !== undefined ? bebida.valorBebida : 0);
+      }, 0);
+    }
+    return 0;
+  }
+  
 
 }
