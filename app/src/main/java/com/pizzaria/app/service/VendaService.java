@@ -1,107 +1,71 @@
 package com.pizzaria.app.service;
 
 
-import com.pizzaria.app.dto.ClienteDTO;
-import com.pizzaria.app.dto.FuncionarioDTO;
-import com.pizzaria.app.dto.ProdutoDTO;
 import com.pizzaria.app.dto.VendaDTO;
 import com.pizzaria.app.entity.Venda;
 import com.pizzaria.app.repository.VendaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class VendaService {
 
-    @Autowired
     private VendaRepository vendaRepository;
 
-    @Autowired
-    private ClienteService clienteService;
 
-    @Autowired
-    private FuncionarioService funcionarioService;
-
-    @Autowired
-    private ProdutoService produtoService;
-
-    public VendaDTO cadastrarVenda(VendaDTO vendaDTO) {
-        Venda venda = new Venda();
-
-        venda.setCliente(clienteService.buscarClientePorId(vendaDTO.getCliente().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado")));
-
-
-        venda.setProduto(produtoService.buscarProdutoPorId(vendaDTO.getProduto().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado")));
-
-        venda.setEmitirNota(vendaDTO.isEmitirNota());
-        venda.setEntregar(vendaDTO.isEntregar());
-
-        venda.setValorVenda(vendaDTO.getValorVenda());
-
-        vendaRepository.save(venda);
-
-        vendaDTO.setId(venda.getId());
-        return vendaDTO;
+    public VendaService(VendaRepository vendaRepository){
+        this.vendaRepository = vendaRepository;
     }
 
 
-    public Optional<Venda> buscarVendaPorId(Long id) {
+    @Transactional(readOnly = true)
+    public Optional<Venda> findById(Long id) {
         return vendaRepository.findById(id);
     }
 
-    public List<VendaDTO> buscarVendasPorEntregar(boolean entregar) {
-        List<Venda> vendas = vendaRepository.findByEntregar(entregar);
-        return vendas.stream().map(this::convertToDTO).collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<VendaDTO> findAll(){
+        List<Venda> vendas = vendaRepository.findAll();
+        return vendas.stream()
+                .map(VendaDTO::new)
+                .toList();
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public void cadastrar(Venda venda){
+        vendaRepository.save(venda);
     }
 
-    public List<VendaDTO> buscarVendasPorEmitirNota(boolean emitirNota) {
-        List<Venda> vendas = vendaRepository.findByEmitirNota(emitirNota);
-        return vendas.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    public VendaDTO atualizarVenda(Long id, VendaDTO vendaDTO) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public void atualizar(Long id, Venda venda){
         Optional<Venda> vendaOptional = vendaRepository.findById(id);
-
-        if (vendaOptional.isPresent()) {
-            Venda venda = vendaOptional.get();
-            venda.setCliente(clienteService.buscarClientePorId(vendaDTO.getCliente().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado")));
-
-
-            venda.setProduto(produtoService.buscarProdutoPorId(vendaDTO.getProduto().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado")));
-
-            venda.setEmitirNota(vendaDTO.isEmitirNota());
-            venda.setEntregar(vendaDTO.isEntregar());
-
-            venda.setValorVenda(vendaDTO.getValorVenda());
-            vendaRepository.save(venda);
-            vendaDTO.setId(venda.getId());
-            return vendaDTO;
+        Venda venda1 = vendaOptional.get();
+        if (vendaOptional.isPresent()){
+            vendaRepository.save(venda1);
+        } else {
+            throw new IllegalArgumentException("Id da venda não econtrado!");
         }
-
-        return null;
-    }
-    public void deletarVenda(Long id) {
-        vendaRepository.deleteById(id);
     }
 
-    private VendaDTO convertToDTO(Venda venda) {
-        VendaDTO vendaDTO = new VendaDTO(venda);
-        vendaDTO.setId(venda.getId());
-        vendaDTO.setCliente(new ClienteDTO(venda.getCliente()));
-        vendaDTO.setFuncionario(new FuncionarioDTO(venda.getFuncionario()));
-        vendaDTO.setProduto(new ProdutoDTO(venda.getProduto()));
-        vendaDTO.setEmitirNota(venda.isEmitirNota());
-        vendaDTO.setEntregar(venda.isEntregar());
-        vendaDTO.setValorVenda(venda.getValorVenda());
-        return vendaDTO;
+    public void deleteVenda(Long id){
+        Venda venda = vendaRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("Venda não econtrada com o ID: " + id));
+        vendaRepository.delete(venda);
+    }
+    public void desativar(Long id){
+        Optional<Venda> vendaOptional = vendaRepository.findById(id);
+        Venda venda = vendaOptional.get();
+
+        if (vendaOptional.isPresent()){
+            venda.setAtivo(false);
+            vendaRepository.save(venda);
+            throw new IllegalArgumentException("Venda desativada com sucesso!");
+        } else {
+            throw new IllegalArgumentException("ID da venda inválido!");
+        }
     }
 }
 

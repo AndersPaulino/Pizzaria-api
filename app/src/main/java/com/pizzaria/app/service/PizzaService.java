@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,15 +79,19 @@ public class PizzaService {
 
             if (tamanho == Tamanho.PEQUENA){
                 pizza.setQtdeSabor(1);
+                pizza.setValorPizza(new BigDecimal("20"));
             }
             if (tamanho == Tamanho.MEDIA){
                 pizza.setQtdeSabor(2);
+                pizza.setValorPizza(new BigDecimal("30"));
             }
             if (tamanho == Tamanho.GRANDE){
                 pizza.setQtdeSabor(3);
+                pizza.setValorPizza(new BigDecimal("40"));
             }
             if (tamanho == Tamanho.FAMILIA){
                 pizza.setQtdeSabor(4);
+                pizza.setValorPizza(new BigDecimal("50"));
             }
             pizza.setQtdeSabor(sabores.size());
         }

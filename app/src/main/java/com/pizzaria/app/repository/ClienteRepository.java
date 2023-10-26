@@ -27,5 +27,5 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     List<Cliente> findByDiaRegistro(@Param("registro") LocalDate registro);
 
     @Query("SELECT e FROM Cliente e WHERE DATE(e.atualizar) = :atualizar")
-    List<Cliente> findByDiaAtualizar(@Param("atualizar") LocalDate registro);
+    List<Cliente> findByDiaAtualizar(@Param("atualizar") LocalDate atualizar);
 }

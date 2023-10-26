@@ -9,60 +9,69 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/vendas")
+
+@CrossOrigin(origins = "*")
 public class VendaController {
 
-    @Autowired
+
     private VendaService vendaService;
 
-    @PostMapping
-    public ResponseEntity<VendaDTO> cadastrarVenda(@RequestBody VendaDTO vendaDTO) {
-        VendaDTO novaVendaDTO = vendaService.cadastrarVenda(vendaDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novaVendaDTO);
+    @Autowired
+    public VendaController(VendaService vendaService){
+        this.vendaService = vendaService;
     }
-
-    @GetMapping("/por-emitir-nota")
-    public ResponseEntity<List<VendaDTO>> buscarVendasPorEmitirNota(@RequestParam boolean emitirNota) {
-        List<VendaDTO> vendasDTO = vendaService.buscarVendasPorEmitirNota(emitirNota);
-        return ResponseEntity.ok(vendasDTO);
-    }
-
-    @GetMapping("/por-entregar")
-    public ResponseEntity<List<VendaDTO>> buscarVendasPorEntregar(@RequestParam boolean entregar) {
-        List<VendaDTO> vendasDTO = vendaService.buscarVendasPorEntregar(entregar);
-        return ResponseEntity.ok(vendasDTO);
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<VendaDTO> buscarVendaPorId(@PathVariable Long id) {
-        Optional<Venda> vendaOptional = vendaService.buscarVendaPorId(id);
-
-        if (vendaOptional.isPresent()) {
-            VendaDTO vendaDTO = new VendaDTO(vendaOptional.get());
-            return ResponseEntity.ok(vendaDTO);
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Venda> findaById(@PathVariable Long id){
+        return vendaService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+    @GetMapping
+    public ResponseEntity<List<VendaDTO>> findAll(){
+        List<VendaDTO> vendaDTOS = vendaService.findAll();
+        return ResponseEntity.ok(vendaDTOS);
+    }
+    @PostMapping
+    public ResponseEntity<String> cadastrar(@RequestBody Venda venda){
+        try {
+            vendaService.cadastrar(venda);
+            return ResponseEntity.ok().body("Registro cadastrado com sucesso!");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    @PutMapping("/id")
+    public ResponseEntity<String> atualizar(@PathVariable Long id, @RequestBody Venda venda){
+        try {
+            vendaService.atualizar(id, venda);
+            return ResponseEntity.ok("Registro atualizado com sucesso!");
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<VendaDTO> atualizarVenda(@PathVariable Long id, @RequestBody VendaDTO vendaDTO) {
-        VendaDTO vendaAtualizadaDTO = vendaService.atualizarVenda(id, vendaDTO);
-
-        if (vendaAtualizadaDTO != null) {
-            return ResponseEntity.ok(vendaAtualizadaDTO);
-        } else {
-            return ResponseEntity.notFound().build();
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<String> deletarVenda(@PathVariable Long id){
+        try {
+            vendaService.deleteVenda(id);
+            return ResponseEntity.ok("Registro deletado com sucesso!");
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status((HttpStatus.BAD_REQUEST)).body(e.getMessage());
         }
     }
+    @DeleteMapping("/desativar/{id}")
+    public ResponseEntity<String> desativar(@PathVariable Long id){
+        try {
+            vendaService.desativar(id);
+            return ResponseEntity.ok().body("Registro desativado com sucesso!");
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao desativar o registro.");
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarVenda(@PathVariable Long id) {
-        vendaService.deletarVenda(id);
-        return ResponseEntity.noContent().build();
+        }
     }
-
 }
