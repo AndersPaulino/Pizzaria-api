@@ -13,32 +13,36 @@ import java.util.List;
 public class Venda extends AbstractEntity {
 
     @Getter @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    @ManyToMany
+    @JoinTable(name = "cl_venda.cliente",
+            joinColumns =  @JoinColumn(name = "venda.id"),
+            inverseJoinColumns = @JoinColumn(name = "cliente.id"))
+    private List<Cliente> cliente = new ArrayList<>();
 
     @Getter @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario_id")
-    private Funcionario funcionario;
+    @ManyToMany
+    @JoinTable(name = "cl_venda.funcionario",
+            joinColumns =  @JoinColumn(name = "venda.id"),
+            inverseJoinColumns = @JoinColumn(name = "funcionario.id"))
+    private List<Funcionario> funcionario = new ArrayList<>();
 
     @Getter @Setter
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "venda_produto",
-            joinColumns = @JoinColumn(name = "venda_id"),
-            inverseJoinColumns = @JoinColumn(name = "produto_id"))
+    @ManyToMany
+    @JoinTable(name = "cl_venda_produto",
+            joinColumns = @JoinColumn(name = "venda.id"),
+            inverseJoinColumns = @JoinColumn(name = "produto.id"))
     private List<Produto> produto = new ArrayList<>();
 
     @Getter @Setter
-    @Column(name = "emitir_nota")
+    @Column(name = "cl_emitir_nota")
     private boolean emitirNota;
 
     @Getter @Setter
-    @Column(name = "entregar")
+    @Column(name = "cl_entregar")
     private boolean entregar;
 
     @Getter @Setter
-    @Column(name = "valor_venda")
+    @Column(name = "cl_valor_venda")
     private BigDecimal valorVenda;
 
 }

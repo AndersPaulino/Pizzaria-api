@@ -11,23 +11,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/vendas")
-
+@RequestMapping("/api/vendas")
 @CrossOrigin(origins = "*")
 public class VendaController {
 
 
-    private VendaService vendaService;
+    private final VendaService vendaService;
 
     @Autowired
     public VendaController(VendaService vendaService){
         this.vendaService = vendaService;
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Venda> findaById(@PathVariable Long id){
-        return vendaService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<VendaDTO> findaById(@PathVariable Long id){
+        VendaDTO vendaDTO = vendaService.findById(id);
+        return ResponseEntity.ok(vendaDTO);
     }
     @GetMapping
     public ResponseEntity<List<VendaDTO>> findAll(){
@@ -35,33 +33,39 @@ public class VendaController {
         return ResponseEntity.ok(vendaDTOS);
     }
     @PostMapping
-    public ResponseEntity<String> cadastrar(@RequestBody Venda venda){
+    public ResponseEntity<String> cadastrar(@RequestBody Venda venda) {
         try {
-            vendaService.cadastrar(venda);
-            return ResponseEntity.ok().body("Registro cadastrado com sucesso!");
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            // Verifique se a venda possui pelo menos um cliente
+            if (venda.getCliente() == null || venda.getCliente().isEmpty()) {
+                return ResponseEntity.badRequest().body("A venda deve ter pelo menos um cliente.");
+            }
+
+            // Verifique se a venda possui pelo menos um produto
+            if (venda.getProduto() == null || venda.getProduto().isEmpty()) {
+                return ResponseEntity.badRequest().body("A venda deve ter pelo menos um produto.");
+            }
+
+            // Registre a venda no serviço de venda
+            vendaService.cadastrarVenda(venda);
+            return ResponseEntity.ok("Registro cadastrada com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno no servidor");
         }
     }
-    @PutMapping("/id")
-    public ResponseEntity<String> atualizar(@PathVariable Long id, @RequestBody Venda venda){
-        try {
-            vendaService.atualizar(id, venda);
-            return ResponseEntity.ok("Registro atualizado com sucesso!");
-        } catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VendaDTO> atualizarVenda(@PathVariable Long id, @RequestBody VendaDTO vendaDTO) {
+        VendaDTO vendaAtualizada = new VendaDTO(vendaService.atualizarVenda(id, vendaDTO.toVenda()));
+
+        return ResponseEntity.ok(vendaAtualizada);
     }
 
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<String> deletarVenda(@PathVariable Long id){
-        try {
-            vendaService.deleteVenda(id);
-            return ResponseEntity.ok("Registro deletado com sucesso!");
-        } catch (IllegalArgumentException e){
-            return ResponseEntity.status((HttpStatus.BAD_REQUEST)).body(e.getMessage());
-        }
+        vendaService.deleteVenda(id);
+        return ResponseEntity.ok("Venda com ID " + id + " excluída com sucesso.");
     }
+
     @DeleteMapping("/desativar/{id}")
     public ResponseEntity<String> desativar(@PathVariable Long id){
         try {
@@ -73,5 +77,10 @@ public class VendaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao desativar o registro.");
 
         }
+    }
+
+    @GetMapping("erro")
+    private ResponseEntity<List<VendaDTO>> exemploErro(){
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 }

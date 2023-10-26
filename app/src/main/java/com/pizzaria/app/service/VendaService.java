@@ -5,11 +5,11 @@ import com.pizzaria.app.dto.VendaDTO;
 import com.pizzaria.app.entity.Venda;
 import com.pizzaria.app.repository.VendaRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VendaService {
@@ -23,31 +23,36 @@ public class VendaService {
 
 
     @Transactional(readOnly = true)
-    public Optional<Venda> findById(Long id) {
-        return vendaRepository.findById(id);
+    public VendaDTO findById(Long id) {
+        Venda entity = vendaRepository.findById(id).orElse(null);
+        if (entity == null) {
+            return null;
+        }
+        return new VendaDTO(entity);
     }
 
     @Transactional(readOnly = true)
-    public List<VendaDTO> findAll(){
+    public List<VendaDTO> findAll() {
         List<Venda> vendas = vendaRepository.findAll();
-        return vendas.stream()
-                .map(VendaDTO::new)
-                .toList();
+        return vendas.stream().map(VendaDTO::new).collect(Collectors.toList());
     }
     @Transactional(rollbackFor = Exception.class)
-    public void cadastrar(Venda venda){
+    public void cadastrarVenda(Venda venda){
         vendaRepository.save(venda);
     }
 
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void atualizar(Long id, Venda venda){
-        Optional<Venda> vendaOptional = vendaRepository.findById(id);
-        Venda venda1 = vendaOptional.get();
-        if (vendaOptional.isPresent()){
-            vendaRepository.save(venda1);
-        } else {
-            throw new IllegalArgumentException("Id da venda não econtrado!");
-        }
+    public Venda atualizarVenda(Long id, Venda vendaAtualizada){
+        Venda vendaExistente = vendaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("A Venda com o ID " + id + " não existe."));
+
+        vendaExistente.setCliente(vendaAtualizada.getCliente());
+        vendaExistente.setFuncionario(vendaAtualizada.getFuncionario());
+        vendaExistente.setProduto(vendaAtualizada.getProduto());
+        vendaExistente.setEmitirNota(vendaAtualizada.isEmitirNota());
+        vendaExistente.setEntregar(vendaAtualizada.isEntregar());
+        vendaExistente.setValorVenda(vendaAtualizada.getValorVenda());
+
+        return vendaRepository.save(vendaExistente);
     }
 
     public void deleteVenda(Long id){

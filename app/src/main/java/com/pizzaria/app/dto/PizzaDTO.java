@@ -14,17 +14,11 @@ import java.util.List;
 @Getter @Setter
 public class PizzaDTO {
     private Long id;
-
     private boolean ativo;
-
     private LocalDateTime registro;
-
     private List<Sabor> sabor = new ArrayList<>();
-
     private Tamanho tamanho;
-
     private BigDecimal valorPizza;
-
     private int qtdeSabor;
 
     public PizzaDTO(){}
