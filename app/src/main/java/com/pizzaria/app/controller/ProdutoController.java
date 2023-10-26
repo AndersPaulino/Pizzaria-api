@@ -5,13 +5,14 @@ import com.pizzaria.app.entity.Produto;
 import com.pizzaria.app.repository.ProdutoRepository;
 import com.pizzaria.app.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/produto")
+@RequestMapping("/api/produto")
 public class ProdutoController {
 
     private final ProdutoService produtoService;
@@ -34,14 +35,19 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ProdutoDTO cadastrarProduto(@RequestBody ProdutoDTO produtoDTO) {
-        return produtoService.cadastrarProduto(produtoDTO);
+    public ResponseEntity<String> cadastrar(@RequestBody Produto produto) {
+        try {
+            produtoService.cadastrar(produto);
+            return ResponseEntity.ok().body("Registro Cadastrado com sucesso!");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @PutMapping("/{id}")
+    /*@PutMapping("/{id}")
     public ProdutoDTO atualizarProduto(@PathVariable Long id, @RequestBody ProdutoDTO produtoDTO) {
         return produtoService.atualizarProduto(id, produtoDTO);
-    }
+    }*/
 
     @DeleteMapping("/{id}")
     public void deletarProduto(@PathVariable Long id) {
