@@ -33,6 +33,7 @@
                             <button class="btn btn-primary" (click)="editar(modal1, cliente, i)">Editar</button>
                             <button class="btn btn-danger" (click)="deletar(cliente.id)">Excluir</button>
                         </td>
+                        <td *ngIf="modoLancamento"> <button type="button" class="btn btn-primary" (click)="lancamento( cliente)">Lançar</button> </td>
                     </tr>
                 </tbody>
             </table>

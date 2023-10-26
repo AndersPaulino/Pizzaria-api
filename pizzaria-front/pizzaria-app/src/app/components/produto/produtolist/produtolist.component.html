@@ -51,6 +51,7 @@
                       <button class="btn btn-primary" (click)="editar(modal1, produto, i)">Editar</button>
                       <button class="btn btn-danger" (click)="deletar(produto.id)">Excluir</button>
                     </td>
+                    <td *ngIf="modoLancamento"> <button type="button" class="btn btn-primary" (click)="lancamento( produto)">Lançar</button> </td>
                   </tr>
                 </tbody>
               </table>     

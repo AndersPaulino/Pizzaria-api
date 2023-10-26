@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { NgbModal , NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Funcionario } from 'src/app/models/funcionario';
 import { FuncionarioService } from 'src/app/services/funcionario.service';
 
@@ -14,6 +14,9 @@ export class FuncionariolistComponent {
 
   funcionarioSelecionadoParaEdicao: Funcionario = new Funcionario();
   indiceSelecionadoParaEdicao!: number;
+
+  @Output() retorno = new EventEmitter<Funcionario>();
+  @Input() modoLancamento: boolean = false;
 
   modalService = inject(NgbModal);
   funcionarioService = inject(FuncionarioService);
@@ -74,5 +77,9 @@ export class FuncionariolistComponent {
 
   deletar(id: number) {
     this.funcionarioService.deletarFuncionario(id).subscribe(() => this.listAll());
+  }
+
+  lancamento(funcionario: Funcionario){
+    this.retorno.emit(funcionario);
   }
 }

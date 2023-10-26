@@ -1,1 +1,70 @@
-<p>vendalist works!</p>
+<div class="container">
+    <h3 class="alert alert-primary">Registro de Vendas</h3>
+    <button type="button" class="btn btn-primary" (click)="adicionar(modal1)">Adicionar Venda</button>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Cliente</th>
+                        <th>Funcionário</th>
+                        <th>Produtos</th>
+                        <th>Valor da Venda</th>
+                        <th>Nota Emitida</th>
+                        <th>Entrega Realizada</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let venda of lista; let i = index">
+                        <td>{{ venda.id }}</td>
+                        <td>
+                            <ul>
+                                <li *ngFor="let cliente of venda.cliente">{{ cliente.nome }}</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li *ngFor="let funcionario of venda.funcionario">{{ funcionario.nome }}</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li *ngFor="let produto of venda.produto">
+                                    {{ produto.pizzaList }} (Quantidade de Pizzas: {{ produto.pizzaList.length }})
+                                </li>
+                            </ul>
+                            <ul>
+                                <li *ngFor="let produto of venda.produto">
+                                    {{ produto.bebidaList }} (Quantidade de Bebidas: {{ produto.bebidaList.length }})
+                                </li>
+                            </ul>
+                        </td>
+                        <td>{{ "R$ " + venda.valorVenda.toFixed(2) }}</td>
+                        <td>{{ venda.emitirNota ? 'Sim' : 'Não' }}</td>
+                        <td>{{ venda.entregar ? 'Sim' : 'Não' }}</td>
+                        <td>
+                            <button class="btn btn-primary" (click)="editar(modal1, venda, i)">Editar</button>
+                            <button class="btn btn-danger" (click)="deletar(venda.id)">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #modal1 let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Detalhes da Venda</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-vendadetails [venda]="vendaSelecionadaParaEdicao" (retorno)="addOuEditarVenda($event)"></app-vendadetails>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Fechar</button>
+    </div>
+</ng-template>
