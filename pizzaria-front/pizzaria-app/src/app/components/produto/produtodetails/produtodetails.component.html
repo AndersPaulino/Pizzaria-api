@@ -1,0 +1,60 @@
+<form (ngSubmit)="salvar()">
+    <button type="button" class="btn btn-primary" (click)="lancar(modal1)">Lançar Pizza</button>
+    <button type="button" class="btn btn-primary" (click)="lancar(modal2)">Lançar Bebida</button>
+  
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#ID</th>
+          <th scope="col">Item</th>
+          <th scope="col">Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let pizza of produto.pizzaList; let i = index">
+          <tr>
+            <th scope="row">{{ i + 1 }}</th>
+            <td>Pizza</td>
+            <td>{{ pizza.valorPizza }}</td>
+          </tr>
+        </ng-container>
+        <ng-container *ngFor="let bebida of produto.bebidaList; let i = index">
+          <tr>
+            <th scope="row">{{ i + 1 }}</th>
+            <td>Bebida</td>
+            <td>{{ bebida.valorBebida }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+  
+
+  <ng-template #modal1 let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Pizza Modal</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+        <app-pizzalist [modoLancamento]="true" (retorno)="retornoPizzaList($event)"></app-pizzalist>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #modal2 let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Bebida Modal</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-bebidas-list [modoLancamento]="true" (retorno)="retornoBebidaList($event)"></app-bebidas-list>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

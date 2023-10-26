@@ -1,32 +1,31 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Endereco } from 'src/app/models/endereco';
-import { EnderecoService } from 'src/app/services/endereco.service';
-
+import { Produto } from 'src/app/models/produto';
+import { ProdutoService } from 'src/app/services/produto.service';
 @Component({
-  selector: 'app-enderecolist',
-  templateUrl: './enderecolist.component.html',
-  styleUrls: ['./enderecolist.component.scss']
+  selector: 'app-produtolist',
+  templateUrl: './produtolist.component.html',
+  styleUrls: ['./produtolist.component.scss']
 })
-export class EnderecolistComponent {
-  lista: Endereco[] = [];
-
-  @Output() retorno = new EventEmitter<Endereco>();
-  @Input() modoLancamento: boolean = false;
-
-  enderecoSelecionadoParaEdicao: Endereco = new Endereco();
+export class ProdutolistComponent {
+  lista: Produto[] = [];
+  produtoSelecionadoParaEdicao: Produto = new Produto();
   indiceSelecionadoParaEdicao!: number;
+
+  @Output() retorno = new EventEmitter<Produto>();
+  @Input() modoLancamento: boolean = false;
 
   modalService = inject(NgbModal);
   modalRef!: NgbModalRef;
-  enderecoService = inject(EnderecoService);
+
+  produtoService = inject(ProdutoService);
 
   constructor() {
     this.listAll();
   }
 
   listAll() {
-    this.enderecoService.listAll().subscribe({
+    this.produtoService.listAll().subscribe({
       next: lista => {
         this.lista = lista;
       },
@@ -38,7 +37,7 @@ export class EnderecolistComponent {
   }
 
   exemploErro() {
-    this.enderecoService.exemploErro().subscribe({
+    this.produtoService.exemploErro().subscribe({
       next: lista => { // QUANDO DÁ CERTO
         this.lista = lista;
       },
@@ -50,36 +49,36 @@ export class EnderecolistComponent {
   }
 
   adicionar(modal: any) {
-    this.enderecoSelecionadoParaEdicao = new Endereco();
+    this.produtoSelecionadoParaEdicao = new Produto();
     this.modalRef = this.modalService.open(modal, { size: 'sm' });
   }
 
-  editar(modal: any, endereco: Endereco, indice: number) {
-    this.enderecoSelecionadoParaEdicao = { ...endereco };
+  editar(modal: any, produto: Produto, indice: number) {
+    this.produtoSelecionadoParaEdicao = { ...produto };
     this.indiceSelecionadoParaEdicao = indice;
     this.modalRef = this.modalService.open(modal, { size: 'sm' });
   }
 
-  addOuEditarEndereco(endereco: Endereco) {
+  addOuEditarProduto(produto: Produto) {
     const onComplete = () => {
       this.listAll();
       this.modalRef.dismiss();
     };
 
-    if (endereco.id) {
+    if (produto.id) {
       console.log("Aqui foi atualizar");
-      this.enderecoService.atualizarEndereco(endereco.id, endereco).subscribe(onComplete);
+      this.produtoService.atualizarProduto(produto.id, produto).subscribe(onComplete);
     } else {
       console.log("Aqui foi cadastrar");
-      this.enderecoService.cadastrarEndereco(endereco).subscribe(onComplete);
+      this.produtoService.cadastrarProduto(produto).subscribe(onComplete);
     }
   }
 
   deletar(id: number) {
-    this.enderecoService.deletarEndereco(id).subscribe(() => this.listAll());
+    this.produtoService.deletarProduto(id).subscribe(() => this.listAll());
   }
 
-  lancamento(endereco: Endereco){
-    this.retorno.emit(endereco);
+  lancamento(produto: Produto){
+    this.retorno.emit(produto);
   }
 }

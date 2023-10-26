@@ -39,6 +39,7 @@ public class Produto extends AbstractEntity{
     @Column(name = "cl_valor_pedido")
     private BigDecimal valorProduto;
 
+    @PreUpdate
     public void calcularValorProduto() {
         BigDecimal valorTotal = BigDecimal.ZERO;
 

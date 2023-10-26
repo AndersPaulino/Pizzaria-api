@@ -22,6 +22,8 @@ import { ClientedetailsComponent } from './components/cliente/clientedetails/cli
 import { ClientelistComponent } from './components/cliente/clientelist/clientelist.component';
 import { PizzalistComponent } from './components/pizza/pizzalist/pizzalist.component';
 import { PizzadetailsComponent } from './components/pizza/pizzadetails/pizzadetails.component';
+import { ProdutodetailsComponent } from './components/produto/produtodetails/produtodetails.component';
+import { ProdutolistComponent } from './components/produto/produtolist/produtolist.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { PizzadetailsComponent } from './components/pizza/pizzadetails/pizzadeta
     ClientedetailsComponent,
     ClientelistComponent,
     PizzalistComponent,
-    PizzadetailsComponent
+    PizzadetailsComponent,
+    ProdutodetailsComponent,
+    ProdutolistComponent
   ],
   imports: [
     FormsModule,

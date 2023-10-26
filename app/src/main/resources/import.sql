@@ -3,3 +3,4 @@ INSERT INTO tb_sabor (ativo, registro, cl_nome_sabor) VALUES (TRUE, NOW(), '4-QU
 INSERT INTO tb_endereco (ativo, registro, bairro, rua, numero) VALUES(TRUE, NOW(), 'Teste', 'rua teste', 4);
 INSERT INTO tb_cliente (ativo, registro, nome, cpf) VALUES (TRUE, NOW(), 'valor_nome', 'valor_cpf');
 INSERT INTO tb_funcionario (ativo, registro, cl_nome) VALUES(TRUE, NOW(), 'FUNCIONARIO');
+INSERT INTO tb_produto (ativo, registro, cl_valor_pedido) VALUES(TRUE, NOW(), 0);

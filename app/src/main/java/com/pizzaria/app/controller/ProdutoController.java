@@ -34,11 +34,6 @@ public class ProdutoController {
                 return ResponseEntity.badRequest().body("O objeto produto está ausente ou vazio.");
             }
 
-            // Verifique se o valor do produto é fornecido
-            if (produto.getValorProduto() == null) {
-                return ResponseEntity.badRequest().body("O valor do produto não pode estar vazio.");
-            }
-
             produtoService.cadastrar(produto);
 
             return ResponseEntity.ok().body("Produto cadastrado com sucesso!");
@@ -55,8 +50,18 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoAtualizado);
     }
 
-    @DeleteMapping("/{id}")
-    public void deletarProduto(@PathVariable Long id) {
-        produtoService.deletarProduto(id);
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<String> deletarProduto(@PathVariable Long id) {
+        try {
+            produtoService.deletarProduto(id);
+            return ResponseEntity.ok("Registro excluído com sucesso!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("erro")
+    private ResponseEntity<List<ProdutoDTO>> exemploErro(){
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 }

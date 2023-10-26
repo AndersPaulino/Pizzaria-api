@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Bebida } from 'src/app/models/bebida';
 import { BebidaService } from 'src/app/services/bebida.service';
 
@@ -12,10 +12,14 @@ export class BebidasListComponent {
 
   lista: Bebida[] = [];
 
+  @Output() retorno = new EventEmitter<Bebida>();
+  @Input() modoLancamento: boolean = false;
+
   bebidaSelecionadaParaEdicao: Bebida = new Bebida();
   indiceSelecionadoParaEdicao!: number;
 
   modalService = inject(NgbModal);
+  modalRef!: NgbModalRef;
   bebidaService = inject(BebidaService);
 
   constructor() {
@@ -48,13 +52,13 @@ export class BebidasListComponent {
 
   adicionar(modal: any) {
     this.bebidaSelecionadaParaEdicao = new Bebida();
-    this.modalService.open(modal, { size: 'sm' });
+    this.modalRef = this.modalService.open(modal, { size: 'sm' });
   }
 
   editar(modal: any, bebida: Bebida, indice: number) {
     this.bebidaSelecionadaParaEdicao = { ...bebida };
     this.indiceSelecionadoParaEdicao = indice;
-    this.modalService.open(modal, { size: 'sm' });
+    this.modalRef = this.modalService.open(modal, { size: 'sm' });
   }
 
   addOuEditarBebida(bebida: Bebida) {
@@ -74,5 +78,9 @@ export class BebidasListComponent {
 
   deletar(id: number) {
     this.bebidaService.deletarBebida(id).subscribe(() => this.listAll());
+  }
+
+  lancamento(bebida: Bebida){
+    this.retorno.emit(bebida);
   }
 }
