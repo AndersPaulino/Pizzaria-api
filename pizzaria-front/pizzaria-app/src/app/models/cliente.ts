@@ -4,9 +4,9 @@ export class Cliente {
     id!: number;
     nome!: string;
     cpf!: string;
-    enderecos: Endereco[];
+    endereco!: Endereco[];
 
     constructor() {
-        this.enderecos = [];
+        this.endereco = [];
     }
 }

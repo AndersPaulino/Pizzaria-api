@@ -11,10 +11,8 @@ import { ClienteService } from 'src/app/services/cliente.service';
 export class ClientedetailsComponent {
   @Input() cliente: Cliente = new Cliente();
   @Output() retorno = new EventEmitter<Cliente>();
-
   modalService = inject(NgbModal);
   modalRef!: NgbModalRef;
-
   clienteService = inject(ClienteService);
 
   constructor(){}
@@ -24,14 +22,14 @@ export class ClientedetailsComponent {
   }
 
   excluir(endereco: Endereco, indice: number) {
-    this.cliente.enderecos.splice(indice,1);
+    this.cliente.endereco.splice(indice,1);
   }
 
-  retornoEnderecoList(endereco: Endereco) {
-    console.log(endereco);
-    this.cliente.enderecos.push(endereco);
+  retornoEnderecoList(endereco: Endereco): void {
+    this.cliente.endereco.push(endereco);
     this.modalRef.dismiss();
   }
+  
 
   lancar(modal: any) {
     this.modalRef = this.modalService.open(modal, { size: 'lg' });

@@ -1,9 +1,7 @@
 package com.pizzaria.app.service;
 
 import com.pizzaria.app.dto.ClienteDTO;
-import com.pizzaria.app.dto.FuncionarioDTO;
 import com.pizzaria.app.entity.Cliente;
-import com.pizzaria.app.entity.Funcionario;
 import com.pizzaria.app.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

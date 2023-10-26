@@ -9,6 +9,7 @@
                         <th>#ID</th>
                         <th>Nome</th>
                         <th>CPF</th>
+                        <th>Endereço</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -19,11 +20,20 @@
                         <td>{{ cliente.nome }}</td>
                         <td>{{ cliente.cpf }}</td>
                         <td>
+                            <ng-container *ngIf="cliente.endereco && cliente.endereco.length > 0; else noAddress">
+                              <div *ngFor="let endereco of cliente.endereco">
+                                {{ endereco.bairro }}, {{ endereco.rua }}, {{ endereco.numero }}<br>
+                              </div>
+                            </ng-container>
+                            <ng-template #noAddress>
+                              Endereço não informado
+                            </ng-template>
+                          </td>
+                        <td>
                             <button class="btn btn-primary" (click)="editar(modal1, cliente, i)">Editar</button>
                             <button class="btn btn-danger" (click)="deletar(cliente.id)">Excluir</button>
                         </td>
                     </tr>
-
                 </tbody>
             </table>
         </div>

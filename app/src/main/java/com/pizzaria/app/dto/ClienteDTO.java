@@ -6,27 +6,36 @@ import com.pizzaria.app.entity.Endereco;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
 public class ClienteDTO {
     private Long id;
+    private boolean ativo;
+    private LocalDateTime registro;
     private String nome;
     private String cpf;
     private List<Endereco> endereco = new ArrayList<>();
 
-    public ClienteDTO(Long id, String nome, String cpf, List<Endereco> endereco) {
-        this.id = id;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.endereco = endereco;
+    public ClienteDTO(){}
+    public  Cliente toCliente(){
+        Cliente cliente = new Cliente();
+        cliente.setId(id);
+        cliente.setAtivo(ativo);
+        cliente.setRegistro(registro);
+        cliente.setNome(nome);
+        cliente.setCpf(cpf);
+        return cliente;
     }
-
     public ClienteDTO(Cliente cliente) {
         id = cliente.getId();
         nome = cliente.getNome();
         cpf = cliente.getCpf();
         endereco = cliente.getEndereco();
+    }
+    public static ClienteDTO fromCliente(Cliente cliente) {
+        return new ClienteDTO(cliente);
     }
 }
