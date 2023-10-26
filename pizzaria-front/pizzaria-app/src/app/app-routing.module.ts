@@ -9,6 +9,7 @@ import { FuncionariolistComponent } from './components/funcionario/funcionarioli
 import { ClientelistComponent } from './components/cliente/clientelist/clientelist.component';
 import { PizzalistComponent } from './components/pizza/pizzalist/pizzalist.component';
 import { ProdutolistComponent } from './components/produto/produtolist/produtolist.component';
+import { VendalistComponent } from './components/venda/vendalist/vendalist.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "login", pathMatch: 'full' },
@@ -21,7 +22,8 @@ const routes: Routes = [
       { path: "funcionario", component: FuncionariolistComponent },
       { path: "cliente", component:  ClientelistComponent},
       { path: "pizza", component:  PizzalistComponent},
-      { path: "produto", component:  ProdutolistComponent}
+      { path: "produto", component:  ProdutolistComponent},
+      { path: "venda", component:  VendalistComponent}
     ]
   }
 

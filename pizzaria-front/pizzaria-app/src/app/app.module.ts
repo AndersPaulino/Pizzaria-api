@@ -24,6 +24,8 @@ import { PizzalistComponent } from './components/pizza/pizzalist/pizzalist.compo
 import { PizzadetailsComponent } from './components/pizza/pizzadetails/pizzadetails.component';
 import { ProdutodetailsComponent } from './components/produto/produtodetails/produtodetails.component';
 import { ProdutolistComponent } from './components/produto/produtolist/produtolist.component';
+import { VendadetailsComponent } from './components/venda/vendadetails/vendadetails.component';
+import { VendalistComponent } from './components/venda/vendalist/vendalist.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { ProdutolistComponent } from './components/produto/produtolist/produtoli
     PizzalistComponent,
     PizzadetailsComponent,
     ProdutodetailsComponent,
-    ProdutolistComponent
+    ProdutolistComponent,
+    VendadetailsComponent,
+    VendalistComponent
   ],
   imports: [
     FormsModule,
