@@ -35,12 +35,14 @@ public class EnderecoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Endereco> listarTodosEnderecos() {
-        return enderecoRepository.findAll();
+    public List<EnderecoDTO> findAll() {
+        List<Endereco> enderecos = enderecoRepository.findAll();
+        return enderecos.stream().map(EnderecoDTO::new).toList();
     }
     @Transactional(readOnly = true)
-    public Optional<Endereco> buscarEnderecoPorId(Long id) {
-        return enderecoRepository.findById(id);
+    public Optional<EnderecoDTO> findById(Long id) {
+        return enderecoRepository.findById(id)
+                .map(EnderecoDTO::new);
     }
 
     @Transactional(rollbackFor = Exception.class)
